@@ -22,18 +22,19 @@ export default function Layout({ children }: { children: ReactNode }) {
   function handleLogout() { logout(); nav('/login'); }
 
   return (
-    <div style={{ display:'flex', minHeight:'100vh' }}>
-      <aside style={{ width:224, flexShrink:0, background:'var(--brown)', display:'flex', flexDirection:'column', position:'fixed', top:0, left:0, bottom:0, zIndex:100 }}>
+    <div className="app-shell">
+      <aside className="app-sidebar">
         {/* Logo */}
-        <div style={{ padding:'20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,.08)' }}>
+        <div className="app-brand">
           <div className="font-serif" style={{ fontSize:17, fontWeight:600, color:'var(--goldl)', letterSpacing:'-.1px' }}>Smakvärlden</div>
           <div style={{ fontSize:10, color:'rgba(255,255,255,.3)', marginTop:3, fontFamily:'DM Mono' }}>Kökets operativsystem</div>
         </div>
 
         {/* Nav */}
-        <nav style={{ flex:1, padding:'10px 8px', display:'flex', flexDirection:'column', gap:1 }}>
+        <nav className="app-nav">
           {NAV.map(({ to, icon: Icon, label, hot }) => (
             <NavLink key={to} to={to} end={to === '/'}
+              className="app-nav-link"
               style={({ isActive }) => ({
                 display:'flex', alignItems:'center', justifyContent:'space-between',
                 padding:'9px 10px', borderRadius:9,
@@ -44,10 +45,10 @@ export default function Layout({ children }: { children: ReactNode }) {
               })}>
               <div style={{ display:'flex', alignItems:'center', gap:9 }}>
                 <Icon size={15} style={{ flexShrink:0 }} />
-                {label}
+                <span className="app-nav-label">{label}</span>
               </div>
               {hot && alertCount > 0 && (
-                <span style={{ fontSize:10, fontWeight:700, padding:'1px 6px', borderRadius:100, background:'rgba(185,28,28,.8)', color:'#fff', minWidth:18, textAlign:'center' }}>
+                <span className="app-nav-badge" style={{ fontSize:10, fontWeight:700, padding:'1px 6px', borderRadius:100, background:'rgba(185,28,28,.8)', color:'#fff', minWidth:18, textAlign:'center' }}>
                   {alertCount}
                 </span>
               )}
@@ -56,7 +57,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* User */}
-        <div style={{ padding:'10px 8px', borderTop:'1px solid rgba(255,255,255,.08)' }}>
+        <div className="app-user">
           {user && (
             <div style={{ padding:'10px', borderRadius:9, marginBottom:6, background:'rgba(255,255,255,.06)' }}>
               <div style={{ fontSize:12, fontWeight:600, color:'#fff', textTransform:'capitalize' }}>{user.name}</div>
@@ -76,7 +77,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <main style={{ marginLeft:224, flex:1, minHeight:'100vh', background:'var(--cream)' }}>
+      <main className="app-main">
         {children}
       </main>
     </div>
