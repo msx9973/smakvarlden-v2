@@ -282,7 +282,7 @@ export const store = {
 
   register(name: string, email: string, pw: string): User {
     if (!name || !email.includes('@') || pw.length < 6) throw new Error('Fyll i alla fält (lösenord minst 6 tecken)');
-    const u: User = { id:'u'+Date.now(), name, email, plan:'free' };
+    const u: User = { id:crypto.randomUUID(), name, email, plan:'free' };
     save(K.user, u); return u;
   },
 

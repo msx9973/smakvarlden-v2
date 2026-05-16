@@ -2,6 +2,16 @@ import { useMemo } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, BarChart2 } from 'lucide-react';
 import { store, margin, totalCost, marginColor } from '../store';
 
+function Stat({ label, value, sub, ok }: {label:string;value:string;sub:string;ok?:boolean}) {
+  return (
+    <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:14, padding:'16px 18px' }}>
+      <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>{label}</div>
+      <div className="font-serif" style={{ fontSize:26, fontWeight:600, color:'var(--t1)', marginBottom:4 }}>{value}</div>
+      <div style={{ fontSize:11, fontWeight:600, color: ok===undefined?'var(--t3)':ok?'var(--green)':'var(--red)' }}>{sub}</div>
+    </div>
+  );
+}
+
 export default function Analytics() {
   const recipes     = store.getRecipes();
   const ingredients = store.getIngredients();
@@ -31,16 +41,6 @@ export default function Analytics() {
     return Object.entries(map).map(([cat,{count,total}]) => ({ cat, count, avg: total/count }))
       .sort((a,b)=>b.avg-a.avg);
   }, [ingredients]);
-
-  function Stat({ label, value, sub, ok }: {label:string;value:string;sub:string;ok?:boolean}) {
-    return (
-      <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:14, padding:'16px 18px' }}>
-        <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>{label}</div>
-        <div className="font-serif" style={{ fontSize:26, fontWeight:600, color:'var(--t1)', marginBottom:4 }}>{value}</div>
-        <div style={{ fontSize:11, fontWeight:600, color: ok===undefined?'var(--t3)':ok?'var(--green)':'var(--red)' }}>{sub}</div>
-      </div>
-    );
-  }
 
   return (
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>

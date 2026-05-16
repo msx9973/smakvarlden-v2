@@ -135,7 +135,7 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
     const raw = recipeIngredients.reduce((s,i) => s + i.quantity * i.unitPrice, 0);
     const sp  = parseFloat(price) || suggested(raw);
     const rec: Recipe = {
-      id: 'r' + Date.now(), name: name.trim(), category: cat,
+      id: crypto.randomUUID(), name: name.trim(), category: cat,
       servings: parseInt(servings) || 1, sellingPriceSek: sp,
       ingredients: recipeIngredients, createdAt: new Date().toISOString().slice(0,10),
     };

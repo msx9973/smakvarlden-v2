@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Crown, Check } from 'lucide-react';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
 
 // ─── WASTE PAGE ──────────────────────────────────────────────────

@@ -44,7 +44,7 @@ export default function Calculator() {
     if (!name.trim()) { setErr('Ange ett receptnamn'); return; }
     if (recipeIngs.length === 0) { setErr('Lägg till minst en ingrediens'); return; }
     const rec: Recipe = {
-      id: 'r'+Date.now(), name: name.trim(), category: cat,
+      id: crypto.randomUUID(), name: name.trim(), category: cat,
       servings: parseInt(servings)||1, sellingPriceSek: sp,
       ingredients: recipeIngs, createdAt: new Date().toISOString().slice(0,10),
     };

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, TrendingUp, ArrowRight } from 'lucide-react';
 import { store, margin, totalCost, marginColor, buildAlerts } from '../store';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/auth-context';
 
 // buildAlerts from store handles impact computation
 
