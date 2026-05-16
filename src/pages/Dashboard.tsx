@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, TrendingUp, ArrowRight } from 'lucide-react';
 import { store, margin, totalCost, marginColor, buildAlerts } from '../store';

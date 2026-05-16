@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Plus, Trash2, Save } from 'lucide-react';
 import { store, suggested } from '../store';
 import type { Recipe, RecipeIngredient } from '../store';

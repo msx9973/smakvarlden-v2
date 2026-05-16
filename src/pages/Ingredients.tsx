@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Plus, Pencil, Trash2, Search, TrendingUp, TrendingDown } from 'lucide-react';
 import { store } from '../store';
 import type { Ingredient } from '../store';

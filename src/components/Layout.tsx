@@ -1,4 +1,4 @@
-﻿import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Zap, BookOpen, ShoppingBasket, Calculator, LogOut, Crown, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';

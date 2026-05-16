@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';

@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { AlertTriangle, TrendingUp, TrendingDown, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import { store, buildAlerts, marginColor } from '../store';
 import type { IngredientAlert, RecipeImpact } from '../store';
