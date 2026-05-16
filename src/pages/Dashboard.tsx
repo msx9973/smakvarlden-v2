@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, TrendingUp, ArrowRight } from 'lucide-react';
 import { store, margin, totalCost, marginColor, buildAlerts } from '../store';
@@ -29,6 +29,7 @@ export default function Dashboard() {
           God dag{user?.name ? `, ${user.name}` : ''} 👨‍🍳
         </h1>
         <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Kökets lönsamhetsöverblick</p>
+        <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
       </div>
 
       {/* KPIs */}
@@ -140,7 +141,6 @@ export default function Dashboard() {
             { to:'/calculator',   emoji:'🧮', title:'Kalkylera ny rätt', desc:'Beräkna kostnad och marginal direkt' },
             { to:'/recipes',      emoji:'🍽️', title:'Mina recept',       desc:'Hantera och analysera dina rätter' },
             { to:'/ingredients',  emoji:'🥬', title:'Uppdatera priser',  desc:'Ange nya leverantörspriser — påverkan beräknas auto' },
-            { to:'/analytics',    emoji:'📈', title:'Köksanalys',        desc:'Trender, inflation och lönsamhetsöverblick' },
           ].map(({ to, emoji, title, desc, hot }) => (
             <Link key={to} to={to}
               style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 18px', background:'var(--white)', border:`1px solid ${hot?'rgba(185,28,28,.25)':'var(--border)'}`, borderRadius:14, textDecoration:'none', transition:'all .2s' }}
@@ -163,3 +163,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

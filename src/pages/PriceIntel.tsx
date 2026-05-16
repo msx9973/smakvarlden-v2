@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { AlertTriangle, TrendingUp, TrendingDown, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import { store, buildAlerts, marginColor } from '../store';
 import type { IngredientAlert, RecipeImpact } from '../store';
@@ -163,8 +163,9 @@ export default function PriceIntel() {
       <div style={{ marginBottom:28 }}>
         <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Prisintelligens</h1>
         <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>
-          Vad förändrades → vilka recept påverkas → hur mycket förloras → vad du ska göra
+          Ingredient price changed → affected recipes → margin loss → suggested action
         </p>
+        <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Not live supplier data.</p>
       </div>
 
       {/* Summary KPIs */}
@@ -231,3 +232,4 @@ export default function PriceIntel() {
     </div>
   );
 }
+

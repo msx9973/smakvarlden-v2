@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+﻿import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { store, rawCost, margin, suggested } from '../store';
 
@@ -36,6 +36,7 @@ export default function RecipeDetail() {
             <div style={{ fontSize:13, color:'var(--t2)' }}>
               {recipe.category} · {recipe.servings} portion{recipe.servings>1?'er':''}
             </div>
+            <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
           </div>
 
           {/* Ingredient breakdown */}
@@ -133,3 +134,4 @@ export default function RecipeDetail() {
     </div>
   );
 }
+

@@ -7,9 +7,8 @@ import Recipes from './pages/Recipes';
 import RecipeDetail from './pages/RecipeDetail';
 import Calculator from './pages/Calculator';
 import Ingredients from './pages/Ingredients';
-import Analytics from './pages/Analytics';
 import PriceIntel from './pages/PriceIntel';
-import { WastePage, LoginPage, UpgradePage } from './pages/Other';
+import { LoginPage, TrustPage, UpgradePage } from './pages/Other';
 import './index.css';
 
 function Protected({ children }: { children: React.ReactNode }) {
@@ -30,9 +29,13 @@ export default function App() {
           <Route path="/recipes/:id" element={<Protected><RecipeDetail /></Protected>} />
           <Route path="/calculator"  element={<Protected><Calculator /></Protected>} />
           <Route path="/ingredients" element={<Protected><Ingredients /></Protected>} />
-          <Route path="/analytics"   element={<Protected><Analytics /></Protected>} />
-          <Route path="/waste"       element={<Protected><WastePage /></Protected>} />
           <Route path="/upgrade"     element={<Protected><UpgradePage /></Protected>} />
+          <Route path="/trust"       element={<TrustPage />} />
+          <Route path="/privacy"     element={<TrustPage />} />
+          <Route path="/terms"       element={<TrustPage />} />
+          <Route path="/contact"     element={<TrustPage />} />
+          <Route path="/analytics"   element={<Navigate to="/" replace />} />
+          <Route path="/waste"       element={<Navigate to="/" replace />} />
           <Route path="*"            element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

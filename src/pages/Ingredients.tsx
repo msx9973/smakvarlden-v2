@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Plus, Pencil, Trash2, Search, TrendingUp, TrendingDown } from 'lucide-react';
 import { store } from '../store';
 import type { Ingredient } from '../store';
@@ -35,6 +35,7 @@ export default function Ingredients() {
         <div>
           <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Ingredienser</h1>
           <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>{ingredients.length} ingredienser · priser uppdateras när du redigerar</p>
+          <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
         </div>
         <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8 }}>
           <Plus size={15} /> Ny ingrediens
@@ -136,7 +137,7 @@ function IngredientModal({ ing, onClose }: { ing: Ingredient|null; onClose:()=>v
     const existing = ing ? store.getIngredients().find(i=>i.id===ing.id) : null;
     const newPrice = parseFloat(price);
     const newIng: Ingredient = {
-      id:           ing?.id || 'i'+Date.now(),
+      id:           ing?.id || crypto.randomUUID(),
       name:         name.trim(),
       category:     cat,
       unit,
@@ -200,3 +201,4 @@ function IngredientModal({ ing, onClose }: { ing: Ingredient|null; onClose:()=>v
     </div>
   );
 }
+

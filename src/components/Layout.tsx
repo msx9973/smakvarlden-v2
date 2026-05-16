@@ -1,5 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Zap, BookOpen, ShoppingBasket, Calculator, TrendingUp, Trash2, LogOut, Crown } from 'lucide-react';
+﻿import { NavLink, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Zap, BookOpen, ShoppingBasket, Calculator, LogOut, Crown, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
 import type { ReactNode } from 'react';
@@ -10,8 +10,6 @@ const NAV = [
   { to:'/recipes',     icon:BookOpen,        label:'Recept',          hot:false },
   { to:'/ingredients', icon:ShoppingBasket,  label:'Ingredienser',    hot:false },
   { to:'/calculator',  icon:Calculator,      label:'Kalkylator',      hot:false },
-  { to:'/analytics',   icon:TrendingUp,      label:'Köksanalys',      hot:false },
-  { to:'/waste',       icon:Trash2,          label:'Svinnanalys',     hot:false },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -78,8 +76,14 @@ export default function Layout({ children }: { children: ReactNode }) {
       </aside>
 
       <main className="app-main">
+        <div className="launch-banner">
+          <strong>Demo data / example calculations.</strong>
+          <span>Ingredient price changed → affected recipes → margin loss → suggested action.</span>
+          <a href="/trust"><ShieldCheck size={13} /> Trust & privacy</a>
+        </div>
         {children}
       </main>
     </div>
   );
 }
+

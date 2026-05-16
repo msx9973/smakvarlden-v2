@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { Plus, Trash2, Save } from 'lucide-react';
 import { store, suggested } from '../store';
 import type { Recipe, RecipeIngredient } from '../store';
@@ -58,6 +58,7 @@ export default function Calculator() {
       <div style={{ marginBottom:28 }}>
         <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Kalkylator</h1>
         <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Bygg en rätt, se kostnad och marginal direkt</p>
+        <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 380px', gap:24, alignItems:'start' }}>
@@ -225,3 +226,4 @@ function Row({ k, v, red, gold }: { k:string; v:string; red?:boolean; gold?:bool
     </div>
   );
 }
+

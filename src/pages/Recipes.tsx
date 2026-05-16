@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
@@ -29,6 +29,7 @@ export default function Recipes() {
         <div>
           <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Recept</h1>
           <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>{recipes.length} recept · klicka för att se kalkyl</p>
+          <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
         </div>
         <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 20px' }}>
           <Plus size={15} /> Nytt recept
@@ -203,3 +204,4 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+

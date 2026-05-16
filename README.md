@@ -1,6 +1,6 @@
 # Smakvärlden v2
 
-Smakvärlden v2 is a frontend prototype for a kitchen operating system built around restaurant profitability. It helps chefs and small restaurant teams understand food cost, ingredient price changes, recipe margins, waste estimates, and better menu decisions from one focused dashboard.
+Smakvärlden v2 is a frontend launch demo for a kitchen operating system built around restaurant profitability. It helps chefs and small restaurant teams understand food cost, ingredient price changes, recipe margins, and better menu decisions from one focused dashboard.
 
 This is not a recipe blog. The product direction is food-cost control and kitchen decision support for modern restaurants.
 
@@ -12,20 +12,23 @@ Smakvärlden is designed to answer the questions chefs need quickly:
 - Which ingredient prices changed?
 - Which recipes are now losing margin?
 - What menu price should change?
-- Where is waste costing money?
 - Which dishes are strongest or weakest financially?
+
+The main product story is:
+
+> Ingredient price changed → affected recipes → margin loss → suggested action
 
 ## Current Features
 
 - Protected demo app shell with dashboard navigation
+- Clear demo data / example calculation labels
 - Dashboard with food-cost, margin, recipe, and price-alert summaries
 - Price intelligence view with affected dishes and suggested price actions
 - Recipe library with detail pages and margin calculations
 - Ingredient database with supplier, unit, price, previous price, and history data
 - Recipe calculator with waste uplift, total cost, selling price, and margin
-- Kitchen analytics for price movements, category averages, and recipe ranking
-- Waste estimate page using category-based assumptions
 - Upgrade/pricing screen for the Pro concept
+- Public trust/privacy/contact page explaining demo limits and data safety
 - Responsive desktop sidebar and mobile bottom navigation
 
 ## Tech Stack
@@ -65,9 +68,25 @@ Preview the production build:
 npm run preview
 ```
 
+## Launch Scope
+
+The public demo intentionally focuses on the surfaces that are strongest and easiest to understand:
+
+- Dashboard
+- Price Intelligence
+- Ingredients
+- Recipes
+- Calculator
+- Upgrade/pricing
+- Trust/privacy/contact
+
+Advanced analytics, waste analysis, and AI-style features are not part of the main launch navigation until they are production-ready.
+
 ## Demo Login
 
 The app uses local demo authentication. No backend is required.
+
+This is not real production security. It is only a browser demo gate.
 
 - Login: any valid email plus a password with at least 4 characters
 - Register: name, valid email, and password with at least 6 characters
@@ -102,7 +121,7 @@ The prototype includes seeded restaurant data:
 - Ingredients with current and previous SEK prices
 - Price history for charting and trend views
 - Recipes with ingredient quantities and selling prices
-- Margin, food-cost, and waste calculations
+- Margin and food-cost calculations
 - Price-impact logic for affected recipes
 
 The local store lives in `src/store/index.ts`.

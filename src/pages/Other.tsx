@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Crown, Check } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
@@ -18,7 +18,7 @@ export function WastePage() {
   return (
     <div style={{ padding:'32px 36px', maxWidth:900, margin:'0 auto' }}>
       <div style={{ marginBottom:24 }}>
-        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Svinnanalys</h1>
+        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Demo data</h1>
         <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Estimerade svinncostnader — branschschabloner, inte verkliga mätningar</p>
       </div>
       <div style={{ padding:'12px 16px', background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', borderRadius:11, marginBottom:20, fontSize:13, color:'#1d4ed8' }}>
@@ -87,9 +87,12 @@ export function LoginPage() {
             </svg>
           </div>
           <h1 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--brown)' }}>Smakvärlden</h1>
-          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Kökets operativsystem</p>
+          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Demo mode för kökets operativsystem</p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>
+          <div style={{ padding:'11px 13px', borderRadius:11, background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', color:'#1d4ed8', fontSize:12.5, lineHeight:1.5, marginBottom:16 }}>
+            <strong>Demo only.</strong> This login is local browser demo access, not real account security. Demo data / example calculations are used throughout the app.
+          </div>
           <div style={{ display:'flex', gap:2, padding:4, background:'var(--muted)', borderRadius:12, marginBottom:22 }}>
             {(['login','register'] as const).map(m => (
               <button key={m} onClick={()=>{setMode(m);setErr('');}}
@@ -127,9 +130,14 @@ export function LoginPage() {
           </form>
           {mode==='login' && (
             <p style={{ textAlign:'center', marginTop:14, fontSize:12, color:'var(--t3)' }}>
-              Demo: valfri e-post + lösenord (4+ tecken)
+              Demo: use any email + password with 4+ characters.
             </p>
           )}
+          <div style={{ display:'flex', justifyContent:'center', gap:10, marginTop:16, fontSize:12 }}>
+            <Link to="/privacy" style={{ color:'var(--gold)', fontWeight:600 }}>Privacy</Link>
+            <Link to="/terms" style={{ color:'var(--gold)', fontWeight:600 }}>Terms</Link>
+            <Link to="/contact" style={{ color:'var(--gold)', fontWeight:600 }}>Contact</Link>
+          </div>
         </div>
       </div>
     </div>
@@ -137,17 +145,60 @@ export function LoginPage() {
 }
 
 // ─── UPGRADE PAGE ─────────────────────────────────────────────────
+export function TrustPage() {
+  const sections = [
+    {
+      title: 'Privacy Policy',
+      body: 'This public demo stores demo login state, recipes, ingredients and prices in your browser localStorage only. It does not send recipe or supplier data to a backend because this prototype has no backend service.',
+    },
+    {
+      title: 'Terms',
+      body: 'Smakvärlden v2 is a prototype for evaluation. Demo calculations are examples and should not be used as accounting, purchasing, legal, tax or audited financial advice.',
+    },
+    {
+      title: 'Data Security',
+      body: 'Real customer launch requires proper authentication, database access controls, encrypted transport, server-side validation, backups and clear deletion/export workflows. This demo should not be used for confidential production restaurant data.',
+    },
+    {
+      title: 'Contact',
+      body: 'For launch questions, supplier-data discussions, privacy requests or restaurant onboarding, contact the Smakvärlden team before entering sensitive business data.',
+    },
+  ];
+
+  return (
+    <div style={{ minHeight:'100vh', background:'var(--cream)', padding:'32px 20px' }}>
+      <div style={{ maxWidth:880, margin:'0 auto' }}>
+        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>← Back to demo login</Link>
+        <div style={{ background:'var(--brown)', color:'#fff', borderRadius:20, padding:'30px', marginBottom:18 }}>
+          <div className="font-serif" style={{ fontSize:34, fontWeight:600, color:'var(--goldl)', marginBottom:10 }}>Trust, privacy and demo limits</div>
+          <p style={{ color:'rgba(255,255,255,.72)', fontSize:15, maxWidth:660, lineHeight:1.7 }}>
+            Ingredient price changed → affected recipes → margin loss → suggested action. That is the core Smakvärlden workflow. The current public version uses demo data / example calculations until production authentication and storage are connected.
+          </p>
+        </div>
+        <div className="trust-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:14 }}>
+          {sections.map(section => (
+            <section key={section.title} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:16, padding:'20px' }}>
+              <h2 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--t1)', marginBottom:8 }}>{section.title}</h2>
+              <p style={{ color:'var(--t2)', fontSize:14, lineHeight:1.7 }}>{section.body}</p>
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function UpgradePage() {
   const { user } = useAuth();
   const plans = [
     { name:'Gratis', price:'0 kr', per:'för alltid', featured:false,
-      feats:['Upp till 10 recept','Receptkalkylator','Ingrediensdatabas','Marknadsdata','Svinnanalys'],
+      feats:['Upp till 10 recept','Receptkalkylator','Ingrediensdatabas','Prisintelligens','Demo data'],
       btn:'Nuvarande plan', disabled:user?.plan==='free' },
     { name:'Pro Kök', price:'59 kr', per:'/månad · 7 dagar gratis', featured:true,
-      feats:['Obegränsade recept','Liveprisövervakning','Prisvarningar','Köksanalys & trender','AI-menyassistent','Prioriterad support'],
+      feats:['Obegränsade recept','Liveprisövervakning','Prisvarningar','Marginalförlust per recept','Föreslagna prisåtgärder','Prioriterad support'],
       btn:user?.plan==='pro'?'✓ Aktiv plan':'Starta 7 dagar gratis', disabled:user?.plan==='pro' },
     { name:'Företag', price:'Offert', per:'Flera anläggningar', featured:false,
-      feats:['Allt i Pro','Flera kök','Teamkonton','Anpassade integrationer','Dedikerad support'],
+      feats:['Allt i Pro','Flera kök','Teamkonton','Leverantörsintegrationer','Dedikerad support'],
       btn:'Kontakta oss', disabled:false },
   ];
   return (
@@ -173,7 +224,7 @@ export function UpgradePage() {
                 </div>
               ))}
             </div>
-            <button disabled={p.disabled} style={{ width:'100%', padding:12, borderRadius:10, border:'none', font:'600 13.5px DM Sans', cursor:p.disabled?'default':'pointer', transition:'.2s', background:p.featured?'var(--gold)':p.disabled?'var(--muted)':'var(--muted)', color:p.featured?'var(--brown)':'var(--t2)', opacity:p.disabled&&!p.featured?.7:1 }}>
+            <button disabled={p.disabled} style={{ width:'100%', padding:12, borderRadius:10, border:'none', font:'600 13.5px DM Sans', cursor:p.disabled?'default':'pointer', transition:'.2s', background:p.featured?'var(--gold)':p.disabled?'var(--muted)':'var(--muted)', color:p.featured?'var(--brown)':'var(--t2)', opacity:p.disabled&&!p.featured ? .7 : 1 }}>
               {p.btn}
             </button>
           </div>
@@ -182,3 +233,4 @@ export function UpgradePage() {
     </div>
   );
 }
+
