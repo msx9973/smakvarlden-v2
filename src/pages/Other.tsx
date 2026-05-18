@@ -72,7 +72,7 @@ export function LoginPage() {
     try {
       if (mode==='login') login(email, pw);
       else register(name, email, pw);
-      nav('/');
+      nav('/dashboard');
     } catch(ex: unknown) { setErr(ex instanceof Error ? ex.message : 'Fel uppstod'); }
     finally { setLoading(false); }
   }

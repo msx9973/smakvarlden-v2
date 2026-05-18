@@ -5,7 +5,7 @@ import { store } from '../store';
 import type { ReactNode } from 'react';
 
 const NAV = [
-  { to:'/',            icon:LayoutDashboard, label:'Dashboard',       hot:false },
+  { to:'/dashboard',   icon:LayoutDashboard, label:'Dashboard',       hot:false },
   { to:'/price-intel', icon:Zap,             label:'Prisintelligens', hot:true  },
   { to:'/recipes',     icon:BookOpen,        label:'Recept',          hot:false },
   { to:'/ingredients', icon:ShoppingBasket,  label:'Ingredienser',    hot:false },
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         {/* Nav */}
         <nav className="app-nav">
           {NAV.map(({ to, icon: Icon, label, hot }) => (
-            <NavLink key={to} to={to} end={to === '/'}
+            <NavLink key={to} to={to} end={to === '/dashboard'}
               className="app-nav-link"
               style={({ isActive }) => ({
                 display:'flex', alignItems:'center', justifyContent:'space-between',

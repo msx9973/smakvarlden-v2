@@ -25,8 +25,9 @@ export default function App() {
         <Routes>
           <Route path="/investor"    element={<InvestorPresentation />} />
           <Route path="/presentation" element={<InvestorPresentation />} />
+          <Route path="/"            element={<InvestorPresentation />} />
           <Route path="/login"       element={<LoginPage />} />
-          <Route path="/"            element={<Protected><Dashboard /></Protected>} />
+          <Route path="/dashboard"   element={<Protected><Dashboard /></Protected>} />
           <Route path="/price-intel" element={<Protected><PriceIntel /></Protected>} />
           <Route path="/recipes"     element={<Protected><Recipes /></Protected>} />
           <Route path="/recipes/:id" element={<Protected><RecipeDetail /></Protected>} />
@@ -37,8 +38,8 @@ export default function App() {
           <Route path="/privacy"     element={<TrustPage />} />
           <Route path="/terms"       element={<TrustPage />} />
           <Route path="/contact"     element={<TrustPage />} />
-          <Route path="/analytics"   element={<Navigate to="/" replace />} />
-          <Route path="/waste"       element={<Navigate to="/" replace />} />
+          <Route path="/analytics"   element={<Navigate to="/dashboard" replace />} />
+          <Route path="/waste"       element={<Navigate to="/dashboard" replace />} />
           <Route path="*"            element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
