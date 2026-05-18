@@ -8,6 +8,7 @@ import RecipeDetail from './pages/RecipeDetail';
 import Calculator from './pages/Calculator';
 import Ingredients from './pages/Ingredients';
 import PriceIntel from './pages/PriceIntel';
+import InvestorPresentation from './pages/InvestorPresentation';
 import { LoginPage, TrustPage, UpgradePage } from './pages/Other';
 import './index.css';
 
@@ -22,6 +23,8 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/investor"    element={<InvestorPresentation />} />
+          <Route path="/presentation" element={<InvestorPresentation />} />
           <Route path="/login"       element={<LoginPage />} />
           <Route path="/"            element={<Protected><Dashboard /></Protected>} />
           <Route path="/price-intel" element={<Protected><PriceIntel /></Protected>} />
