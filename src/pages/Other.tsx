@@ -4,10 +4,10 @@ import { Eye, EyeOff, Crown, Check } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
 
-// ─── WASTE PAGE ──────────────────────────────────────────────────
+// âââ WASTE PAGE ââââââââââââââââââââââââââââââââââââââââââââââââââ
 export function WastePage() {
   const ings = store.getIngredients();
-  const RATES: Record<string,number> = { Fisk:12, Kött:10, Grönsaker:20, Mejeri:8, Torrvaror:4, Kryddor:6, Skaldjur:14, Svamp:18 };
+  const RATES: Record<string,number> = { Fisk:12, KÃ¶tt:10, GrÃ¶nsaker:20, Mejeri:8, Torrvaror:4, Kryddor:6, Skaldjur:14, Svamp:18 };
   const rows = ings.map(i => ({
     ...i,
     wastePct: RATES[i.category] ?? 10,
@@ -19,16 +19,16 @@ export function WastePage() {
     <div style={{ padding:'32px 36px', maxWidth:900, margin:'0 auto' }}>
       <div style={{ marginBottom:24 }}>
         <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Demo data</h1>
-        <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Estimerade svinncostnader — branschschabloner, inte verkliga mätningar</p>
+        <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Estimerade svinncostnader â branschschabloner, inte verkliga mÃ¤tningar</p>
       </div>
       <div style={{ padding:'12px 16px', background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', borderRadius:11, marginBottom:20, fontSize:13, color:'#1d4ed8' }}>
-        ℹ️ Alla siffror är estimat baserade på branschschabloner per kategori — inte uppmätta värden.
+        â¹ï¸ Alla siffror Ã¤r estimat baserade pÃ¥ branschschabloner per kategori â inte uppmÃ¤tta vÃ¤rden.
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:24 }}>
         {[
           { label:'Est. svinn / dag',   value:`~${totalDay.toFixed(0)} kr` },
-          { label:'Est. svinn / månad', value:`~${(totalDay*30).toFixed(0)} kr` },
-          { label:'Est. svinn / år',    value:`~${(totalDay*365).toFixed(0)} kr` },
+          { label:'Est. svinn / mÃ¥nad', value:`~${(totalDay*30).toFixed(0)} kr` },
+          { label:'Est. svinn / Ã¥r',    value:`~${(totalDay*365).toFixed(0)} kr` },
         ].map(s => (
           <div key={s.label} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:14, padding:'16px 18px' }}>
             <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>{s.label}</div>
@@ -55,7 +55,7 @@ export function WastePage() {
   );
 }
 
-// ─── LOGIN PAGE ───────────────────────────────────────────────────
+// âââ LOGIN PAGE âââââââââââââââââââââââââââââââââââââââââââââââââââ
 export function LoginPage() {
   const { login, register } = useAuth();
   const nav = useNavigate();
@@ -86,8 +86,8 @@ export function LoginPage() {
               <path d="M7.5 1.5v5M5 3.5l2.5 3 2.5-3M2 9.5h11M3.5 9.5V13M11.5 9.5V13"/>
             </svg>
           </div>
-          <h1 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--brown)' }}>Smakvärlden</h1>
-          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Demo mode för kökets operativsystem</p>
+          <h1 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--brown)' }}>SmakvÃ¤rlden</h1>
+          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Demo mode fÃ¶r kÃ¶kets operativsystem</p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>
           <div style={{ padding:'11px 13px', borderRadius:11, background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', color:'#1d4ed8', fontSize:12.5, lineHeight:1.5, marginBottom:16 }}>
@@ -112,12 +112,12 @@ export function LoginPage() {
             )}
             <div>
               <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>E-post</label>
-              <input className="inp" type="email" placeholder="chef@koken.se" value={email} onChange={e=>setEmail(e.target.value)} required />
+              <input className="inp" type="email" placeholder="din@email.se" value={email} onChange={e=>setEmail(e.target.value)} required />
             </div>
             <div>
-              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Lösenord</label>
+              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>LÃ¶senord</label>
               <div style={{ position:'relative' }}>
-                <input className="inp" type={show?'text':'password'} placeholder={mode==='register'?'Minst 6 tecken':'••••••••'} value={pw} onChange={e=>setPw(e.target.value)} required style={{ paddingRight:40 }} />
+                <input className="inp" type={show?'text':'password'} placeholder={mode==='register'?'Minst 6 tecken':'â¢â¢â¢â¢â¢â¢â¢â¢'} value={pw} onChange={e=>setPw(e.target.value)} required style={{ paddingRight:40 }} />
                 <button type="button" onClick={()=>setShow(v=>!v)} style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--t3)' }}>
                   {show ? <EyeOff size={14}/> : <Eye size={14}/>}
                 </button>
@@ -144,7 +144,7 @@ export function LoginPage() {
   );
 }
 
-// ─── UPGRADE PAGE ─────────────────────────────────────────────────
+// âââ UPGRADE PAGE âââââââââââââââââââââââââââââââââââââââââââââââââ
 export function TrustPage() {
   const sections = [
     {
@@ -153,26 +153,26 @@ export function TrustPage() {
     },
     {
       title: 'Terms',
-      body: 'Smakvärlden v2 is a prototype for evaluation. Demo calculations are examples and should not be used as accounting, purchasing, legal, tax or audited financial advice.',
+      body: 'SmakvÃ¤rlden v2 is a prototype for evaluation. Demo calculations are examples and should not be used as accounting, purchasing, legal, tax or audited financial advice.',
     },
     {
       title: 'Data Security',
       body: 'Real customer launch requires proper authentication, database access controls, encrypted transport, server-side validation, backups and clear deletion/export workflows. This demo should not be used for confidential production restaurant data.',
     },
     {
-      title: 'Contact',
-      body: 'For launch questions, supplier-data discussions, privacy requests or restaurant onboarding, contact the Smakvärlden team before entering sensitive business data.',
+      title: 'Kontakt',
+      body: 'För frågor om lansering, leverantörsdata, integritet eller restauranganslutning — kontakta oss på chef@smakvarlden.se',
     },
   ];
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)', padding:'32px 20px' }}>
       <div style={{ maxWidth:880, margin:'0 auto' }}>
-        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>← Back to demo login</Link>
+        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>â Back to demo login</Link>
         <div style={{ background:'var(--brown)', color:'#fff', borderRadius:20, padding:'30px', marginBottom:18 }}>
           <div className="font-serif" style={{ fontSize:34, fontWeight:600, color:'var(--goldl)', marginBottom:10 }}>Trust, privacy and demo limits</div>
           <p style={{ color:'rgba(255,255,255,.72)', fontSize:15, maxWidth:660, lineHeight:1.7 }}>
-            Ingredient price changed → affected recipes → margin loss → suggested action. That is the core Smakvärlden workflow. The current public version uses demo data / example calculations until production authentication and storage are connected.
+            Ingredient price changed â affected recipes â margin loss â suggested action. That is the core SmakvÃ¤rlden workflow. The current public version uses demo data / example calculations until production authentication and storage are connected.
           </p>
         </div>
         <div className="trust-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:14 }}>
@@ -191,14 +191,14 @@ export function TrustPage() {
 export function UpgradePage() {
   const { user } = useAuth();
   const plans = [
-    { name:'Gratis', price:'0 kr', per:'för alltid', featured:false,
+    { name:'Gratis', price:'0 kr', per:'fÃ¶r alltid', featured:false,
       feats:['Upp till 10 recept','Receptkalkylator','Ingrediensdatabas','Prisintelligens','Demo data'],
       btn:'Nuvarande plan', disabled:user?.plan==='free' },
-    { name:'Pro Kök', price:'59 kr', per:'/månad · 7 dagar gratis', featured:true,
-      feats:['Obegränsade recept','Liveprisövervakning','Prisvarningar','Marginalförlust per recept','Föreslagna prisåtgärder','Prioriterad support'],
-      btn:user?.plan==='pro'?'✓ Aktiv plan':'Starta 7 dagar gratis', disabled:user?.plan==='pro' },
-    { name:'Företag', price:'Offert', per:'Flera anläggningar', featured:false,
-      feats:['Allt i Pro','Flera kök','Teamkonton','Leverantörsintegrationer','Dedikerad support'],
+    { name:'Pro KÃ¶k', price:'59 kr', per:'/mÃ¥nad Â· 7 dagar gratis', featured:true,
+      feats:['ObegrÃ¤nsade recept','LiveprisÃ¶vervakning','Prisvarningar','MarginalfÃ¶rlust per recept','FÃ¶reslagna prisÃ¥tgÃ¤rder','Prioriterad support'],
+      btn:user?.plan==='pro'?'â Aktiv plan':'Starta 7 dagar gratis', disabled:user?.plan==='pro' },
+    { name:'FÃ¶retag', price:'Offert', per:'Flera anlÃ¤ggningar', featured:false,
+      feats:['Allt i Pro','Flera kÃ¶k','Teamkonton','LeverantÃ¶rsintegrationer','Dedikerad support'],
       btn:'Kontakta oss', disabled:false },
   ];
   return (
@@ -207,8 +207,8 @@ export function UpgradePage() {
         <div style={{ display:'inline-flex', alignItems:'center', gap:7, padding:'5px 14px', borderRadius:100, background:'var(--goldbg)', border:'1px solid var(--goldb)', fontSize:12, fontWeight:600, color:'var(--gold)', marginBottom:16 }}>
           <Crown size={13}/> Early Access
         </div>
-        <h1 className="font-serif" style={{ fontSize:36, fontWeight:600, letterSpacing:'-1px', color:'var(--t1)', marginBottom:12 }}>Enkelt. Inga överraskningar.</h1>
-        <p style={{ fontSize:16, color:'var(--t2)', maxWidth:420, margin:'0 auto' }}>Börja gratis. Uppgradera när köket är redo.</p>
+        <h1 className="font-serif" style={{ fontSize:36, fontWeight:600, letterSpacing:'-1px', color:'var(--t1)', marginBottom:12 }}>Enkelt. Inga Ã¶verraskningar.</h1>
+        <p style={{ fontSize:16, color:'var(--t2)', maxWidth:420, margin:'0 auto' }}>BÃ¶rja gratis. Uppgradera nÃ¤r kÃ¶ket Ã¤r redo.</p>
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:14 }}>
         {plans.map(p => (
