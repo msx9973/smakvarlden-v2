@@ -4,10 +4,10 @@ import { Eye, EyeOff, Crown, Check } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ WASTE PAGE ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ WASTE PAGE ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ
 export function WastePage() {
   const ings = store.getIngredients();
-  const RATES: Record<string,number> = { Fisk:12, KÃÂÃÂ¶tt:10, GrÃÂÃÂ¶nsaker:20, Mejeri:8, Torrvaror:4, Kryddor:6, Skaldjur:14, Svamp:18 };
+  const RATES: Record<string,number> = { Fisk:12, KÃÂÃÂÃÂÃÂ¶tt:10, GrÃÂÃÂÃÂÃÂ¶nsaker:20, Mejeri:8, Torrvaror:4, Kryddor:6, Skaldjur:14, Svamp:18 };
   const rows = ings.map(i => ({
     ...i,
     wastePct: RATES[i.category] ?? 10,
@@ -19,16 +19,16 @@ export function WastePage() {
     <div style={{ padding:'32px 36px', maxWidth:900, margin:'0 auto' }}>
       <div style={{ marginBottom:24 }}>
         <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Demo data</h1>
-        <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Estimerade svinncostnader ÃÂ¢ÃÂÃÂ branschschabloner, inte verkliga mÃÂÃÂ¤tningar</p>
+        <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Estimerade svinncostnader ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ branschschabloner, inte verkliga mÃÂÃÂÃÂÃÂ¤tningar</p>
       </div>
       <div style={{ padding:'12px 16px', background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', borderRadius:11, marginBottom:20, fontSize:13, color:'#1d4ed8' }}>
-        ÃÂ¢ÃÂÃÂ¹ÃÂ¯ÃÂ¸ÃÂ Alla siffror ÃÂÃÂ¤r estimat baserade pÃÂÃÂ¥ branschschabloner per kategori ÃÂ¢ÃÂÃÂ inte uppmÃÂÃÂ¤tta vÃÂÃÂ¤rden.
+        ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¹ÃÂÃÂ¯ÃÂÃÂ¸ÃÂÃÂ Alla siffror ÃÂÃÂÃÂÃÂ¤r estimat baserade pÃÂÃÂÃÂÃÂ¥ branschschabloner per kategori ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ inte uppmÃÂÃÂÃÂÃÂ¤tta vÃÂÃÂÃÂÃÂ¤rden.
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:24 }}>
         {[
           { label:'Est. svinn / dag',   value:`~${totalDay.toFixed(0)} kr` },
-          { label:'Est. svinn / mÃÂÃÂ¥nad', value:`~${(totalDay*30).toFixed(0)} kr` },
-          { label:'Est. svinn / ÃÂÃÂ¥r',    value:`~${(totalDay*365).toFixed(0)} kr` },
+          { label:'Est. svinn / mÃÂÃÂÃÂÃÂ¥nad', value:`~${(totalDay*30).toFixed(0)} kr` },
+          { label:'Est. svinn / ÃÂÃÂÃÂÃÂ¥r',    value:`~${(totalDay*365).toFixed(0)} kr` },
         ].map(s => (
           <div key={s.label} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:14, padding:'16px 18px' }}>
             <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>{s.label}</div>
@@ -55,7 +55,7 @@ export function WastePage() {
   );
 }
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ LOGIN PAGE ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ LOGIN PAGE ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ
 export function LoginPage() {
   const { login, register } = useAuth();
   const nav = useNavigate();
@@ -86,8 +86,8 @@ export function LoginPage() {
               <path d="M7.5 1.5v5M5 3.5l2.5 3 2.5-3M2 9.5h11M3.5 9.5V13M11.5 9.5V13"/>
             </svg>
           </div>
-          <h1 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--brown)' }}>SmakvÃÂÃÂ¤rlden</h1>
-          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Demo mode fÃÂÃÂ¶r kÃÂÃÂ¶kets operativsystem</p>
+          <h1 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--brown)' }}>SmakvÃÂÃÂÃÂÃÂ¤rlden</h1>
+          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Demo mode fÃÂÃÂÃÂÃÂ¶r kÃÂÃÂÃÂÃÂ¶kets operativsystem</p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>
           <div style={{ padding:'11px 13px', borderRadius:11, background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', color:'#1d4ed8', fontSize:12.5, lineHeight:1.5, marginBottom:16 }}>
@@ -115,9 +115,9 @@ export function LoginPage() {
               <input className="inp" type="email" placeholder="din@email.se" value={email} onChange={e=>setEmail(e.target.value)} required />
             </div>
             <div>
-              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>LÃÂÃÂ¶senord</label>
+              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>LÃÂÃÂÃÂÃÂ¶senord</label>
               <div style={{ position:'relative' }}>
-                <input className="inp" type={show?'text':'password'} placeholder={mode==='register'?'Minst 6 tecken':'ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¢'} value={pw} onChange={e=>setPw(e.target.value)} required style={{ paddingRight:40 }} />
+                <input className="inp" type={show?'text':'password'} placeholder={mode==='register'?'Minst 6 tecken':'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢'} value={pw} onChange={e=>setPw(e.target.value)} required style={{ paddingRight:40 }} />
                 <button type="button" onClick={()=>setShow(v=>!v)} style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--t3)' }}>
                   {show ? <EyeOff size={14}/> : <Eye size={14}/>}
                 </button>
@@ -144,35 +144,78 @@ export function LoginPage() {
   );
 }
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ UPGRADE PAGE ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ UPGRADE PAGE ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ
+
+export function HowItWorks() {
+  const steps = [
+    { step:'1', emoji:'📸', title:'Ta en bild på ditt recept', body:'Har du recept på papper? Ta en bild med telefonen. Appen läser av ingredienser och mängder automatiskt — handskrivet eller tryckt fungerar båda.', tip:'Inga krav på snygg handstil — AI förstår ändå.' },
+    { step:'2', emoji:'✅', title:'Fyll i det som saknas', body:'Om något fattas — t.ex. hur många gram — frågar appen dig om just det. Du ser allt tydligt och sparar med ett klick.', tip:'Du bestämmer alltid. Appen gissar aldrig på egen hand.' },
+    { step:'3', emoji:'🧾', title:'Skanna din faktura varje vecka', body:'Faktura från Menigo eller Martin & Servera? Ta en bild. Appen läser av alla priser och uppdaterar dina ingredienser automatiskt.', tip:'Tar 10 sekunder. Gör det varje måndag morgon.' },
+    { step:'4', emoji:'📊', title:'Se vad du tjänar — på varje rätt', body:'Nu visar appen exakt vad varje rätt kostar att laga och hur mycket du tjänar. Gick laxen upp? Du ser direkt vilka rätter som påverkas.', tip:'Röd = du förlorar pengar. Grön = bra marginal.' },
+    { step:'5', emoji:'💡', title:'Ta rätt beslut', body:'Höj priset lite? Minska portionen med 10 gram? Appen räknar ut vad som lönar sig. Du bestämmer — men nu med fakta istället för magkänsla.', tip:'De flesta restauranger sparar 3 000–10 000 kr/månad.' },
+  ];
+  return (
+    <div style={{ padding:'48px 36px', maxWidth:860, margin:'0 auto' }}>
+      <div style={{ textAlign:'center', marginBottom:48 }}>
+        <div style={{ fontFamily:'DM Mono', fontSize:11, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:12 }}>Hur det fungerar</div>
+        <h2 className="font-serif" style={{ fontSize:34, fontWeight:700, letterSpacing:'-1px', color:'var(--t1)', marginBottom:12 }}>Två bilder. Allt klart.</h2>
+        <p style={{ fontSize:16, color:'var(--t2)', maxWidth:500, margin:'0 auto', lineHeight:1.7 }}>Du behöver inte kunna något om teknik. Du tar bilder — Smakvärlden gör resten.</p>
+      </div>
+      <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+        {steps.map((s,i) => (
+          <div key={i} style={{ display:'grid', gridTemplateColumns:'64px 1fr', gap:24, paddingBottom:40, position:'relative' }}>
+            {i < steps.length-1 && <div style={{ position:'absolute', left:31, top:64, bottom:0, width:2, background:'var(--border)' }} />}
+            <div style={{ width:64, height:64, borderRadius:'50%', background:'var(--brown)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, zIndex:1, boxShadow:'0 0 0 4px var(--cream)' }}>
+              <span style={{ fontSize:26 }}>{s.emoji}</span>
+            </div>
+            <div style={{ paddingTop:14 }}>
+              <div style={{ fontFamily:'DM Mono', fontSize:10, color:'var(--t3)', letterSpacing:1, marginBottom:4 }}>STEG {s.step}</div>
+              <h3 style={{ fontSize:17, fontWeight:700, color:'var(--t1)', marginBottom:8 }}>{s.title}</h3>
+              <p style={{ fontSize:14, color:'var(--t2)', lineHeight:1.7, marginBottom:10 }}>{s.body}</p>
+              <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 12px', background:'var(--goldbg)', borderRadius:8, fontSize:12, color:'var(--t2)', fontWeight:500 }}>💡 {s.tip}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop:8, background:'var(--brown)', borderRadius:20, padding:'28px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:20 }}>
+        <div>
+          <div className="font-serif" style={{ fontSize:20, fontWeight:600, color:'var(--goldl)', marginBottom:6 }}>Prova gratis — inga kortuppgifter</div>
+          <div style={{ fontSize:13, color:'rgba(255,255,255,.6)' }}>2 gratisskanning per månad ingår. Uppgradera när du vill.</div>
+        </div>
+        <a href="/login" style={{ padding:'12px 24px', borderRadius:10, background:'var(--gold)', color:'var(--brown)', fontSize:13, fontWeight:700, textDecoration:'none', flexShrink:0 }}>Kom igång nu →</a>
+      </div>
+    </div>
+  );
+}
+
 export function TrustPage() {
   const sections = [
     {
       title: 'Integritet',
-      body: 'SmakvÃ¤rlden sparar dina recept, ingredienser och priser lokalt i din webblÃ¤sare. Ingen information skickas till nÃ¥gon server. Din data stannar hos dig.',
+      body: 'SmakvÃÂ¤rlden sparar dina recept, ingredienser och priser lokalt i din webblÃÂ¤sare. Ingen information skickas till nÃÂ¥gon server. Din data stannar hos dig.',
     },
     {
       title: 'Villkor',
-      body: 'SmakvÃ¤rlden Ã¤r ett verktyg fÃ¶r restauranger som vill ha koll pÃ¥ sina kostnader och marginaler. Kalkyler och prisuppgifter Ã¤r vÃ¤gledande och ersÃ¤tter inte professionell redovisningsrÃ¥dgivning.',
+      body: 'SmakvÃÂ¤rlden ÃÂ¤r ett verktyg fÃÂ¶r restauranger som vill ha koll pÃÂ¥ sina kostnader och marginaler. Kalkyler och prisuppgifter ÃÂ¤r vÃÂ¤gledande och ersÃÂ¤tter inte professionell redovisningsrÃÂ¥dgivning.',
     },
     {
-      title: 'DatasÃ¤kerhet',
-      body: 'All data sparas i din webblÃ¤sare och fÃ¶rsvinner om du rensar din historik. Vi rekommenderar att du inte lagrar kÃ¤nslig affÃ¤rsinformation i demoversionen.',
+      title: 'DatasÃÂ¤kerhet',
+      body: 'All data sparas i din webblÃÂ¤sare och fÃÂ¶rsvinner om du rensar din historik. Vi rekommenderar att du inte lagrar kÃÂ¤nslig affÃÂ¤rsinformation i demoversionen.',
     },
     {
       title: 'Kontakt',
-      body: 'Har du frÃ¥gor eller vill komma i kontakt med oss? Skriv till chef@smakvarlden.se sÃ¥ Ã¥terkommer vi sÃ¥ snart vi kan.',
+      body: 'Har du frÃÂ¥gor eller vill komma i kontakt med oss? Skriv till chef@smakvarlden.se sÃÂ¥ ÃÂ¥terkommer vi sÃÂ¥ snart vi kan.',
     },
   ];
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)', padding:'32px 20px' }}>
       <div style={{ maxWidth:880, margin:'0 auto' }}>
-        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>ÃÂ¢ÃÂÃÂ Back to demo login</Link>
+        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Back to demo login</Link>
         <div style={{ background:'var(--brown)', color:'#fff', borderRadius:20, padding:'30px', marginBottom:18 }}>
           <div className="font-serif" style={{ fontSize:34, fontWeight:600, color:'var(--goldl)', marginBottom:10 }}>Integritet & villkor</div>
           <p style={{ color:'rgba(255,255,255,.72)', fontSize:15, maxWidth:660, lineHeight:1.7 }}>
-            SmakvÃ¤rlden hjÃ¤lper restauranger att hÃ¥lla koll pÃ¥ ingredienspriser, receptkostnader och marginaler â allt pÃ¥ ett stÃ¤lle.
+            SmakvÃÂ¤rlden hjÃÂ¤lper restauranger att hÃÂ¥lla koll pÃÂ¥ ingredienspriser, receptkostnader och marginaler Ã¢ÂÂ allt pÃÂ¥ ett stÃÂ¤lle.
           </p>
         </div>
         <div className="trust-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:14 }}>
@@ -185,7 +228,7 @@ export function TrustPage() {
         </div>
       </div>
         <p style={{ textAlign:'center', marginTop:28, fontSize:12, color:'var(--t3)' }}>
-          © 2026 Smakvärlden. Alla rättigheter förbehållna.
+          Â© 2026 SmakvÃ¤rlden. Alla rÃ¤ttigheter fÃ¶rbehÃ¥llna.
         </p>
     </div>
   );
@@ -194,14 +237,14 @@ export function TrustPage() {
 export function UpgradePage() {
   const { user } = useAuth();
   const plans = [
-    { name:'Gratis', price:'0 kr', per:'fÃÂÃÂ¶r alltid', featured:false,
+    { name:'Gratis', price:'0 kr', per:'fÃÂÃÂÃÂÃÂ¶r alltid', featured:false,
       feats:['Upp till 10 recept','Receptkalkylator','Ingrediensdatabas','Prisintelligens','Demo data'],
       btn:'Nuvarande plan', disabled:user?.plan==='free' },
-    { name:'Pro KÃÂÃÂ¶k', price:'59 kr', per:'/mÃÂÃÂ¥nad ÃÂÃÂ· 7 dagar gratis', featured:true,
-      feats:['ObegrÃÂÃÂ¤nsade recept','LiveprisÃÂÃÂ¶vervakning','Prisvarningar','MarginalfÃÂÃÂ¶rlust per recept','FÃÂÃÂ¶reslagna prisÃÂÃÂ¥tgÃÂÃÂ¤rder','Prioriterad support'],
-      btn:user?.plan==='pro'?'ÃÂ¢ÃÂÃÂ Aktiv plan':'Starta 7 dagar gratis', disabled:user?.plan==='pro' },
-    { name:'FÃÂÃÂ¶retag', price:'Offert', per:'Flera anlÃÂÃÂ¤ggningar', featured:false,
-      feats:['Allt i Pro','Flera kÃÂÃÂ¶k','Teamkonton','LeverantÃÂÃÂ¶rsintegrationer','Dedikerad support'],
+    { name:'Pro KÃÂÃÂÃÂÃÂ¶k', price:'59 kr', per:'/mÃÂÃÂÃÂÃÂ¥nad ÃÂÃÂÃÂÃÂ· 7 dagar gratis', featured:true,
+      feats:['ObegrÃÂÃÂÃÂÃÂ¤nsade recept','LiveprisÃÂÃÂÃÂÃÂ¶vervakning','Prisvarningar','MarginalfÃÂÃÂÃÂÃÂ¶rlust per recept','FÃÂÃÂÃÂÃÂ¶reslagna prisÃÂÃÂÃÂÃÂ¥tgÃÂÃÂÃÂÃÂ¤rder','Prioriterad support'],
+      btn:user?.plan==='pro'?'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Aktiv plan':'Starta 7 dagar gratis', disabled:user?.plan==='pro' },
+    { name:'FÃÂÃÂÃÂÃÂ¶retag', price:'Offert', per:'Flera anlÃÂÃÂÃÂÃÂ¤ggningar', featured:false,
+      feats:['Allt i Pro','Flera kÃÂÃÂÃÂÃÂ¶k','Teamkonton','LeverantÃÂÃÂÃÂÃÂ¶rsintegrationer','Dedikerad support'],
       btn:'Kontakta oss', disabled:false },
   ];
   return (
@@ -210,8 +253,8 @@ export function UpgradePage() {
         <div style={{ display:'inline-flex', alignItems:'center', gap:7, padding:'5px 14px', borderRadius:100, background:'var(--goldbg)', border:'1px solid var(--goldb)', fontSize:12, fontWeight:600, color:'var(--gold)', marginBottom:16 }}>
           <Crown size={13}/> Early Access
         </div>
-        <h1 className="font-serif" style={{ fontSize:36, fontWeight:600, letterSpacing:'-1px', color:'var(--t1)', marginBottom:12 }}>Enkelt. Inga ÃÂÃÂ¶verraskningar.</h1>
-        <p style={{ fontSize:16, color:'var(--t2)', maxWidth:420, margin:'0 auto' }}>BÃÂÃÂ¶rja gratis. Uppgradera nÃÂÃÂ¤r kÃÂÃÂ¶ket ÃÂÃÂ¤r redo.</p>
+        <h1 className="font-serif" style={{ fontSize:36, fontWeight:600, letterSpacing:'-1px', color:'var(--t1)', marginBottom:12 }}>Enkelt. Inga ÃÂÃÂÃÂÃÂ¶verraskningar.</h1>
+        <p style={{ fontSize:16, color:'var(--t2)', maxWidth:420, margin:'0 auto' }}>BÃÂÃÂÃÂÃÂ¶rja gratis. Uppgradera nÃÂÃÂÃÂÃÂ¤r kÃÂÃÂÃÂÃÂ¶ket ÃÂÃÂÃÂÃÂ¤r redo.</p>
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:14 }}>
         {plans.map(p => (
