@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
 import type { Recipe } from '../store';
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
 const SCAN_KEY = 'sv_scans_' + new Date().toISOString().slice(0,7);
+const RECIPE_SCAN_KEY = 'sv_rscans_' + new Date().toISOString().slice(0,7);
+function getRecipeScansUsed(): number { return parseInt(localStorage.getItem(RECIPE_SCAN_KEY) || '0'); }
+function incrementRecipeScans() { localStorage.setItem(RECIPE_SCAN_KEY, String(getRecipeScansUsed() + 1)); }
 
 function getScansUsed(): number {
   return parseInt(localStorage.getItem(SCAN_KEY) || '0');
@@ -20,7 +23,8 @@ export default function Recipes() {
   const [search, setSearch]   = useState('');
   const [cat, setCat]         = useState('Alla');
   const [showNew, setShowNew] = useState(false);
-  const [showScanner, setShowScanner] = useState(false);
+  const [showScanner, setShowScanner]       = useState(false);
+  const [showRecipeScanner, setShowRecipeScanner] = useState(false);
 
   const filtered = recipes.filter(r =>
     (cat === 'Alla' || r.category === cat) &&
@@ -41,9 +45,13 @@ export default function Recipes() {
           <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>{recipes.length} recept · klicka för att se kalkyl</p>
         </div>
         <div style={{ display:'flex', gap:10 }}>
+          <button onClick={() => setShowRecipeScanner(true)}
+            style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
+            <Camera size={14} /> Skanna recept
+          </button>
           <button onClick={() => setShowScanner(true)}
-            style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 20px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13.5, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
-            <ScanLine size={15} /> Skanna faktura
+            style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
+            <ScanLine size={14} /> Skanna faktura
           </button>
           <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 20px' }}>
             <Plus size={15} /> Nytt recept
@@ -137,6 +145,130 @@ export default function Recipes() {
 
       {showNew && <NewRecipeModal onClose={() => { setShowNew(false); setRecipes(store.getRecipes()); }} />}
       {showScanner && <InvoiceScanner onClose={() => { setShowScanner(false); setRecipes(store.getRecipes()); }} />}
+      {showRecipeScanner && <RecipeScanner onClose={() => { setShowRecipeScanner(false); setRecipes(store.getRecipes()); }} />}
+    </div>
+  );
+}
+
+
+interface ScannedIng { name:string; quantity:number|null; unit:string; matchedId?:string; priceSek?:number; }
+interface ScannedRec { name:string; category:string; sellingPrice:number|null; servings:number; ingredients:ScannedIng[]; }
+type RSState = 'idle'|'scanning'|'review'|'done'|'error'|'limit';
+
+function RecipeScanner({ onClose }:{ onClose:()=>void }) {
+  const [state,setState]=useState<RSState>(getRecipeScansUsed()>=SCAN_LIMIT?'limit':'idle');
+  const [file,setFile]=useState<File|null>(null);
+  const [preview,setPreview]=useState<string|null>(null);
+  const [scanned,setScanned]=useState<ScannedRec|null>(null);
+  const [error,setError]=useState('');
+  const [rName,setRName]=useState('');
+  const [rCat,setRCat]=useState('Huvudrätter');
+  const [rPrice,setRPrice]=useState('');
+  const [rServ,setRServ]=useState('1');
+  const [ings,setIngs]=useState<ScannedIng[]>([]);
+
+  function handleFile(f:File){setFile(f);if(f.type.startsWith('image/'))setPreview(URL.createObjectURL(f));else setPreview(null);}
+  function handleDrop(e:React.DragEvent){e.preventDefault();const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+
+  async function scan(){
+    if(!file)return; setState('scanning'); setError('');
+    try{
+      const b64=await new Promise<string>((res,rej)=>{const r=new FileReader();r.onload=()=>res((r.result as string).split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+      const isPdf=file.type==='application/pdf';
+      const mt=isPdf?'application/pdf':file.type as 'image/jpeg'|'image/png'|'image/webp';
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1500,
+        system:'Du är ett system som läser recept från svenska restaurangkök. Svara ENDAST med giltig JSON: {"name":"Namn","category":"Huvudrätter","servings":1,"sellingPrice":null,"ingredients":[{"name":"Lax","quantity":120,"unit":"g"}]}. Sätt quantity till null om osäker.',
+        messages:[{role:'user',content:[{type:isPdf?'document':'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:'Läs detta recept.'}]}]
+      })});
+      const data=await resp.json();
+      if(!resp.ok)throw new Error(data.error?.message||'API-fel');
+      const parsed:ScannedRec=JSON.parse(data.content[0].text.trim().replace(/```json|```/g,'').trim());
+      const si=store.getIngredients();
+      const matched=parsed.ingredients.map(x=>{const f=si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));return{...x,matchedId:f?.id,priceSek:f?.priceSek};});
+      incrementRecipeScans(); setScanned({...parsed,ingredients:matched});
+      setRName(parsed.name); setRCat(parsed.category||'Huvudrätter');
+      setRPrice(parsed.sellingPrice?String(parsed.sellingPrice):''); setRServ(String(parsed.servings||1)); setIngs(matched);
+      setState('review');
+    }catch(e:unknown){setError(e instanceof Error?e.message:'Något gick fel.');setState('error');}
+  }
+
+  function updIng(i:number,f:keyof ScannedIng,v:string|number){setIngs(p=>p.map((x,j)=>j===i?{...x,[f]:v}:x));}
+  function remIng(i:number){setIngs(p=>p.filter((_,j)=>j!==i));}
+  function addIng(){setIngs(p=>[...p,{name:'',quantity:null,unit:'g'}]);}
+
+  function saveRecipe(){
+    if(!rName.trim())return;
+    const si=store.getIngredients();
+    const ri=ings.filter(x=>x.name&&(x.quantity||0)>0).map(x=>{
+      const f=x.matchedId?si.find(s=>s.id===x.matchedId):si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));
+      return{ingredientId:f?.id||'u_'+x.name,name:x.name,quantity:x.quantity||0,unit:x.unit,unitPrice:f?.priceSek||0};
+    });
+    const raw=ri.reduce((s,x)=>s+x.quantity*x.unitPrice,0);
+    store.saveRecipe({id:'r'+Date.now(),name:rName.trim(),category:rCat,servings:parseInt(rServ)||1,sellingPriceSek:parseFloat(rPrice)||suggested(raw),ingredients:ri,createdAt:new Date().toISOString().slice(0,10)});
+    setState('done');
+  }
+
+  const mq=ings.filter(x=>!x.quantity).length;
+  const mp=ings.filter(x=>!x.matchedId&&(x.quantity||0)>0).length;
+
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(20,14,8,.55)',zIndex:500,display:'flex',alignItems:'center',justifyContent:'center',padding:20}} onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{background:'var(--white)',borderRadius:24,width:'100%',maxWidth:640,maxHeight:'92vh',overflow:'auto',boxShadow:'0 32px 80px rgba(20,14,8,.3)'}}>
+        <div style={{padding:'20px 24px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,background:'var(--white)',zIndex:10}}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}><Camera size={18} color="var(--gold)"/><h2 className="font-serif" style={{fontSize:20,fontWeight:600,color:'var(--t1)'}}>{state==='review'?'Granska & spara':'Skanna recept'}</h2></div>
+          <button onClick={onClose} style={{background:'none',border:'none',cursor:'pointer',color:'var(--t3)',padding:4}}><X size={18}/></button>
+        </div>
+        <div style={{padding:'24px'}}>
+          {state==='limit'&&<div style={{textAlign:'center',padding:'40px 20px'}}><div style={{fontSize:40,marginBottom:16}}>⏳</div><div style={{fontSize:16,fontWeight:700,color:'var(--t1)',marginBottom:16}}>Månadens skanning är slut</div><Link to="/upgrade" onClick={onClose} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',color:'#fff',fontSize:13,fontWeight:600,textDecoration:'none'}}>Uppgradera till Pro</Link></div>}
+          {state==='idle'&&(<>
+            <div style={{fontSize:13,color:'var(--t2)',lineHeight:1.6,marginBottom:20}}>Ta en bild på ett recept — handskrivet eller tryckt. <strong>Inga krav på snygg handstil.</strong> AI läser ingredienser och mängder. Om något saknas frågar vi dig.<span style={{color:'var(--gold)',fontWeight:600}}> {SCAN_LIMIT-getRecipeScansUsed()} av {SCAN_LIMIT} gratisskanning kvar.</span></div>
+            <div onDrop={handleDrop} onDragOver={e=>e.preventDefault()} style={{border:'2px dashed var(--border)',borderRadius:16,padding:'40px 20px',textAlign:'center',marginBottom:16,cursor:'pointer',transition:'all .2s'}} onClick={()=>document.getElementById('rfi')?.click()} onMouseEnter={e=>(e.currentTarget.style.borderColor='var(--gold)')} onMouseLeave={e=>(e.currentTarget.style.borderColor='var(--border)')}>
+              <input id="rfi" type="file" accept="image/*,application/pdf" style={{display:'none'}} onChange={e=>e.target.files?.[0]&&handleFile(e.target.files[0])}/>
+              <Camera size={28} color="var(--t3)" style={{marginBottom:12}}/>
+              <div style={{fontSize:14,fontWeight:600,color:'var(--t1)',marginBottom:4}}>Dra hit receptet eller klicka</div>
+              <div style={{fontSize:12,color:'var(--t3)'}}>Foto eller PDF — handskrivet fungerar!</div>
+            </div>
+            {preview&&<div style={{marginBottom:16,borderRadius:12,overflow:'hidden',border:'1px solid var(--border)'}}><img src={preview} alt="Recept" style={{width:'100%',maxHeight:220,objectFit:'cover'}}/></div>}
+            {file&&!preview&&<div style={{display:'flex',alignItems:'center',gap:10,padding:'12px 16px',background:'var(--goldbg)',borderRadius:10,marginBottom:16}}><span>📄</span><span style={{fontSize:13,fontWeight:600}}>{file.name}</span></div>}
+            <div style={{display:'flex',gap:10,justifyContent:'flex-end'}}>
+              <button onClick={onClose} style={{padding:'10px 20px',borderRadius:10,border:'1px solid var(--border)',background:'none',cursor:'pointer',fontSize:13,color:'var(--t2)'}}>Avbryt</button>
+              <button onClick={scan} disabled={!file} style={{padding:'10px 24px',borderRadius:10,background:file?'var(--brown)':'var(--border)',border:'none',color:file?'#fff':'var(--t3)',fontSize:13,fontWeight:600,cursor:file?'pointer':'not-allowed'}}><Camera size={14} style={{display:'inline',marginRight:6}}/>Skanna recept</button>
+            </div>
+          </>)}
+          {state==='scanning'&&<div style={{textAlign:'center',padding:'48px 20px'}}><div style={{width:48,height:48,border:'3px solid var(--border)',borderTopColor:'var(--gold)',borderRadius:'50%',margin:'0 auto 20px',animation:'spin 1s linear infinite'}}/><div style={{fontSize:16,fontWeight:600,color:'var(--t1)',marginBottom:8}}>Läser receptet...</div><div style={{fontSize:13,color:'var(--t2)'}}>AI analyserar ingredienser och mängder</div><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>}
+          {state==='error'&&<div style={{textAlign:'center',padding:'40px 20px'}}><AlertCircle size={40} color="var(--red)" style={{marginBottom:12}}/><div style={{fontSize:15,fontWeight:600,color:'var(--t1)',marginBottom:8}}>Något gick fel</div><div style={{fontSize:13,color:'var(--t2)',marginBottom:24}}>{error}</div><button onClick={()=>setState('idle')} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer'}}>Försök igen</button></div>}
+          {state==='done'&&<div style={{textAlign:'center',padding:'40px 20px'}}><CheckCircle size={48} color="var(--green)" style={{marginBottom:12}}/><div style={{fontSize:16,fontWeight:700,color:'var(--t1)',marginBottom:8}}>Recept sparat! 🎉</div><div style={{fontSize:13,color:'var(--t2)',marginBottom:24}}><strong>{rName}</strong> är nu sparat med kalkyl. Skanna din faktura för att uppdatera priserna och se marginalen.</div><button onClick={onClose} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer'}}>Stäng och se recept</button></div>}
+          {state==='review'&&scanned&&(<>
+            {mq>0&&<div style={{padding:'12px 16px',background:'rgba(201,168,76,.1)',border:'1px solid rgba(201,168,76,.3)',borderRadius:10,fontSize:13,color:'hsl(44 54% 35%)',marginBottom:16}}>⚠️ <strong>{mq} ingrediens{mq>1?'er':''}</strong> saknar mängd — fyll i dem nedan så blir kalkylen rätt.</div>}
+            {mp>0&&<div style={{padding:'12px 16px',background:'rgba(185,28,28,.06)',border:'1px solid rgba(185,28,28,.15)',borderRadius:10,fontSize:13,color:'var(--red)',marginBottom:16}}>ℹ️ <strong>{mp} ingrediens{mp>1?'er':''}</strong> finns inte i din ingrediensdatabas än. Lägg till dem under Ingredienser för att få rätt kalkyl.</div>}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:20}}>
+              <div style={{gridColumn:'1/-1'}}><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Receptnamn</label><input className="inp" value={rName} onChange={e=>setRName(e.target.value)}/></div>
+              <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Kategori</label><select className="inp" value={rCat} onChange={e=>setRCat(e.target.value)}>{CATS.filter(c=>c!=='Alla').map(c=><option key={c}>{c}</option>)}</select></div>
+              <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Portioner</label><input className="inp" type="number" min="1" value={rServ} onChange={e=>setRServ(e.target.value)}/></div>
+              <div style={{gridColumn:'1/-1'}}><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Försäljningspris (kr) — lämna tomt = auto</label><input className="inp" type="number" placeholder="t.ex. 139" value={rPrice} onChange={e=>setRPrice(e.target.value)}/></div>
+            </div>
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',marginBottom:10}}>Ingredienser — kontrollera mängder</div>
+              <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                {ings.map((x,i)=>(
+                  <div key={i} style={{display:'grid',gridTemplateColumns:'1fr 90px 70px auto',gap:8,alignItems:'center',padding:'10px 12px',borderRadius:10,background:x.quantity?(x.matchedId?'var(--goldbg)':'var(--muted)'):'rgba(185,28,28,.05)',border:`1px solid ${x.quantity?'var(--border)':'rgba(185,28,28,.2)'}`}}>
+                    <div><input className="inp" value={x.name} onChange={e=>updIng(i,'name',e.target.value)} style={{padding:'6px 10px',fontSize:13}}/>{x.matchedId&&<div style={{fontSize:10,color:'var(--green)',marginTop:2,fontWeight:600}}>✓ Matchar din databas</div>}{!x.matchedId&&x.name&&<div style={{fontSize:10,color:'var(--t3)',marginTop:2}}>Ej i din databas</div>}</div>
+                    <input className="inp" type="number" placeholder="Mängd" value={x.quantity??''} onChange={e=>updIng(i,'quantity',parseFloat(e.target.value)||0)} style={{padding:'6px 10px',fontSize:13,textAlign:'center',borderColor:!x.quantity?'rgba(185,28,28,.4)':'var(--border)'}}/>
+                    <select className="inp" value={x.unit} onChange={e=>updIng(i,'unit',e.target.value)} style={{padding:'6px 8px',fontSize:12}}>{['g','kg','ml','liter','styck','msk','tsk'].map(u=><option key={u}>{u}</option>)}</select>
+                    <button onClick={()=>remIng(i)} style={{padding:'6px 10px',borderRadius:8,border:'1px solid var(--border)',background:'none',cursor:'pointer',color:'var(--t3)',fontSize:12}}>✕</button>
+                  </div>
+                ))}
+              </div>
+              <button onClick={addIng} style={{fontSize:13,color:'var(--gold)',background:'none',border:'none',cursor:'pointer',fontWeight:600,marginTop:10}}>+ Lägg till ingrediens</button>
+            </div>
+            <div style={{display:'flex',gap:10,justifyContent:'flex-end'}}>
+              <button onClick={onClose} style={{padding:'10px 20px',borderRadius:10,border:'1px solid var(--border)',background:'none',cursor:'pointer',fontSize:13,color:'var(--t2)'}}>Avbryt</button>
+              <button onClick={saveRecipe} disabled={!rName.trim()} style={{padding:'10px 24px',borderRadius:10,background:rName.trim()?'var(--brown)':'var(--border)',border:'none',color:rName.trim()?'#fff':'var(--t3)',fontSize:13,fontWeight:600,cursor:rName.trim()?'pointer':'not-allowed'}}>Spara recept</button>
+            </div>
+          </>)}
+        </div>
+      </div>
     </div>
   );
 }
