@@ -27,41 +27,41 @@ type PanelId = 'market' | 'product' | 'price' | 'suppliers' | 'demo' | 'ask';
 const COPY = {
   sv: {
     badge: 'Interaktiv investerarpresentation',
-    nav: ['Behov', 'Produkt', 'Prisintelligens', 'Leverantörer', 'Demo', 'Kontakt'],
+    nav: ['Behov', 'Produkt', 'Prisintelligens', 'LeverantÃ¶rer', 'Demo', 'Kontakt'],
     langLabel: 'Svenska',
-    heroTitle: 'Kitchen OS för svenska restauranger',
+    heroTitle: 'Kitchen OS fÃ¶r svenska restauranger',
     heroText:
-      'Smakvärlden hjälper kockar se verklig food cost, prisändringar, svinn och marginalrisk innan vinsten försvinner.',
+      'SmakvÃ¤rlden hjÃ¤lper kockar se verklig food cost, prisÃ¤ndringar, svinn och marginalrisk innan vinsten fÃ¶rsvinner.',
     primary: 'Testa demon',
     secondary: 'Se starkaste funktionen',
-    statIntro: 'Svenska restauranger behöver spara pengar och tid nu',
+    statIntro: 'Svenska restauranger behÃ¶ver spara pengar och tid nu',
     stats: [
-      { value: '+0,5%', label: 'försäljningsvolym 2025', detail: 'Svag volymtillväxt gör varje marginalbeslut viktigare.' },
-      { value: '+3,7%', label: 'restaurangpriser 2025', detail: 'Kunder märker högre priser samtidigt som kostnaderna stiger.' },
-      { value: '29 300', label: 'restaurang- och cateringföretag', detail: 'En stor marknad med samma praktiska problem i köket.' },
+      { value: '+0,5%', label: 'fÃ¶rsÃ¤ljningsvolym 2025', detail: 'Svag volymtillvÃ¤xt gÃ¶r varje marginalbeslut viktigare.' },
+      { value: '+3,7%', label: 'restaurangpriser 2025', detail: 'Kunder mÃ¤rker hÃ¶gre priser samtidigt som kostnaderna stiger.' },
+      { value: '29 300', label: 'restaurang- och cateringfÃ¶retag', detail: 'En stor marknad med samma praktiska problem i kÃ¶ket.' },
     ],
-    pressureTitle: 'Kockar pressas från alla håll',
-    pressureItems: ['Leverantörspriser', 'Svinn', 'Personal', 'Hyra', 'Energi', 'Långsamma kalkylblad'],
-    productTitle: 'En dashboard för food cost, svinn och vinst',
+    pressureTitle: 'Kockar pressas frÃ¥n alla hÃ¥ll',
+    pressureItems: ['LeverantÃ¶rspriser', 'Svinn', 'Personal', 'Hyra', 'Energi', 'LÃ¥ngsamma kalkylblad'],
+    productTitle: 'En dashboard fÃ¶r food cost, svinn och vinst',
     productText:
-      'Byggd för trötta kök: snabb att skanna, enkel att agera på och fokuserad på beslut som skyddar marginalen.',
+      'Byggd fÃ¶r trÃ¶tta kÃ¶k: snabb att skanna, enkel att agera pÃ¥ och fokuserad pÃ¥ beslut som skyddar marginalen.',
     productCards: [
-      { title: 'Food cost', text: 'Se verklig kostnad per rätt.' },
-      { title: 'Prisändringar', text: 'Se vad som ändrats och vilka recept som påverkas.' },
-      { title: 'Vinstskydd', text: 'Få förslag innan marginalen försvinner.' },
+      { title: 'Food cost', text: 'Se verklig kostnad per rÃ¤tt.' },
+      { title: 'PrisÃ¤ndringar', text: 'Se vad som Ã¤ndrats och vilka recept som pÃ¥verkas.' },
+      { title: 'Vinstskydd', text: 'FÃ¥ fÃ¶rslag innan marginalen fÃ¶rsvinner.' },
     ],
-    priceTitle: 'Ingredienspris ändras -> recept påverkas -> marginal tappas -> åtgärd',
+    priceTitle: 'Ingredienspris Ã¤ndras -> recept pÃ¥verkas -> marginal tappas -> Ã¥tgÃ¤rd',
     alert: 'Laxpris +12%',
-    affected: 'Påverkade rätter',
+    affected: 'PÃ¥verkade rÃ¤tter',
     dishes: ['Salmon poke', 'Nigiri', 'Laxpasta'],
     margin: 'Marginal',
-    action: 'Föreslagen åtgärd',
+    action: 'FÃ¶reslagen Ã¥tgÃ¤rd',
     actionText: '+6-9 kr menypris eller byt ingrediens',
-    suppliersTitle: 'Byggt runt svensk leverantörsverklighet',
+    suppliersTitle: 'Byggt runt svensk leverantÃ¶rsverklighet',
     suppliersText:
-      'Smakvärlden är inte en generisk receptapp. Produkten byggs runt inköpskanaler svenska restauranger redan använder.',
-    supplierCards: ['Martin & Servera', 'Menigo', 'Lokala leverantörer', 'Prisimporter'],
-    calculatorTitle: 'Varje recept blir ett affärsbeslut',
+      'SmakvÃ¤rlden Ã¤r inte en generisk receptapp. Produkten byggs runt inkÃ¶pskanaler svenska restauranger redan anvÃ¤nder.',
+    supplierCards: ['Martin & Servera', 'Menigo', 'Lokala leverantÃ¶rer', 'Prisimporter'],
+    calculatorTitle: 'Varje recept blir ett affÃ¤rsbeslut',
     calculatorRows: [
       ['Lax', '16 kr'],
       ['Ris', '6 kr'],
@@ -69,20 +69,20 @@ const COPY = {
       ['Food cost', '39 kr'],
       ['Svinn +20%', '7,8 kr'],
       ['Total kostnad', '46,8 kr'],
-      ['Försäljningspris', '139 kr'],
+      ['FÃ¶rsÃ¤ljningspris', '139 kr'],
     ],
     demoTitle: 'Demo som investerare kan testa direkt',
-    demoSteps: ['Logga in med demo@smakvarlden.se / demo1234', 'Gå till Dashboard', 'Öppna Price Intelligence'],
-    demoButton: 'Öppna appdemo',
-    roadmapTitle: 'Lansera starkaste versionen först',
+    demoSteps: ['Logga in med demo@smakvarlden.se / demo1234', 'GÃ¥ till Dashboard', 'Ãppna Price Intelligence'],
+    demoButton: 'Ãppna appdemo',
+    roadmapTitle: 'Lansera starkaste versionen fÃ¶rst',
     roadmap: ['Dashboard', 'Price Intelligence', 'Ingredienser', 'Recept', 'Kalkylator', 'Pricing / Upgrade'],
-    askTitle: 'Byggt av kockar. Gjort för moderna svenska kök.',
+    askTitle: 'Byggt av kockar. Gjort fÃ¶r moderna svenska kÃ¶k.',
     askText:
-      'Smakvärlden hjälper restauranger förstå verklig food cost, skydda vinst och fatta bättre menybeslut.',
+      'SmakvÃ¤rlden hjÃ¤lper restauranger fÃ¶rstÃ¥ verklig food cost, skydda vinst och fatta bÃ¤ttre menybeslut.',
     contact: 'Kontakt',
     email: 'msx9973@gmail.com',
     phone: '0700483921',
-    trust: 'Demo data / exempelberäkningar. Riktig produktion kräver backend-auth, dataskydd och leverantörsavtal.',
+    trust: 'Demo data / exempelberÃ¤kningar. Riktig produktion krÃ¤ver backend-auth, dataskydd och leverantÃ¶rsavtal.',
   },
   en: {
     badge: 'Interactive investor presentation',
@@ -163,7 +163,7 @@ export default function InvestorPresentation() {
     <main className="ip">
       <header className="ip-nav">
         <button className="ip-logo" onClick={() => goTo('top')} aria-label="Smakvarlden">
-          <span>Smakvärlden</span>
+          <span>SmakvÃ¤rlden</span>
           <small>Kitchen OS</small>
         </button>
 
@@ -398,5 +398,61 @@ export default function InvestorPresentation() {
         <span>{t.trust}</span>
       </footer>
     </main>
+
+        {/* RECIPE SCANNER SLIDE */}
+        <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'80px', background:'var(--cream)' }}>
+          <div style={{ maxWidth:900, width:'100%' }}>
+            <div style={{ fontFamily:'DM Mono', fontSize:11, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:16 }}>Ny funktion</div>
+            <h2 className="font-serif" style={{ fontSize:clamp(36,5,'vw',56), fontWeight:700, letterSpacing:'-1.5px', color:'var(--t1)', marginBottom:20, fontSize:52 }}>
+              Skanna ett recept.<br /><span style={{ color:'var(--gold)' }}>Spara kalkylen.</span>
+            </h2>
+            <p style={{ fontSize:18, color:'var(--t2)', lineHeight:1.7, marginBottom:48, maxWidth:580 }}>
+              Kocken tar en bild på sitt recept — handskrivet eller tryckt. AI läser ingredienser och mängder. Recept med full kostnadskalkyl sparas på 60 sekunder.
+            </p>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:16 }}>
+              {[
+                { icon:'📸', title:'Foto av recept', body:'Handskrivet eller tryckt — båda fungerar' },
+                { icon:'🤖', title:'AI läser det', body:'Ingredienser, mängder och enheter extraheras' },
+                { icon:'📊', title:'Kalkyl direkt', body:'Kostnad och marginal beräknas automatiskt' },
+              ].map((c,i) => (
+                <div key={i} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:16, padding:28 }}>
+                  <div style={{ fontSize:32, marginBottom:12 }}>{c.icon}</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:'var(--t1)', marginBottom:6 }}>{c.title}</div>
+                  <div style={{ fontSize:13, color:'var(--t2)', lineHeight:1.6 }}>{c.body}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* INVOICE SCANNER SLIDE */}
+        <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'80px', background:'var(--brown)' }}>
+          <div style={{ maxWidth:900, width:'100%' }}>
+            <div style={{ fontFamily:'DM Mono', fontSize:11, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:16 }}>Veckofunktion</div>
+            <h2 className="font-serif" style={{ fontSize:52, fontWeight:700, letterSpacing:'-1.5px', color:'#fff', marginBottom:20 }}>
+              Skanna fakturan.<br /><span style={{ color:'var(--goldl)', fontStyle:'italic' }}>Alla marginaler uppdateras.</span>
+            </h2>
+            <p style={{ fontSize:18, color:'rgba(255,255,255,.65)', lineHeight:1.7, marginBottom:48, maxWidth:580 }}>
+              Varje vecka tar kocken en bild på sin leveransfaktura. Appen läser av alla priser automatiskt. Alla recept uppdateras direkt — och du ser exakt vilka rätter som tappat marginal.
+            </p>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:40 }}>
+              {[
+                { icon:'🧾', title:'Bild på fakturan', body:'Från Menigo, Martin & Servera eller annan grossist' },
+                { icon:'⚡', title:'Priser uppdateras', body:'Alla ingredienser får nya priser automatiskt' },
+                { icon:'📊', title:'Marginaler räknas om', body:'Alla recept uppdateras direkt med nya kostnader' },
+                { icon:'🎯', title:'Åtgärd föreslås', body:'Höj priset? Minska portionen? Appen beräknar' },
+              ].map((c,i) => (
+                <div key={i} style={{ background:'rgba(255,255,255,.07)', border:'1px solid rgba(255,255,255,.12)', borderRadius:16, padding:24 }}>
+                  <div style={{ fontSize:28, marginBottom:10 }}>{c.icon}</div>
+                  <div style={{ fontSize:15, fontWeight:700, color:'#fff', marginBottom:4 }}>{c.title}</div>
+                  <div style={{ fontSize:13, color:'rgba(255,255,255,.55)', lineHeight:1.6 }}>{c.body}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ background:'rgba(201,168,76,.15)', border:'1px solid rgba(201,168,76,.3)', borderRadius:14, padding:'16px 24px', fontSize:14, color:'var(--goldl)', fontWeight:600 }}>
+              💡 2 gratisskanning per månad ingår. Obegränsad skanning på Pro-planen.
+            </div>
+          </div>
+        </div>
   );
 }
