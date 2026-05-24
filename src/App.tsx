@@ -34,8 +34,8 @@ export default function App() {
           <Route path="/contact"      element={<TrustPage />} />
 
           {/* Protected app routes */}
-          <Route path="/"            element={<Protected><Dashboard /></Protected>} />
-          <Route path="/dashboard"   element={<Navigate to="/" replace />} />
+          <Route path="/"            element={<InvestorPresentation />} />
+          <Route path="/dashboard"   element={<Protected><Dashboard /></Protected>} />
           <Route path="/price-intel" element={<Protected><PriceIntel /></Protected>} />
           <Route path="/recipes"     element={<Protected><Recipes /></Protected>} />
           <Route path="/recipes/:id" element={<Protected><RecipeDetail /></Protected>} />

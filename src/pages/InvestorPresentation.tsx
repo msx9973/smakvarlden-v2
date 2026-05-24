@@ -3,6 +3,7 @@ import {
   ArrowRight,
   BarChart3,
   Calculator,
+  Camera,
   Check,
   CircleDollarSign,
   ExternalLink,
@@ -11,6 +12,7 @@ import {
   LockKeyhole,
   Menu,
   PackageCheck,
+  ReceiptText,
   ShieldCheck,
   ShoppingBasket,
   Sparkles,
@@ -22,12 +24,12 @@ import {
 import './InvestorPresentation.css';
 
 type Lang = 'sv' | 'en';
-type PanelId = 'market' | 'product' | 'price' | 'suppliers' | 'demo' | 'ask';
+type PanelId = 'market' | 'product' | 'scanners' | 'price' | 'suppliers' | 'demo' | 'ask';
 
 const COPY = {
   sv: {
     badge: 'Interaktiv investerarpresentation',
-    nav: ['Behov', 'Produkt', 'Prisintelligens', 'Leverantörer', 'Demo', 'Kontakt'],
+    nav: ['Behov', 'Produkt', 'Skanning', 'Prisintelligens', 'Leverantörer', 'Demo', 'Kontakt'],
     langLabel: 'Svenska',
     heroTitle: 'Kitchen OS för svenska restauranger',
     heroText:
@@ -49,6 +51,14 @@ const COPY = {
       { title: 'Food cost', text: 'Se verklig kostnad per rätt.' },
       { title: 'Prisändringar', text: 'Se vad som ändrats och vilka recept som påverkas.' },
       { title: 'Vinstskydd', text: 'Få förslag innan marginalen försvinner.' },
+    ],
+    scannerTitle: 'Senaste uppdateringen: recept- och fakturaskanning',
+    scannerText:
+      'Kocken kan fotografera ett recept eller en leverantörsfaktura. Appen läser ingredienser, mängder och priser så kalkylen uppdateras snabbare.',
+    scannerCards: [
+      { title: 'Receptscanner', text: 'Gör handskrivna eller tryckta recept till sparade kalkyler med ingredienser och mängder.' },
+      { title: 'Fakturascanner', text: 'Läser priser från fakturor, till exempel Martin & Servera, Menigo och andra grossister.' },
+      { title: '2 gratisskanningar', text: 'Gratisversionen kan testa flödet. Pro-planen kan byggas runt mer frekvent skanning.' },
     ],
     priceTitle: 'Ingredienspris ändras -> recept påverkas -> marginal tappas -> åtgärd',
     alert: 'Laxpris +12%',
@@ -86,7 +96,7 @@ const COPY = {
   },
   en: {
     badge: 'Interactive investor presentation',
-    nav: ['Need', 'Product', 'Price Intel', 'Suppliers', 'Demo', 'Contact'],
+    nav: ['Need', 'Product', 'Scanners', 'Price Intel', 'Suppliers', 'Demo', 'Contact'],
     langLabel: 'English',
     heroTitle: 'Kitchen OS for Swedish restaurants',
     heroText:
@@ -108,6 +118,14 @@ const COPY = {
       { title: 'Food cost', text: 'See the real cost of every dish.' },
       { title: 'Price changes', text: 'See what changed and which recipes are affected.' },
       { title: 'Profit protection', text: 'Get suggested actions before margin disappears.' },
+    ],
+    scannerTitle: 'Latest update: recipe and invoice scanning',
+    scannerText:
+      'The chef can photograph a recipe or supplier invoice. The app reads ingredients, quantities and prices so calculations update faster.',
+    scannerCards: [
+      { title: 'Recipe scanner', text: 'Turns handwritten or printed recipes into saved calculations with ingredients and quantities.' },
+      { title: 'Invoice scanner', text: 'Reads supplier invoice prices, including Martin & Servera, Menigo and other wholesalers.' },
+      { title: '2 free scans', text: 'The free version can test the flow. The Pro plan can be built around more frequent scanning.' },
     ],
     priceTitle: 'Ingredient price changes -> recipes affected -> margin loss -> action',
     alert: 'Salmon price +12%',
@@ -145,7 +163,7 @@ const COPY = {
   },
 };
 
-const sectionIds: PanelId[] = ['market', 'product', 'price', 'suppliers', 'demo', 'ask'];
+const sectionIds: PanelId[] = ['market', 'product', 'scanners', 'price', 'suppliers', 'demo', 'ask'];
 
 function goTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -289,9 +307,29 @@ export default function InvestorPresentation() {
         </div>
       </section>
 
-      <section id="price" className="ip-section ip-price">
+      <section id="scanners" className="ip-section">
         <div className="ip-section-head">
           <span>03</span>
+          <h2>{t.scannerTitle}</h2>
+        </div>
+        <p className="ip-lead">{t.scannerText}</p>
+        <div className="ip-feature-list">
+          {t.scannerCards.map((card, index) => {
+            const Icon = [Camera, ReceiptText, Sparkles][index];
+            return (
+              <article key={card.title}>
+                <Icon size={20} />
+                <strong>{card.title}</strong>
+                <p>{card.text}</p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="price" className="ip-section ip-price">
+        <div className="ip-section-head">
+          <span>04</span>
           <h2>{t.priceTitle}</h2>
         </div>
         <div className="ip-alert-board">
@@ -327,7 +365,7 @@ export default function InvestorPresentation() {
         </div>
         <div>
           <div className="ip-section-head">
-            <span>04</span>
+            <span>05</span>
             <h2>{t.suppliersTitle}</h2>
           </div>
           <p className="ip-lead">{t.suppliersText}</p>
@@ -336,7 +374,7 @@ export default function InvestorPresentation() {
 
       <section className="ip-section ip-calculator">
         <div className="ip-section-head">
-          <span>05</span>
+          <span>06</span>
           <h2>{t.calculatorTitle}</h2>
         </div>
         <div className="ip-calc-card">
@@ -356,7 +394,7 @@ export default function InvestorPresentation() {
       <section id="demo" className="ip-section ip-demo">
         <div>
           <div className="ip-section-head">
-            <span>06</span>
+            <span>07</span>
             <h2>{t.demoTitle}</h2>
           </div>
           <ol>
@@ -373,7 +411,7 @@ export default function InvestorPresentation() {
 
       <section className="ip-section">
         <div className="ip-section-head">
-          <span>07</span>
+          <span>08</span>
           <h2>{t.roadmapTitle}</h2>
         </div>
         <div className="ip-roadmap">
