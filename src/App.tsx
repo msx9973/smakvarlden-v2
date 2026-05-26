@@ -10,6 +10,7 @@ import Ingredients from './pages/Ingredients';
 import PriceIntel from './pages/PriceIntel';
 import Analytics from './pages/Analytics';
 import InvestorPresentation from './pages/InvestorPresentation';
+import Landing from './pages/Landing';
 import { LoginPage, TrustPage, UpgradePage, WastePage } from './pages/Other';
 import './index.css';
 
@@ -24,7 +25,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
+          <Route path="/"             element={<Landing />} />
           <Route path="/login"        element={<LoginPage />} />
           <Route path="/presentation" element={<InvestorPresentation />} />
           <Route path="/investor"     element={<InvestorPresentation />} />
@@ -32,9 +33,6 @@ export default function App() {
           <Route path="/privacy"      element={<TrustPage />} />
           <Route path="/terms"        element={<TrustPage />} />
           <Route path="/contact"      element={<TrustPage />} />
-
-          {/* Protected app routes */}
-          <Route path="/"            element={<InvestorPresentation />} />
           <Route path="/dashboard"   element={<Protected><Dashboard /></Protected>} />
           <Route path="/price-intel" element={<Protected><PriceIntel /></Protected>} />
           <Route path="/recipes"     element={<Protected><Recipes /></Protected>} />
@@ -44,8 +42,6 @@ export default function App() {
           <Route path="/analytics"   element={<Protected><Analytics /></Protected>} />
           <Route path="/waste"       element={<Protected><WastePage /></Protected>} />
           <Route path="/upgrade"     element={<Protected><UpgradePage /></Protected>} />
-
-          {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
