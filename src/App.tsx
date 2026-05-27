@@ -26,7 +26,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Public routes */}
-          <Route path="/"             element={<LoginPage />} />
+          <Route path="/"             element={<InvestorPresentation />} />
           <Route path="/login"        element={<LoginPage />} />
           <Route path="/landing"      element={<Landing />} />
           <Route path="/presentation" element={<InvestorPresentation />} />
@@ -48,7 +48,7 @@ export default function App() {
           <Route path="/upgrade"     element={<Protected><UpgradePage /></Protected>} />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
