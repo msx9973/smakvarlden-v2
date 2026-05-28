@@ -1,4 +1,4 @@
-ï»¿import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ArrowRight,
   BarChart3,
@@ -29,49 +29,49 @@ type PanelId = 'market' | 'product' | 'scanners' | 'price' | 'suppliers' | 'demo
 const COPY = {
   sv: {
     badge: 'Interaktiv investerarpresentation',
-    nav: ['Behov', 'Produkt', 'Skanning', 'Prisintelligens', 'LeverantÃ¶rer', 'Demo', 'Kontakt'],
+    nav: ['Behov', 'Produkt', 'Skanning', 'Prisintelligens', 'LeverantÃÂ¶rer', 'Demo', 'Kontakt'],
     langLabel: 'Svenska',
-    heroTitle: 'Kitchen OS fÃ¶r svenska restauranger',
+    heroTitle: 'Kitchen OS fÃÂ¶r svenska restauranger',
     heroText:
-      'SmakvÃ¤rlden hjÃ¤lper kockar se verklig food cost, prisÃ¤ndringar, svinn och marginalrisk innan vinsten fÃ¶rsvinner.',
+      'SmakvÃÂ¤rlden hjÃÂ¤lper kockar se verklig food cost, prisÃÂ¤ndringar, svinn och marginalrisk innan vinsten fÃÂ¶rsvinner.',
     primary: 'Testa demon',
     secondary: 'Se starkaste funktionen',
-    statIntro: 'Svenska restauranger behÃ¶ver spara pengar och tid nu',
+    statIntro: 'Svenska restauranger behÃÂ¶ver spara pengar och tid nu',
     stats: [
-      { value: '+0,5%', label: 'fÃ¶rsÃ¤ljningsvolym 2025', detail: 'Svag volymtillvÃ¤xt gÃ¶r varje marginalbeslut viktigare.' },
-      { value: '+3,7%', label: 'restaurangpriser 2025', detail: 'Kunder mÃ¤rker hÃ¶gre priser samtidigt som kostnaderna stiger.' },
-      { value: '29 300', label: 'restaurang- och cateringfÃ¶retag', detail: 'En stor marknad med samma praktiska problem i kÃ¶ket.' },
+      { value: '+0,5%', label: 'fÃÂ¶rsÃÂ¤ljningsvolym 2025', detail: 'Svag volymtillvÃÂ¤xt gÃÂ¶r varje marginalbeslut viktigare.' },
+      { value: '+3,7%', label: 'restaurangpriser 2025', detail: 'Kunder mÃÂ¤rker hÃÂ¶gre priser samtidigt som kostnaderna stiger.' },
+      { value: '29 300', label: 'restaurang- och cateringfÃÂ¶retag', detail: 'En stor marknad med samma praktiska problem i kÃÂ¶ket.' },
     ],
-    pressureTitle: 'Kockar pressas frÃ¥n alla hÃ¥ll',
-    pressureItems: ['LeverantÃ¶rspriser', 'Svinn', 'Personal', 'Hyra', 'Energi', 'LÃ¥ngsamma kalkylblad'],
-    productTitle: 'En dashboard fÃ¶r food cost, svinn och vinst',
+    pressureTitle: 'Kockar pressas frÃÂ¥n alla hÃÂ¥ll',
+    pressureItems: ['LeverantÃÂ¶rspriser', 'Svinn', 'Personal', 'Hyra', 'Energi', 'LÃÂ¥ngsamma kalkylblad'],
+    productTitle: 'En dashboard fÃÂ¶r food cost, svinn och vinst',
     productText:
-      'Byggd fÃ¶r trÃ¶tta kÃ¶k: snabb att skanna, enkel att agera pÃ¥ och fokuserad pÃ¥ beslut som skyddar marginalen.',
+      'Byggd fÃÂ¶r trÃÂ¶tta kÃÂ¶k: snabb att skanna, enkel att agera pÃÂ¥ och fokuserad pÃÂ¥ beslut som skyddar marginalen.',
     productCards: [
-      { title: 'Food cost', text: 'Se verklig kostnad per rÃ¤tt.' },
-      { title: 'PrisÃ¤ndringar', text: 'Se vad som Ã¤ndrats och vilka recept som pÃ¥verkas.' },
-      { title: 'Vinstskydd', text: 'FÃ¥ fÃ¶rslag innan marginalen fÃ¶rsvinner.' },
+      { title: 'Food cost', text: 'Se verklig kostnad per rÃÂ¤tt.' },
+      { title: 'PrisÃÂ¤ndringar', text: 'Se vad som ÃÂ¤ndrats och vilka recept som pÃÂ¥verkas.' },
+      { title: 'Vinstskydd', text: 'FÃÂ¥ fÃÂ¶rslag innan marginalen fÃÂ¶rsvinner.' },
     ],
     scannerTitle: 'Senaste uppdateringen: recept- och fakturaskanning',
     scannerText:
-      'Kocken kan fotografera ett recept eller en leverantÃ¶rsfaktura. Appen lÃ¤ser ingredienser, mÃ¤ngder och priser sÃ¥ kalkylen uppdateras snabbare.',
+      'Kocken kan fotografera ett recept eller en leverantÃÂ¶rsfaktura. Appen lÃÂ¤ser ingredienser, mÃÂ¤ngder och priser sÃÂ¥ kalkylen uppdateras snabbare.',
     scannerCards: [
-      { title: 'Receptscanner', text: 'GÃ¶r handskrivna eller tryckta recept till sparade kalkyler med ingredienser och mÃ¤ngder.' },
-      { title: 'Fakturascanner', text: 'LÃ¤ser priser frÃ¥n fakturor, till exempel Martin & Servera, Menigo och andra grossister.' },
-      { title: '2 gratisskanningar', text: 'Gratisversionen kan testa flÃ¶det. Pro-planen kan byggas runt mer frekvent skanning.' },
+      { title: 'Receptscanner', text: 'GÃÂ¶r handskrivna eller tryckta recept till sparade kalkyler med ingredienser och mÃÂ¤ngder.' },
+      { title: 'Fakturascanner', text: 'LÃÂ¤ser priser frÃÂ¥n fakturor, till exempel Martin & Servera, Menigo och andra grossister.' },
+      { title: '2 gratisskanningar', text: 'Gratisversionen kan testa flÃÂ¶det. Pro-planen kan byggas runt mer frekvent skanning.' },
     ],
-    priceTitle: 'Ingredienspris Ã¤ndras -> recept pÃ¥verkas -> marginal tappas -> Ã¥tgÃ¤rd',
+    priceTitle: 'Ingredienspris ÃÂ¤ndras -> recept pÃÂ¥verkas -> marginal tappas -> ÃÂ¥tgÃÂ¤rd',
     alert: 'Laxpris +12%',
-    affected: 'PÃ¥verkade rÃ¤tter',
+    affected: 'PÃÂ¥verkade rÃÂ¤tter',
     dishes: ['Salmon poke', 'Nigiri', 'Laxpasta'],
     margin: 'Marginal',
-    action: 'FÃ¶reslagen Ã¥tgÃ¤rd',
+    action: 'FÃÂ¶reslagen ÃÂ¥tgÃÂ¤rd',
     actionText: '+6-9 kr menypris eller byt ingrediens',
-    suppliersTitle: 'Byggt runt svensk leverantÃ¶rsverklighet',
+    suppliersTitle: 'Byggt runt svensk leverantÃÂ¶rsverklighet',
     suppliersText:
-      'SmakvÃ¤rlden Ã¤r inte en generisk receptapp. Produkten byggs runt inkÃ¶pskanaler svenska restauranger redan anvÃ¤nder.',
-    supplierCards: ['Martin & Servera', 'Menigo', 'Lokala leverantÃ¶rer', 'Prisimporter'],
-    calculatorTitle: 'Varje recept blir ett affÃ¤rsbeslut',
+      'SmakvÃÂ¤rlden ÃÂ¤r inte en generisk receptapp. Produkten byggs runt inkÃÂ¶pskanaler svenska restauranger redan anvÃÂ¤nder.',
+    supplierCards: ['Martin & Servera', 'Menigo', 'Lokala leverantÃÂ¶rer', 'Prisimporter'],
+    calculatorTitle: 'Varje recept blir ett affÃÂ¤rsbeslut',
     calculatorRows: [
       ['Lax', '16 kr'],
       ['Ris', '6 kr'],
@@ -79,20 +79,20 @@ const COPY = {
       ['Food cost', '39 kr'],
       ['Svinn +20%', '7,8 kr'],
       ['Total kostnad', '46,8 kr'],
-      ['FÃ¶rsÃ¤ljningspris', '139 kr'],
+      ['FÃÂ¶rsÃÂ¤ljningspris', '139 kr'],
     ],
     demoTitle: 'Demo som investerare kan testa direkt',
-    demoSteps: ['Logga in med demo@smakvarlden.se / demo1234', 'GÃ¥ till Dashboard', 'Ãppna Price Intelligence'],
-    demoButton: 'Ãppna appdemo',
-    roadmapTitle: 'Lansera starkaste versionen fÃ¶rst',
+    demoSteps: ['Logga in med demo@smakvarlden.se / demo1234', 'GÃÂ¥ till Dashboard', 'ÃÂppna Price Intelligence'],
+    demoButton: 'ÃÂppna appdemo',
+    roadmapTitle: 'Lansera starkaste versionen fÃÂ¶rst',
     roadmap: ['Dashboard', 'Price Intelligence', 'Ingredienser', 'Recept', 'Kalkylator', 'Pricing / Upgrade'],
-    askTitle: 'Byggt av kockar. Gjort fÃ¶r moderna svenska kÃ¶k.',
+    askTitle: 'Byggt av kockar. Gjort fÃÂ¶r moderna svenska kÃÂ¶k.',
     askText:
-      'SmakvÃ¤rlden hjÃ¤lper restauranger fÃ¶rstÃ¥ verklig food cost, skydda vinst och fatta bÃ¤ttre menybeslut.',
+      'SmakvÃÂ¤rlden hjÃÂ¤lper restauranger fÃÂ¶rstÃÂ¥ verklig food cost, skydda vinst och fatta bÃÂ¤ttre menybeslut.',
     contact: 'Kontakt',
     email: 'chef@smakvarlden.se',
     phone: '',
-    trust: 'Demo data / exempelberÃ¤kningar. Riktig produktion krÃ¤ver backend-auth, dataskydd och leverantÃ¶rsavtal.',
+    trust: 'Demo data / exempelberÃÂ¤kningar. Riktig produktion krÃÂ¤ver backend-auth, dataskydd och leverantÃÂ¶rsavtal.',
   },
   en: {
     badge: 'Interactive investor presentation',
@@ -181,7 +181,7 @@ export default function InvestorPresentation() {
     <main className="ip">
       <header className="ip-nav">
         <button className="ip-logo" onClick={() => goTo('top')} aria-label="Smakvarlden">
-          <span>SmakvÃ¤rlden</span>
+          <span>SmakvÃÂ¤rlden</span>
           <small>Kitchen OS</small>
         </button>
 
