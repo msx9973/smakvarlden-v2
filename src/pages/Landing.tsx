@@ -1,5 +1,33 @@
 import { Link } from 'react-router-dom';
 
+const steps = ['Analyze', 'Identify', 'Optimize', 'Profit'];
+
+const services = [
+  { icon: "🔍", title: "Deep Invoice Audit", body: "We personally review your supplier invoices to identify hidden price increases and market discrepancies — the ones quietly draining your margins every week." },
+  { icon: "🤝", title: "Supplier Negotiation Support", body: "We give you exact data to negotiate better deals with Martin & Servera and Menigo. Numbers never lie — use them." },
+  { icon: "⚙️", title: "System Setup", body: "We handle the initial setup of your recipe costs and ingredient database so you start saving from day one — no technical knowledge required." },
+  { icon: "🎯", title: "Actionable Insights", body: "We turn complex data into simple steps: Raise this price. Swap this ingredient. Reduce this portion. Clear decisions, immediate impact." },
+];
+
+const deliverSteps = [
+  { title: "Analyze — Upload one week of invoices", body: "Share your latest delivery invoices from Menigo or Martin & Servera. AI reads every price in seconds — no manual entry." },
+  { title: "Identify — We find the hidden losses", body: "We compare your prices against current market data and pinpoint every ingredient costing more than it should." },
+  { title: "Optimize — We implement the findings", body: "Every finding goes into your Smakvärlden dashboard. Recipe margins update automatically. You see the full picture." },
+  { title: "Profit — Immediate impact on food costs", body: "You see a measurable reduction in monthly food costs from week one. No waiting, no guessing — just better margins." },
+];
+
+const stats = [
+  { label: "Hidden price increases caught", value: "6–12 / month" },
+  { label: "Average weekly savings", value: "3 000–8 000 kr" },
+  { label: "Time to first insight", value: "Under 60 sec" },
+  { label: "Monthly cost of Pro plan", value: "59 kr" },
+];
+
+const footerLinks = [
+  { label: "Hur det fungerar", to: "/trust" },
+  { label: "Logga in", to: "/login" },
+];
+
 export default function Landing() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
@@ -28,7 +56,7 @@ export default function Landing() {
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="mailto:chef@smakvarlden.se?subject=Free Profit Audit" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '13px 30px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-            📊 Book a Free Profit Audit
+            Book a Free Profit Audit
           </a>
           <Link to="/login" style={{ background: 'transparent', color: 'rgba(255,255,255,.75)', padding: '13px 26px', borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: 'none', border: '1px solid rgba(255,255,255,.2)' }}>
             Try the demo →
@@ -38,7 +66,7 @@ export default function Landing() {
 
       {/* 4-STEP STRIP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: 'var(--gold)' }}>
-        {['Analyze', 'Identify', 'Optimize', 'Profit'].map((label, i) => (
+        {steps.map((label, i) => (
           <div key={i} style={{ padding: '20px 16px', textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,.25)' : 'none' }}>
             <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 34, fontWeight: 700, color: 'rgba(255,255,255,.22)', lineHeight: 1 }}>{i + 1}</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--brown)', marginTop: 4 }}>{label}</div>
@@ -56,16 +84,11 @@ export default function Landing() {
           Technology is only half the battle. We offer a hands-on Profit Optimization Service to take the burden off your shoulders. We give you results, not just tools.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, background: 'var(--border)', border: '1px solid var(--border)', borderRadius: 18, overflow: 'hidden', marginBottom: 28 }}>
-          {[
-            { icon: '🔍', title: 'Deep Invoice Audit', body: 'We personally review your supplier invoices to identify hidden price increases and market discrepancies — the ones quietly draining your margins every week.' },
-            { icon: '🤝', title: 'Supplier Negotiation Support', body: 'We give you exact data to negotiate better deals with Martin & Servera and Menigo. Numbers never lie — use them.' },
-            { icon: '⚙️', title: 'System Setup', body: 'We handle the initial setup of your recipe costs and ingredient database so you start saving from day one — no technical knowledge required.' },
-            { icon: '🎯', title: 'Actionable Insights', body: 'We turn complex data into simple steps: Raise this price. Swap this ingredient. Reduce this portion. Clear decisions, immediate impact.' },
-          ].map((c, i) => (
+          {services.map((svc, i) => (
             <div key={i} style={{ background: 'var(--white)', padding: '30px' }}>
-              <div style={{ fontSize: 26, marginBottom: 12 }}>{c.icon}</div>
-              <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--t1)', marginBottom: 8 }}>{c.title}</h3>
-              <p style={{ fontSize: 13, color: 'var(--t2)', lineHeight: 1.65 }}>{c.body}</p>
+              <div style={{ fontSize: 26, marginBottom: 12 }}>{svc.icon}</div>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--t1)', marginBottom: 8 }}>{svc.title}</h3>
+              <p style={{ fontSize: 13, color: 'var(--t2)', lineHeight: 1.65 }}>{svc.body}</p>
             </div>
           ))}
         </div>
@@ -92,12 +115,7 @@ export default function Landing() {
             <p style={{ fontSize: 15, color: 'var(--t2)', lineHeight: 1.75, marginBottom: 44 }}>No guesswork. No waiting weeks to see results. Our process shows you impact from the very first week.</p>
             <div style={{ position: 'relative', paddingLeft: 40 }}>
               <div style={{ position: 'absolute', left: 19, top: 0, bottom: 0, width: 2, background: 'var(--border)' }} />
-              {[
-                { title: 'Analyze — Upload one week of invoices', body: 'Share your latest delivery invoices from Menigo or Martin & Servera. AI reads every price in seconds — no manual entry.' },
-                { title: 'Identify — We find the hidden losses', body: 'We compare your prices against current market data and pinpoint every ingredient costing more than it should.' },
-                { title: 'Optimize — We implement the findings', body: 'Every finding goes into your Smakvärlden dashboard. Recipe margins update automatically. You see the full picture.' },
-                { title: 'Profit — Immediate impact on food costs', body: 'You see a measurable reduction in monthly food costs from week one. No waiting, no guessing — just better margins.' },
-              ].map((s, i) => (
+              {deliverSteps.map((s, i) => (
                 <div key={i} style={{ display: 'grid', gridTemplateColumns: '40px 1fr', gap: 18, paddingBottom: i < 3 ? 30 : 0, position: 'relative' }}>
                   <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--brown)', color: 'var(--goldl)', fontFamily: 'Playfair Display, serif', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 1 }}>{i + 1}</div>
                   <div style={{ paddingTop: 8 }}>
@@ -110,12 +128,7 @@ export default function Landing() {
           </div>
           <div style={{ background: 'var(--goldbg)', border: '1px solid var(--border)', borderRadius: 18, padding: 34 }}>
             <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 26, fontWeight: 700, color: 'var(--t1)', letterSpacing: -.5, marginBottom: 20 }}>What a typical kitchen saves</h3>
-            {[
-              { label: 'Hidden price increases caught', value: '6–12 / month' },
-              { label: 'Average weekly savings', value: '3 000–8 000 kr' },
-              { label: 'Time to first insight', value: 'Under 60 sec' },
-              { label: 'Monthly cost of Pro plan', value: '59 kr' },
-            ].map((r, i) => (
+            {stats.map((r, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none', fontSize: 13 }}>
                 <span style={{ color: 'var(--t2)' }}>{r.label}</span>
                 <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 700, color: '#15803d' }}>{r.value}</span>
@@ -144,7 +157,7 @@ export default function Landing() {
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
             <a href="mailto:chef@smakvarlden.se?subject=Free Profit Audit Request" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '13px 30px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-              📊 Book a Free Profit Audit
+              Book a Free Profit Audit
             </a>
             <Link to="/login" style={{ background: 'transparent', color: 'rgba(255,255,255,.7)', padding: '13px 26px', borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: 'none', border: '1px solid rgba(255,255,255,.2)' }}>
               Try the demo free
@@ -158,8 +171,9 @@ export default function Landing() {
       <footer style={{ background: '#0A0604', padding: '32px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
         <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--goldl)', fontWeight: 700, fontStyle: 'italic' }}>Smakvärlden</div>
         <div style={{ display: 'flex', gap: 20 }}>
-          <Link to="/trust" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Hur det fungerar</Link>
-          <Link to="/login" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Logga in</Link>
+          {footerLinks.map((l) => (
+            <Link key={l.to} to={l.to} style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>{l.label}</Link>
+          ))}
           <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Kontakt</a>
         </div>
         <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.18)' }}>© 2025 Smakvärlden</div>
