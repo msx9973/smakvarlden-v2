@@ -131,7 +131,7 @@ export function LoginPage() {
             <div>
               <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Lösenord</label>
               <div style={{ position:'relative' }}>
-                <input className="inp" type={show ? 'text' : 'password'} placeholder={mode === 'register' ? 'Minst 6 tecken' : 'â¢â¢â¢â¢â¢â¢â¢â¢'} value={pw} onChange={(e) => setPw(e.target.value)} required style={{ paddingRight:40 }} />
+                <input className="inp" type={show ? 'text' : 'password'} placeholder={mode === 'register' ? 'Minst 6 tecken' : '••••••••'} value={pw} onChange={(e) => setPw(e.target.value)} required style={{ paddingRight:40 }} />
                 <button type="button" onClick={() => setShow((v) => !v)} style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--t3)' }}>
                   {show ? <EyeOff size={14}/> : <Eye size={14}/>}
                 </button>
@@ -160,11 +160,11 @@ export function LoginPage() {
 
 export function HowItWorks() {
   const steps = [
-    { step:'1', emoji:'ð¸', title:'Ta en bild på ditt recept', body:'Har du recept på papper? Ta en bild med telefonen. Appen läser av ingredienser och mängder automatiskt - handskrivet eller tryckt fungerar båda.', tip:'Inga krav på snygg handstil - AI förstår ändå.' },
-    { step:'2', emoji:'â', title:'Fyll i det som saknas', body:'Om något fattas, till exempel hur många gram, frågar appen dig om just det. Du ser allt tydligt och sparar med ett klick.', tip:'Du bestämmer alltid. Appen gissar aldrig på egen hand.' },
-    { step:'3', emoji:'ð§¾', title:'Skanna din faktura varje vecka', body:'Faktura från Menigo eller Martin & Servera? Ta en bild. Appen läser av alla priser och uppdaterar dina ingredienser automatiskt.', tip:'Tar 10 sekunder. Gör det varje måndag morgon.' },
-    { step:'4', emoji:'ð', title:'Se vad du tjänar på varje rätt', body:'Nu visar appen exakt vad varje rätt kostar att laga och hur mycket du tjänar. Gick laxen upp? Du ser direkt vilka rätter som påverkas.', tip:'Röd = du förlorar pengar. Grön = bra marginal.' },
-    { step:'5', emoji:'ð¡', title:'Ta rätt beslut', body:'Höj priset lite? Minska portionen med 10 gram? Appen räknar ut vad som lönar sig. Du bestämmer, men nu med fakta istället för magkänsla.', tip:'De flesta restauranger sparar 3 000-10 000 kr/månad.' },
+    { step:'1', emoji:'📸', title:'Ta en bild på ditt recept', body:'Har du recept på papper? Ta en bild med telefonen. Appen läser av ingredienser och mängder automatiskt - handskrivet eller tryckt fungerar båda.', tip:'Inga krav på snygg handstil - AI förstår ändå.' },
+    { step:'2', emoji:'✅', title:'Fyll i det som saknas', body:'Om något fattas, till exempel hur många gram, frågar appen dig om just det. Du ser allt tydligt och sparar med ett klick.', tip:'Du bestämmer alltid. Appen gissar aldrig på egen hand.' },
+    { step:'3', emoji:'🧾', title:'Skanna din faktura varje vecka', body:'Faktura från Menigo eller Martin & Servera? Ta en bild. Appen läser av alla priser och uppdaterar dina ingredienser automatiskt.', tip:'Tar 10 sekunder. Gör det varje måndag morgon.' },
+    { step:'4', emoji:'📊', title:'Se vad du tjänar på varje rätt', body:'Nu visar appen exakt vad varje rätt kostar att laga och hur mycket du tjänar. Gick laxen upp? Du ser direkt vilka rätter som påverkas.', tip:'Röd = du förlorar pengar. Grön = bra marginal.' },
+    { step:'5', emoji:'💡', title:'Ta rätt beslut', body:'Höj priset lite? Minska portionen med 10 gram? Appen räknar ut vad som lönar sig. Du bestämmer, men nu med fakta istället för magkänsla.', tip:'De flesta restauranger sparar 3 000-10 000 kr/månad.' },
   ];
   return (
     <div style={{ padding:'48px 36px', maxWidth:860, margin:'0 auto' }}>
@@ -184,7 +184,7 @@ export function HowItWorks() {
               <div style={{ fontFamily:'DM Mono', fontSize:10, color:'var(--t3)', letterSpacing:1, marginBottom:4 }}>STEG {s.step}</div>
               <h3 style={{ fontSize:17, fontWeight:700, color:'var(--t1)', marginBottom:8 }}>{s.title}</h3>
               <p style={{ fontSize:14, color:'var(--t2)', lineHeight:1.7, marginBottom:10 }}>{s.body}</p>
-              <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 12px', background:'var(--goldbg)', borderRadius:8, fontSize:12, color:'var(--t2)', fontWeight:500 }}>ð¡ {s.tip}</div>
+              <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 12px', background:'var(--goldbg)', borderRadius:8, fontSize:12, color:'var(--t2)', fontWeight:500 }}>💡 {s.tip}</div>
             </div>
           </div>
         ))}
@@ -194,7 +194,7 @@ export function HowItWorks() {
           <div className="font-serif" style={{ fontSize:20, fontWeight:600, color:'var(--goldl)', marginBottom:6 }}>Prova gratis - inga kortuppgifter</div>
           <div style={{ fontSize:13, color:'rgba(255,255,255,.6)' }}>2 gratisskanningar per månad ingår. Uppgradera när du vill.</div>
         </div>
-        <a href="/login" style={{ padding:'12px 24px', borderRadius:10, background:'var(--gold)', color:'var(--brown)', fontSize:13, fontWeight:700, textDecoration:'none', flexShrink:0 }}>Kom igång nu â</a>
+        <a href="/login" style={{ padding:'12px 24px', borderRadius:10, background:'var(--gold)', color:'var(--brown)', fontSize:13, fontWeight:700, textDecoration:'none', flexShrink:0 }}>Kom igång nu →</a>
       </div>
     </div>
   );
@@ -223,7 +223,7 @@ export function TrustPage() {
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)', padding:'32px 20px' }}>
       <div style={{ maxWidth:880, margin:'0 auto' }}>
-        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>â Back to demo login</Link>
+        <Link to="/login" style={{ display:'inline-flex', marginBottom:24, color:'var(--gold)', fontWeight:700, textDecoration:'none' }}>← Back to demo login</Link>
         <div style={{ background:'var(--brown)', color:'#fff', borderRadius:20, padding:'30px', marginBottom:18 }}>
           <div className="font-serif" style={{ fontSize:34, fontWeight:600, color:'var(--goldl)', marginBottom:10 }}>Integritet & villkor</div>
           <p style={{ color:'rgba(255,255,255,.72)', fontSize:15, maxWidth:660, lineHeight:1.7 }}>
@@ -240,7 +240,7 @@ export function TrustPage() {
         </div>
       </div>
       <p style={{ textAlign:'center', marginTop:28, fontSize:12, color:'var(--t3)' }}>
-        Â© 2026 Smakvärlden. Alla rättigheter förbehållna.
+        © 2026 Smakvärlden. Alla rättigheter förbehållna.
       </p>
     </div>
   );
@@ -252,9 +252,9 @@ export function UpgradePage() {
     { name:'Gratis', price:'0 kr', per:'för alltid', featured:false,
       feats:['Upp till 10 recept','Receptkalkylator','Ingrediensdatabas','Prisintelligens','Demo data'],
       btn:'Nuvarande plan', disabled:user?.plan === 'free' },
-    { name:'Pro Kök', price:'59 kr', per:'/månad Â· 7 dagar gratis', featured:true,
+    { name:'Pro Kök', price:'59 kr', per:'/månad · 7 dagar gratis', featured:true,
       feats:['Obegränsade recept','Liveprisövervakning','Prisvarningar','Marginalförlust per recept','Föreslagna prisåtgärder','Prioriterad support'],
-      btn:user?.plan === 'pro' ? 'â Aktiv plan' : 'Starta 7 dagar gratis', disabled:user?.plan === 'pro' },
+      btn:user?.plan === 'pro' ? '✓ Aktiv plan' : 'Starta 7 dagar gratis', disabled:user?.plan === 'pro' },
     { name:'Företag', price:'Offert', per:'Flera anläggningar', featured:false,
       feats:['Allt i Pro','Flera kök','Teamkonton','Leverantörsintegrationer','Dedikerad support'],
       btn:'Kontakta oss', disabled:false },
