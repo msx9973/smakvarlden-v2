@@ -21,57 +21,58 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import ConsultingLeadForm from '../components/ConsultingLeadForm';
 import './InvestorPresentation.css';
 
 type Lang = 'sv' | 'en';
-type PanelId = 'market' | 'product' | 'scanners' | 'price' | 'suppliers' | 'demo' | 'ask';
+type PanelId = 'market' | 'product' | 'scanners' | 'price' | 'suppliers' | 'demo' | 'consulting' | 'ask';
 
 const COPY = {
   sv: {
-    badge: 'Interaktiv investerarpresentation',
-    nav: ['Behov', 'Produkt', 'Skanning', 'Prisintelligens', 'LeverantÃ¶rer', 'Demo', 'Kontakt'],
+    badge: 'Interaktiv presentation',
+    nav: ['Behov', 'Produkt', 'Skanning', 'Prisintelligens', 'Leverantörer', 'Demo', 'Konsulting', 'Kontakt'],
     langLabel: 'Svenska',
-    heroTitle: 'Kitchen OS fÃ¶r svenska restauranger',
+    heroTitle: 'Kitchen OS för svenska restauranger',
     heroText:
-      'SmakvÃ¤rlden hjÃ¤lper kockar se verklig food cost, prisÃ¤ndringar, svinn och marginalrisk innan vinsten fÃ¶rsvinner.',
+      'Smakvärlden hjälper kockar se verklig food cost, prisändringar, svinn och marginalrisk innan vinsten försvinner.',
     primary: 'Testa demon',
     secondary: 'Se starkaste funktionen',
-    statIntro: 'Svenska restauranger behÃ¶ver spara pengar och tid nu',
+    statIntro: 'Svenska restauranger behöver spara pengar och tid nu',
     stats: [
-      { value: '+0,5%', label: 'fÃ¶rsÃ¤ljningsvolym 2025', detail: 'Svag volymtillvÃ¤xt gÃ¶r varje marginalbeslut viktigare.' },
-      { value: '+3,7%', label: 'restaurangpriser 2025', detail: 'Kunder mÃ¤rker hÃ¶gre priser samtidigt som kostnaderna stiger.' },
-      { value: '29 300', label: 'restaurang- och cateringfÃ¶retag', detail: 'En stor marknad med samma praktiska problem i kÃ¶ket.' },
+      { value: '+0,5%', label: 'försäljningsvolym 2025', detail: 'Svag volymtillväxt gör varje marginalbeslut viktigare.' },
+      { value: '+3,7%', label: 'restaurangpriser 2025', detail: 'Kunder märker högre priser samtidigt som kostnaderna stiger.' },
+      { value: '29 300', label: 'restaurang- och cateringföretag', detail: 'En stor marknad med samma praktiska problem i köket.' },
     ],
-    pressureTitle: 'Kockar pressas frÃ¥n alla hÃ¥ll',
-    pressureItems: ['LeverantÃ¶rspriser', 'Svinn', 'Personal', 'Hyra', 'Energi', 'LÃ¥ngsamma kalkylblad'],
-    productTitle: 'En dashboard fÃ¶r food cost, svinn och vinst',
+    pressureTitle: 'Kockar pressas från alla håll',
+    pressureItems: ['Leverantörspriser', 'Svinn', 'Personal', 'Hyra', 'Energi', 'Långsamma kalkylblad'],
+    productTitle: 'En dashboard för food cost, svinn och vinst',
     productText:
-      'Byggd fÃ¶r trÃ¶tta kÃ¶k: snabb att skanna, enkel att agera pÃ¥ och fokuserad pÃ¥ beslut som skyddar marginalen.',
+      'Byggd för trötta kök: snabb att skanna, enkel att agera på och fokuserad på beslut som skyddar marginalen.',
     productCards: [
-      { title: 'Food cost', text: 'Se verklig kostnad per rÃ¤tt.' },
-      { title: 'PrisÃ¤ndringar', text: 'Se vad som Ã¤ndrats och vilka recept som pÃ¥verkas.' },
-      { title: 'Vinstskydd', text: 'FÃ¥ fÃ¶rslag innan marginalen fÃ¶rsvinner.' },
+      { title: 'Food cost', text: 'Se verklig kostnad per rätt.' },
+      { title: 'Prisändringar', text: 'Se vad som ändrats och vilka recept som påverkas.' },
+      { title: 'Vinstskydd', text: 'Få förslag innan marginalen försvinner.' },
     ],
-    scannerTitle: 'Senaste uppdateringen: recept- och fakturaskanning',
+    scannerTitle: 'Recept- och fakturaskanning',
     scannerText:
-      'Kocken kan fotografera ett recept eller en leverantÃ¶rsfaktura. Appen lÃ¤ser ingredienser, mÃ¤ngder och priser sÃ¥ kalkylen uppdateras snabbare.',
+      'Kocken kan fotografera ett recept eller en leverantörsfaktura. Appen läser ingredienser, mängder och priser så kalkylen uppdateras snabbare.',
     scannerCards: [
-      { title: 'Receptscanner', text: 'GÃ¶r handskrivna eller tryckta recept till sparade kalkyler med ingredienser och mÃ¤ngder.' },
-      { title: 'Fakturascanner', text: 'LÃ¤ser priser frÃ¥n fakturor, till exempel Martin & Servera, Menigo och andra grossister.' },
-      { title: '2 gratisskanningar', text: 'Gratisversionen kan testa flÃ¶det. Pro-planen kan byggas runt mer frekvent skanning.' },
+      { title: 'Receptscanner', text: 'Gör handskrivna eller tryckta recept till sparade kalkyler med ingredienser och mängder.' },
+      { title: 'Fakturascanner', text: 'Läser priser från fakturor, till exempel Martin & Servera, Menigo och andra grossister.' },
+      { title: '2 gratisskanningar', text: 'Gratisversionen kan testa flödet. Pro-planen kan byggas runt mer frekvent skanning.' },
     ],
-    priceTitle: 'Ingredienspris Ã¤ndras -> recept pÃ¥verkas -> marginal tappas -> Ã¥tgÃ¤rd',
+    priceTitle: 'Ingredienspris ändras -> recept påverkas -> marginal tappas -> åtgärd',
     alert: 'Laxpris +12%',
-    affected: 'PÃ¥verkade rÃ¤tter',
+    affected: 'Påverkade rätter',
     dishes: ['Salmon poke', 'Nigiri', 'Laxpasta'],
     margin: 'Marginal',
-    action: 'FÃ¶reslagen Ã¥tgÃ¤rd',
+    action: 'Föreslagen åtgärd',
     actionText: '+6-9 kr menypris eller byt ingrediens',
-    suppliersTitle: 'Byggt runt svensk leverantÃ¶rsverklighet',
+    suppliersTitle: 'Byggt runt svensk leverantörsverklighet',
     suppliersText:
-      'SmakvÃ¤rlden Ã¤r inte en generisk receptapp. Produkten byggs runt inkÃ¶pskanaler svenska restauranger redan anvÃ¤nder.',
-    supplierCards: ['Martin & Servera', 'Menigo', 'Lokala leverantÃ¶rer', 'Prisimporter'],
-    calculatorTitle: 'Varje recept blir ett affÃ¤rsbeslut',
+      'Smakvärlden är inte en generisk receptapp. Produkten byggs runt inköpskanaler svenska restauranger redan använder.',
+    supplierCards: ['Martin & Servera', 'Menigo', 'Lokala leverantörer', 'Prisimporter'],
+    calculatorTitle: 'Varje recept blir ett affärsbeslut',
     calculatorRows: [
       ['Lax', '16 kr'],
       ['Ris', '6 kr'],
@@ -79,24 +80,31 @@ const COPY = {
       ['Food cost', '39 kr'],
       ['Svinn +20%', '7,8 kr'],
       ['Total kostnad', '46,8 kr'],
-      ['FÃ¶rsÃ¤ljningspris', '139 kr'],
+      ['Försäljningspris', '139 kr'],
     ],
-    demoTitle: 'Demo som investerare kan testa direkt',
-    demoSteps: ['Logga in med demo@smakvarlden.se / demo1234', 'GÃ¥ till Dashboard', 'Ãppna Price Intelligence'],
-    demoButton: 'Ãppna appdemo',
-    roadmapTitle: 'Lansera starkaste versionen fÃ¶rst',
-    roadmap: ['Dashboard', 'Price Intelligence', 'Ingredienser', 'Recept', 'Kalkylator', 'Pricing / Upgrade'],
-    askTitle: 'Byggt av kockar. Gjort fÃ¶r moderna svenska kÃ¶k.',
+    demoTitle: 'Demo som går att testa direkt',
+    demoSteps: ['Logga in med demo@smakvarlden.se / demo1234', 'Gå till Dashboard', 'Öppna Price Intelligence'],
+    demoButton: 'Öppna appdemo',
+    consultingTitle: 'Konsulting som gör första fakturan värdefull',
+    consultingText:
+      'Smakvärlden är produkten. Konsultingen är den mjuka starten: vi hjälper restaurangen läsa en verklig faktura, koppla viktiga recept och få tydliga beslut från dag ett.',
+    consultingCards: [
+      { title: 'Fakturaanalys', text: 'Vi hittar prisändringar och råvaror som pressar food cost.' },
+      { title: 'Receptsetup', text: 'Vi hjälper lägga in första recepten, ingredienserna och menu price.' },
+      { title: 'Excel-export', text: 'Alla leads sparas i Netlify Forms och kan exporteras som CSV till Excel.' },
+    ],
+    roadmapTitle: 'Lansera starkaste versionen först',
+    roadmap: ['Dashboard', 'Price Intelligence', 'Ingredienser', 'Recept', 'Kalkylator', 'Konsulting'],
+    askTitle: 'Byggt av kockar. Gjort för moderna svenska kök.',
     askText:
-      'SmakvÃ¤rlden hjÃ¤lper restauranger fÃ¶rstÃ¥ verklig food cost, skydda vinst och fatta bÃ¤ttre menybeslut.',
+      'Smakvärlden hjälper restauranger förstå verklig food cost, skydda vinst och fatta bättre menybeslut.',
     contact: 'Kontakt',
     email: 'chef@smakvarlden.se',
-    phone: '',
-    trust: 'Demo data / exempelberÃ¤kningar. Riktig produktion krÃ¤ver backend-auth, dataskydd och leverantÃ¶rsavtal.',
+    trust: 'Demo data / exempelberäkningar. Riktig produktion kräver backend-auth, dataskydd och leverantörsavtal.',
   },
   en: {
-    badge: 'Interactive investor presentation',
-    nav: ['Need', 'Product', 'Scanners', 'Price Intel', 'Suppliers', 'Demo', 'Contact'],
+    badge: 'Interactive presentation',
+    nav: ['Need', 'Product', 'Scanners', 'Price Intel', 'Suppliers', 'Demo', 'Consulting', 'Contact'],
     langLabel: 'English',
     heroTitle: 'Kitchen OS for Swedish restaurants',
     heroText:
@@ -119,7 +127,7 @@ const COPY = {
       { title: 'Price changes', text: 'See what changed and which recipes are affected.' },
       { title: 'Profit protection', text: 'Get suggested actions before margin disappears.' },
     ],
-    scannerTitle: 'Latest update: recipe and invoice scanning',
+    scannerTitle: 'Recipe and invoice scanning',
     scannerText:
       'The chef can photograph a recipe or supplier invoice. The app reads ingredients, quantities and prices so calculations update faster.',
     scannerCards: [
@@ -148,22 +156,29 @@ const COPY = {
       ['Total cost', '46.8 kr'],
       ['Selling price', '139 kr'],
     ],
-    demoTitle: 'Demo investors can test directly',
+    demoTitle: 'Demo you can test directly',
     demoSteps: ['Log in with demo@smakvarlden.se / demo1234', 'Go to Dashboard', 'Open Price Intelligence'],
     demoButton: 'Open app demo',
+    consultingTitle: 'Consulting that makes the first invoice valuable',
+    consultingText:
+      'Smakvarlden is the product. Consulting is the soft start: we help the restaurant read a real invoice, connect key recipes and get clear decisions from day one.',
+    consultingCards: [
+      { title: 'Invoice audit', text: 'We find price changes and ingredients that pressure food cost.' },
+      { title: 'Recipe setup', text: 'We help add the first recipes, ingredients and menu price.' },
+      { title: 'Excel export', text: 'All leads are stored in Netlify Forms and can be exported as CSV to Excel.' },
+    ],
     roadmapTitle: 'Launch the strongest version first',
-    roadmap: ['Dashboard', 'Price Intelligence', 'Ingredients', 'Recipes', 'Calculator', 'Pricing / Upgrade'],
+    roadmap: ['Dashboard', 'Price Intelligence', 'Ingredients', 'Recipes', 'Calculator', 'Consulting'],
     askTitle: 'Built by chefs. Made for modern Swedish kitchens.',
     askText:
       'Smakvarlden helps restaurants understand real food cost, protect profit and make better menu decisions.',
     contact: 'Contact',
     email: 'chef@smakvarlden.se',
-    phone: '',
     trust: 'Demo data / example calculations. Real production requires backend auth, data security and supplier agreements.',
   },
 };
 
-const sectionIds: PanelId[] = ['market', 'product', 'scanners', 'price', 'suppliers', 'demo', 'ask'];
+const sectionIds: PanelId[] = ['market', 'product', 'scanners', 'price', 'suppliers', 'demo', 'consulting', 'ask'];
 
 function goTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -181,7 +196,7 @@ export default function InvestorPresentation() {
     <main className="ip">
       <header className="ip-nav">
         <button className="ip-logo" onClick={() => goTo('top')} aria-label="Smakvarlden">
-          <span>SmakvÃ¤rlden</span>
+          <span>Smakvärlden</span>
           <small>Kitchen OS</small>
         </button>
 
@@ -220,11 +235,7 @@ export default function InvestorPresentation() {
         </div>
 
         <div className="ip-dashboard" aria-label="Smakvarlden dashboard mockup">
-          <div className="ip-window-top">
-            <span />
-            <span />
-            <span />
-          </div>
+          <div className="ip-window-top"><span /><span /><span /></div>
           <div className="ip-dash-grid">
             <div className="ip-dash-card wide">
               <small>Price Intelligence</small>
@@ -236,18 +247,9 @@ export default function InvestorPresentation() {
                 <i style={{ height: '88%' }} />
               </div>
             </div>
-            <div className="ip-dash-card">
-              <small>Food cost</small>
-              <strong>39 kr</strong>
-            </div>
-            <div className="ip-dash-card">
-              <small>Margin</small>
-              <strong>66%</strong>
-            </div>
-            <div className="ip-dash-card alert">
-              <small>Action</small>
-              <strong>+6-9 kr</strong>
-            </div>
+            <div className="ip-dash-card"><small>Food cost</small><strong>39 kr</strong></div>
+            <div className="ip-dash-card"><small>Margin</small><strong>66%</strong></div>
+            <div className="ip-dash-card alert"><small>Action</small><strong>+6-9 kr</strong></div>
           </div>
         </div>
       </section>
@@ -336,9 +338,7 @@ export default function InvestorPresentation() {
           <article className="ip-alert-main">
             <div><Zap size={22} /> {t.alert}</div>
             <p>{t.affected}</p>
-            <ul>
-              {t.dishes.map((dish) => <li key={dish}>{dish}</li>)}
-            </ul>
+            <ul>{t.dishes.map((dish) => <li key={dish}>{dish}</li>)}</ul>
           </article>
           <article>
             <span>{t.margin}</span>
@@ -379,15 +379,9 @@ export default function InvestorPresentation() {
         </div>
         <div className="ip-calc-card">
           {t.calculatorRows.map(([label, value]) => (
-            <div key={label}>
-              <span>{label}</span>
-              <strong>{value}</strong>
-            </div>
+            <div key={label}><span>{label}</span><strong>{value}</strong></div>
           ))}
-          <div className="total">
-            <span>Margin</span>
-            <strong>66%</strong>
-          </div>
+          <div className="total"><span>Margin</span><strong>66%</strong></div>
         </div>
       </section>
 
@@ -397,9 +391,7 @@ export default function InvestorPresentation() {
             <span>07</span>
             <h2>{t.demoTitle}</h2>
           </div>
-          <ol>
-            {t.demoSteps.map((step) => <li key={step}>{step}</li>)}
-          </ol>
+          <ol>{t.demoSteps.map((step) => <li key={step}>{step}</li>)}</ol>
         </div>
         <div className="ip-demo-card">
           <ShoppingBasket size={25} />
@@ -409,9 +401,32 @@ export default function InvestorPresentation() {
         </div>
       </section>
 
+      <section id="consulting" className="ip-section ip-split">
+        <div>
+          <div className="ip-section-head">
+            <span>08</span>
+            <h2>{t.consultingTitle}</h2>
+          </div>
+          <p className="ip-lead">{t.consultingText}</p>
+          <div className="ip-feature-list">
+            {t.consultingCards.map((card, index) => {
+              const Icon = [ReceiptText, Calculator, BarChart3][index];
+              return (
+                <article key={card.title}>
+                  <Icon size={20} />
+                  <strong>{card.title}</strong>
+                  <p>{card.text}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+        <ConsultingLeadForm source="presentation" />
+      </section>
+
       <section className="ip-section">
         <div className="ip-section-head">
-          <span>08</span>
+          <span>09</span>
           <h2>{t.roadmapTitle}</h2>
         </div>
         <div className="ip-roadmap">
@@ -427,7 +442,6 @@ export default function InvestorPresentation() {
         <div className="ip-contact">
           <span>{t.contact}</span>
           <a href={`mailto:${t.email}`}>{t.email}</a>
-          <a href={`tel:${t.phone}`}>{t.phone}</a>
         </div>
       </section>
 
