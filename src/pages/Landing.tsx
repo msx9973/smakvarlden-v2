@@ -3,22 +3,22 @@ import { Link } from 'react-router-dom';
 const steps = ['Analyze', 'Identify', 'Optimize', 'Profit'];
 
 const services = [
-  { icon: "🔍", title: "Deep Invoice Audit", body: "We personally review your supplier invoices to identify hidden price increases and market discrepancies — the ones quietly draining your margins every week." },
-  { icon: "🤝", title: "Supplier Negotiation Support", body: "We give you exact data to negotiate better deals with Martin & Servera and Menigo. Numbers never lie — use them." },
-  { icon: "⚙️", title: "System Setup", body: "We handle the initial setup of your recipe costs and ingredient database so you start saving from day one — no technical knowledge required." },
-  { icon: "🎯", title: "Actionable Insights", body: "We turn complex data into simple steps: Raise this price. Swap this ingredient. Reduce this portion. Clear decisions, immediate impact." },
+  { icon: "ð", title: "Deep Invoice Audit", body: "We personally review your supplier invoices to identify hidden price increases and market discrepancies â the ones quietly draining your margins every week." },
+  { icon: "ð¤", title: "Supplier Negotiation Support", body: "We give you exact data to negotiate better deals with Martin & Servera and Menigo. Numbers never lie â use them." },
+  { icon: "âï¸", title: "System Setup", body: "We handle the initial setup of your recipe costs and ingredient database so you start saving from day one â no technical knowledge required." },
+  { icon: "ð¯", title: "Actionable Insights", body: "We turn complex data into simple steps: Raise this price. Swap this ingredient. Reduce this portion. Clear decisions, immediate impact." },
 ];
 
 const deliverSteps = [
-  { title: "Analyze — Upload one week of invoices", body: "Share your latest delivery invoices from Menigo or Martin & Servera. AI reads every price in seconds — no manual entry." },
-  { title: "Identify — We find the hidden losses", body: "We compare your prices against current market data and pinpoint every ingredient costing more than it should." },
-  { title: "Optimize — We implement the findings", body: "Every finding goes into your Smakvärlden dashboard. Recipe margins update automatically. You see the full picture." },
-  { title: "Profit — Immediate impact on food costs", body: "You see a measurable reduction in monthly food costs from week one. No waiting, no guessing — just better margins." },
+  { title: "Analyze â Upload one week of invoices", body: "Share your latest delivery invoices from Menigo or Martin & Servera. AI reads every price in seconds â no manual entry." },
+  { title: "Identify â We find the hidden losses", body: "We compare your prices against current market data and pinpoint every ingredient costing more than it should." },
+  { title: "Optimize â We implement the findings", body: "Every finding goes into your Smakvärlden dashboard. Recipe margins update automatically. You see the full picture." },
+  { title: "Profit â Immediate impact on food costs", body: "You see a measurable reduction in monthly food costs from week one. No waiting, no guessing â just better margins." },
 ];
 
 const stats = [
-  { label: "Hidden price increases caught", value: "6–12 / month" },
-  { label: "Average weekly savings", value: "3 000–8 000 kr" },
+  { label: "Hidden price increases caught", value: "6â12 / month" },
+  { label: "Average weekly savings", value: "3 000â8 000 kr" },
   { label: "Time to first insight", value: "Under 60 sec" },
   { label: "Monthly cost of Pro plan", value: "59 kr" },
 ];
@@ -52,14 +52,14 @@ export default function Landing() {
           <span style={{ color: 'var(--goldl)', fontStyle: 'italic' }}>Start Profiting.</span>
         </h1>
         <p style={{ fontSize: 17, color: 'rgba(255,255,255,.58)', lineHeight: 1.78, maxWidth: 580, margin: '0 auto 44px' }}>
-          We don&apos;t just provide software — we provide a complete Kitchen Operating System. Smakvärlden combines AI-powered invoice tracking with expert Profit Optimization to keep your kitchen profitable every single day.
+          We don&apos;t just provide software â we provide a complete Kitchen Operating System. Smakvärlden combines AI-powered invoice tracking with expert Profit Optimization to keep your kitchen profitable every single day.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="mailto:chef@smakvarlden.se?subject=Free Profit Audit" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '13px 30px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
             Book a Free Profit Audit
           </a>
           <Link to="/login" style={{ background: 'transparent', color: 'rgba(255,255,255,.75)', padding: '13px 26px', borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: 'none', border: '1px solid rgba(255,255,255,.2)' }}>
-            Try the demo →
+            Try the demo â
           </Link>
         </div>
       </section>
@@ -94,7 +94,7 @@ export default function Landing() {
         </div>
         <div style={{ background: 'var(--brown)', borderRadius: 18, padding: '36px 44px', display: 'flex', alignItems: 'center', gap: 28, position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, right: -80, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,.14) 0%, transparent 70%)' }} />
-          <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'rgba(201,168,76,.15)', border: '2px solid rgba(201,168,76,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>✶</div>
+          <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'rgba(201,168,76,.15)', border: '2px solid rgba(201,168,76,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>â¶</div>
           <div>
             <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 20, fontWeight: 600, color: 'var(--goldl)', marginBottom: 8 }}>Our Success Guarantee</h3>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,.58)', lineHeight: 1.7 }}>
@@ -136,7 +136,7 @@ export default function Landing() {
             ))}
             <div style={{ marginTop: 22, background: 'var(--brown)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
               <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, color: 'rgba(255,255,255,.35)', letterSpacing: 1, marginBottom: 6 }}>ROI IN FIRST WEEK</div>
-              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 40, fontWeight: 700, color: 'var(--goldl)', letterSpacing: -1 }}>50×</div>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 40, fontWeight: 700, color: 'var(--goldl)', letterSpacing: -1 }}>50Ã</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,.35)', marginTop: 4 }}>average return on 59 kr investment</div>
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function Landing() {
               Try the demo free
             </Link>
           </div>
-          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.25)', letterSpacing: .5 }}>chef@smakvarlden.se · smakvarlden.se · Upplands Väsby, Sweden</div>
+          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.25)', letterSpacing: .5 }}>chef@smakvarlden.se Â· smakvarlden.se Â· Upplands Väsby, Sweden</div>
         </div>
       </section>
 
@@ -176,7 +176,7 @@ export default function Landing() {
           ))}
           <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Kontakt</a>
         </div>
-        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.18)' }}>© 2025 Smakvärlden</div>
+        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.18)' }}>Â© 2025 Smakvärlden</div>
       </footer>
 
     </div>
