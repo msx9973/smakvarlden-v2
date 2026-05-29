@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
 import type { Recipe } from '../store';
+import { parseInvoiceData } from '../lib/invoice-parser';
+import type { ParsedInvoiceItem } from '../lib/invoice-parser';
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
@@ -176,14 +178,16 @@ function RecipeScanner({ onClose }:{ onClose:()=>void }) {
       const b64=await new Promise<string>((res,rej)=>{const r=new FileReader();r.onload=()=>res((r.result as string).split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
       const isPdf=file.type==='application/pdf';
       const mt=isPdf?'application/pdf':file.type as 'image/jpeg'|'image/png'|'image/webp';
-      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1500,
+      const resp=await fetch('/.netlify/functions/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        type:'recipe',
+        base64:b64,
+        mediaType:mt,
         system:'Du är ett system som läser recept från svenska restaurangkök. Svara ENDAST med giltig JSON: {"name":"Namn","category":"Huvudrätter","servings":1,"sellingPrice":null,"ingredients":[{"name":"Lax","quantity":120,"unit":"g"}]}. Sätt quantity till null om osäker.',
         messages:[{role:'user',content:[{type:isPdf?'document':'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:'Läs detta recept.'}]}]
       })});
       const data=await resp.json();
       if(!resp.ok)throw new Error(data.error?.message||'API-fel');
-      const parsed:ScannedRec=JSON.parse(data.content[0].text.trim().replace(/```json|```/g,'').trim());
+      const parsed:ScannedRec=data;
       const si=store.getIngredients();
       const matched=parsed.ingredients.map(x=>{const f=si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));return{...x,matchedId:f?.id,priceSek:f?.priceSek};});
       incrementRecipeScans(); setScanned({...parsed,ingredients:matched});
@@ -205,7 +209,7 @@ function RecipeScanner({ onClose }:{ onClose:()=>void }) {
       return{ingredientId:f?.id||'u_'+x.name,name:x.name,quantity:x.quantity||0,unit:x.unit,unitPrice:f?.priceSek||0};
     });
     const raw=ri.reduce((s,x)=>s+x.quantity*x.unitPrice,0);
-    store.saveRecipe({id:'r'+Date.now(),name:rName.trim(),category:rCat,servings:parseInt(rServ)||1,sellingPriceSek:parseFloat(rPrice)||suggested(raw),ingredients:ri,createdAt:new Date().toISOString().slice(0,10)});
+    store.saveRecipe({id:crypto.randomUUID(),name:rName.trim(),category:rCat,servings:parseInt(rServ)||1,sellingPriceSek:parseFloat(rPrice)||suggested(raw),ingredients:ri,createdAt:new Date().toISOString().slice(0,10)});
     setState('done');
   }
 
@@ -273,7 +277,7 @@ function RecipeScanner({ onClose }:{ onClose:()=>void }) {
   );
 }
 
-type ScanResult = { name: string; price: number; unit: string; matched: boolean; ingredientId?: string };
+type ScanResult = ParsedInvoiceItem;
 type ScanState = 'idle' | 'uploading' | 'scanning' | 'done' | 'error' | 'limit';
 
 function InvoiceScanner({ onClose }: { onClose: () => void }) {
@@ -310,31 +314,19 @@ function InvoiceScanner({ onClose }: { onClose: () => void }) {
       });
       const isPdf = file.type === 'application/pdf';
       const mediaType = isPdf ? 'application/pdf' : file.type as 'image/jpeg'|'image/png'|'image/webp';
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/.netlify/functions/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `Du är ett system som läser leveransfakturor från svenska livsmedelsgrossister. Extrahera ALLA ingredienser med pris och enhet. Svara ENDAST med giltig JSON: {"items":[{"name":"Norsk Lax","price":145,"unit":"kg"}]}. Ignorera frakt, moms, rabatter.`,
-          messages: [{ role: 'user', content: [
-            { type: isPdf ? 'document' : 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: 'Läs denna faktura och extrahera alla ingredienser med priser.' }
-          ]}]
+          type: 'invoice',
+          base64,
+          mediaType,
         })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error?.message || 'API-fel');
-      const clean = data.content[0].text.trim().replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
       const existing = store.getIngredients();
-      const matched: ScanResult[] = (parsed.items || []).map((item: {name:string;price:number;unit:string}) => {
-        const found = existing.find(i =>
-          i.name.toLowerCase().includes(item.name.toLowerCase()) ||
-          item.name.toLowerCase().includes(i.name.toLowerCase())
-        );
-        return { name: item.name, price: item.price, unit: item.unit, matched: !!found, ingredientId: found?.id };
-      });
+      const matched = parseInvoiceData(data, 'demo-restaurant', existing);
       incrementScans();
       setResults(matched);
       setState('done');
@@ -350,7 +342,7 @@ function InvoiceScanner({ onClose }: { onClose: () => void }) {
     results.forEach(r => {
       if (r.matched && r.ingredientId) {
         const ing = ingredients.find(i => i.id === r.ingredientId);
-        if (ing) store.saveIngredient({ ...ing, priceSek: r.price, updatedAt: new Date().toISOString().slice(0,10) });
+        if (ing) store.saveIngredient({ ...ing, priceSek: r.unitPrice, supplier: r.supplierName, updatedAt: new Date().toISOString().slice(0,10) });
       }
     });
     setApplying(false); setApplied(true);
@@ -444,11 +436,11 @@ function InvoiceScanner({ onClose }: { onClose: () => void }) {
                       <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                         <span style={{ fontSize:14 }}>{r.matched?'✅':'⚪'}</span>
                         <div>
-                          <div style={{ fontSize:13, fontWeight:600, color:'var(--t1)' }}>{r.name}</div>
-                          <div style={{ fontSize:11, color:'var(--t3)' }}>{r.matched?'Matchar din ingrediens':'Ej i din databas'}</div>
+                          <div style={{ fontSize:13, fontWeight:600, color:'var(--t1)' }}>{r.itemName}</div>
+                          <div style={{ fontSize:11, color:'var(--t3)' }}>{r.matched?'Matchar din ingrediens':'Ej i din databas'} - {r.quantity} {r.unit} - {r.supplierName}</div>
                         </div>
                       </div>
-                      <div className="font-mono" style={{ fontSize:14, fontWeight:700, color:'var(--brown)' }}>{r.price} kr/{r.unit}</div>
+                      <div className="font-mono" style={{ fontSize:14, fontWeight:700, color:'var(--brown)' }}>{r.unitPrice} kr/{r.unit}</div>
                     </div>
                   ))}
                 </div>
@@ -496,7 +488,7 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
     const raw = recipeIngredients.reduce((s,i) => s + i.quantity * i.unitPrice, 0);
     const sp  = parseFloat(price) || suggested(raw);
     const rec: Recipe = {
-      id: 'r' + Date.now(), name: name.trim(), category: cat,
+      id: crypto.randomUUID(), name: name.trim(), category: cat,
       servings: parseInt(servings) || 1, sellingPriceSek: sp,
       ingredients: recipeIngredients, createdAt: new Date().toISOString().slice(0,10),
     };
