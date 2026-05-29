@@ -6,6 +6,7 @@ import {
   calculateRecipeTotalCost,
   suggestSellingPrice,
 } from '../lib/calculations';
+import { SEED_ING } from './seed-ingredients';
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
 export interface PricePoint {
@@ -161,37 +162,6 @@ export function buildAlerts(
 }
 
 // ─── SEED DATA ────────────────────────────────────────────────────────────────
-function hist(current: number, prev: number): PricePoint[] {
-  const pts: PricePoint[] = [];
-  const now = new Date('2026-05-16');
-  for (let w = 8; w >= 0; w--) {
-    const d = new Date(now); d.setDate(d.getDate() - w * 7);
-    const t = (8 - w) / 8;
-    const p = prev + (current - prev) * t + (Math.random() - 0.5) * (current * 0.02);
-    pts.push({ date: d.toISOString().slice(0, 10), priceSek: Math.round(p * 100) / 100 });
-  }
-  pts[pts.length - 1].priceSek = current;
-  return pts;
-}
-
-const SEED_ING: Ingredient[] = [
-  { id:'i1',  name:'Norsk Lax',       category:'Fisk',      unit:'kg',    priceSek:145,  prevPriceSek:129,  supplier:'Menigo',           priceHistory:hist(145,129),  updatedAt:'2026-05-16' },
-  { id:'i2',  name:'Japanskt Ris',    category:'Torrvaror', unit:'kg',    priceSek:60,   prevPriceSek:59,   supplier:'Snabbgross',        priceHistory:hist(60,59),    updatedAt:'2026-05-16' },
-  { id:'i3',  name:'Avokado',         category:'Grönsaker', unit:'kg',    priceSek:90,   prevPriceSek:83,   supplier:'Martin & Servera',  priceHistory:hist(90,83),    updatedAt:'2026-05-15' },
-  { id:'i4',  name:'Edamame',         category:'Grönsaker', unit:'kg',    priceSek:80,   prevPriceSek:78,   supplier:'Menigo',            priceHistory:hist(80,78),    updatedAt:'2026-05-14' },
-  { id:'i5',  name:'Oxfilé',          category:'Kött',      unit:'kg',    priceSek:368,  prevPriceSek:380,  supplier:'Martin & Servera',  priceHistory:hist(368,380),  updatedAt:'2026-05-16' },
-  { id:'i6',  name:'Tryffel (Svart)', category:'Svamp',     unit:'kg',    priceSek:2800, prevPriceSek:2314, supplier:'Menigo',            priceHistory:hist(2800,2314),updatedAt:'2026-05-13' },
-  { id:'i7',  name:'Hummer',          category:'Skaldjur',  unit:'kg',    priceSek:468,  prevPriceSek:480,  supplier:'Snabbgross',        priceHistory:hist(468,480),  updatedAt:'2026-05-16' },
-  { id:'i8',  name:'Smör 82%',        category:'Mejeri',    unit:'kg',    priceSek:95,   prevPriceSek:90,   supplier:'Martin & Servera',  priceHistory:hist(95,90),    updatedAt:'2026-05-15' },
-  { id:'i9',  name:'Parmigiano',      category:'Mejeri',    unit:'kg',    priceSek:220,  prevPriceSek:213,  supplier:'Menigo',            priceHistory:hist(220,213),  updatedAt:'2026-05-14' },
-  { id:'i10', name:'Pasta (Torr)',    category:'Torrvaror', unit:'kg',    priceSek:45,   prevPriceSek:44,   supplier:'Snabbgross',        priceHistory:hist(45,44),    updatedAt:'2026-05-12' },
-  { id:'i11', name:'Sojasås',         category:'Kryddor',   unit:'liter', priceSek:55,   prevPriceSek:54,   supplier:'Menigo',            priceHistory:hist(55,54),    updatedAt:'2026-05-10' },
-  { id:'i12', name:'Rucola',          category:'Grönsaker', unit:'kg',    priceSek:70,   prevPriceSek:68,   supplier:'Martin & Servera',  priceHistory:hist(70,68),    updatedAt:'2026-05-16' },
-  { id:'i13', name:'Tomat kvist',     category:'Grönsaker', unit:'kg',    priceSek:42,   prevPriceSek:35,   supplier:'Martin & Servera',  priceHistory:hist(42,35),    updatedAt:'2026-05-16' },
-  { id:'i14', name:'Kycklingfilé',    category:'Kött',      unit:'kg',    priceSek:112,  prevPriceSek:98,   supplier:'Menigo',            priceHistory:hist(112,98),   updatedAt:'2026-05-16' },
-  { id:'i15', name:'Vispgrädde 40%',  category:'Mejeri',    unit:'liter', priceSek:58,   prevPriceSek:52,   supplier:'Snabbgross',        priceHistory:hist(58,52),    updatedAt:'2026-05-16' },
-];
-
 const SEED_REC: Recipe[] = [
   {
     id:'r1', name:'Laxpoke Bowl', category:'Huvudrätter', servings:1, sellingPriceSek:139, createdAt:'2026-05-10',
@@ -252,7 +222,7 @@ function load<T>(key: string, fallback: T): T {
   catch { return fallback; }
 }
 function save<T>(key: string, val: T) { localStorage.setItem(key, JSON.stringify(val)); }
-const K = { ing: 'sv_ing3', rec: 'sv_rec3', user: 'sv_user' };
+const K = { ing: 'sv_ing4', rec: 'sv_rec3', user: 'sv_user' };
 
 export const store = {
   getIngredients: (): Ingredient[] => load(K.ing, SEED_ING),
