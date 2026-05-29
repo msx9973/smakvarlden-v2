@@ -7,6 +7,7 @@ import { parseInvoiceData } from '../lib/invoice-parser';
 import type { ParsedInvoiceItem } from '../lib/invoice-parser';
 import { useAuth } from '../lib/auth-context';
 import { fileToBase64, fetchScanHealth, scanDocument } from '../lib/scan-api';
+import { calculateLineCostWithUnits, convertQuantity, inferPurchaseUnit } from '../lib/calculations';
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
@@ -240,9 +241,11 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
     const si=store.getIngredients();
     const ri=ings.filter(x=>x.name&&(x.quantity||0)>0).map(x=>{
       const f=x.matchedId?si.find(s=>s.id===x.matchedId):si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));
-      return{ingredientId:f?.id||'u_'+x.name,name:x.name,quantity:x.quantity||0,unit:x.unit,unitPrice:f?.priceSek||0};
+      const purchaseUnit = f?.unit ?? inferPurchaseUnit(x.unit);
+      const quantity = convertQuantity(x.quantity || 0, x.unit, purchaseUnit);
+      return{ingredientId:f?.id||'u_'+x.name,name:x.name,quantity,unit:purchaseUnit,unitPrice:f?.priceSek||0};
     });
-    const raw=ri.reduce((s,x)=>s+x.quantity*x.unitPrice,0);
+    const raw=ri.reduce((s,x)=>s+calculateLineCostWithUnits(x.quantity,x.unit,x.unitPrice,x.unit),0);
     store.saveRecipe({id:crypto.randomUUID(),name:rName.trim(),category:rCat,servings:parseInt(rServ)||1,sellingPriceSek:parseFloat(rPrice)||suggested(raw),ingredients:ri,createdAt:new Date().toISOString().slice(0,10)});
     setState('done');
   }
@@ -505,7 +508,10 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
         return { ingredientId:ing.id, name:ing.name, quantity:parseFloat(l.qty), unit:ing.unit, unitPrice:ing.priceSek };
       });
     if (recipeIngredients.length === 0) { setErr('Lägg till minst en ingrediens'); return; }
-    const raw = recipeIngredients.reduce((s,i) => s + i.quantity * i.unitPrice, 0);
+    const raw = recipeIngredients.reduce(
+      (s, i) => s + calculateLineCostWithUnits(i.quantity, i.unit, i.unitPrice, i.unit),
+      0,
+    );
     const sp  = parseFloat(price) || suggested(raw);
     const rec: Recipe = {
       id: crypto.randomUUID(), name: name.trim(), category: cat,

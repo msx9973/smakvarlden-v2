@@ -1,10 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { store, rawCost, margin, suggested } from '../store';
+import { calculateLineCostWithUnits, inferPurchaseUnit } from '../lib/calculations';
 
 export default function RecipeDetail() {
   const { id } = useParams<{ id: string }>();
   const recipe = store.getRecipes().find(r => r.id === id);
+  const ingredients = store.getIngredients();
 
   if (!recipe) return (
     <div style={{ padding:'60px 36px', textAlign:'center' }}>
@@ -45,13 +47,16 @@ export default function RecipeDetail() {
               <span style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.7px', color:'rgba(255,255,255,.45)' }}>Ingredienser</span>
             </div>
             {recipe.ingredients.map((ing, i) => {
-              const lineCost = ing.quantity * ing.unitPrice;
-              const share    = raw > 0 ? (lineCost / raw) * 100 : 0;
+              const dbIng = ingredients.find(item => item.id === ing.ingredientId);
+              const purchaseUnit = dbIng?.unit ?? inferPurchaseUnit(ing.unit);
+              const unitPrice = dbIng?.priceSek ?? ing.unitPrice;
+              const lineCost = calculateLineCostWithUnits(ing.quantity, ing.unit, unitPrice, purchaseUnit);
+              const share = raw > 0 ? (lineCost / raw) * 100 : 0;
               return (
                 <div key={i} style={{ display:'flex', alignItems:'center', gap:12, padding:'11px 18px', borderBottom: i < recipe.ingredients.length-1 ? '1px solid var(--border)' : 'none' }}>
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontSize:13, fontWeight:500, color:'var(--t1)' }}>{ing.name}</div>
-                    <div style={{ fontSize:11, color:'var(--t3)', marginTop:1 }}>{ing.quantity} {ing.unit} × {ing.unitPrice} kr</div>
+                    <div style={{ fontSize:11, color:'var(--t3)', marginTop:1 }}>{ing.quantity} {ing.unit} × {unitPrice} kr/{purchaseUnit}</div>
                   </div>
                   <div style={{ width:60 }}>
                     <div style={{ height:3, background:'var(--muted)', borderRadius:100, overflow:'hidden' }}>
