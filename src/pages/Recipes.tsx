@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
 import type { Recipe } from '../store';
-import { parseInvoiceData } from '../lib/invoice-parser';
+import { parseInvoiceData, createIngredientFromInvoiceItem } from '../lib/invoice-parser';
 import type { ParsedInvoiceItem } from '../lib/invoice-parser';
 import { useAuth } from '../lib/auth-context';
 import { fileToBase64, fetchScanHealth, scanDocument } from '../lib/scan-api';
@@ -327,6 +327,7 @@ function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => voi
   const [error, setError] = useState('');
   const [applying, setApplying] = useState(false);
   const [applied, setApplied]   = useState(false);
+  const [applySummary, setApplySummary] = useState({ updated: 0, added: 0 });
 
   function handleFile(f: File) {
     setFile(f);
@@ -360,17 +361,38 @@ function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => voi
 
   function applyPrices() {
     setApplying(true);
-    const ingredients = store.getIngredients();
+    let updated = 0;
+    let added = 0;
+
     results.forEach(r => {
+      if (r.unitPrice <= 0 || !r.itemName.trim()) return;
+
       if (r.matched && r.ingredientId) {
-        const ing = ingredients.find(i => i.id === r.ingredientId);
-        if (ing) store.saveIngredient({ ...ing, priceSek: r.unitPrice, supplier: r.supplierName, updatedAt: new Date().toISOString().slice(0,10) });
+        const ing = store.getIngredients().find(i => i.id === r.ingredientId);
+        if (ing) {
+          store.saveIngredient({
+            ...ing,
+            priceSek: r.unitPrice,
+            supplier: r.supplierName,
+            updatedAt: new Date().toISOString().slice(0, 10),
+          });
+          updated++;
+        }
+        return;
       }
+
+      store.saveIngredient(createIngredientFromInvoiceItem(r));
+      added++;
     });
-    setApplying(false); setApplied(true);
+
+    setApplySummary({ updated, added });
+    setApplying(false);
+    setApplied(true);
   }
 
   const matchedCount = results.filter(r => r.matched).length;
+  const newCount = results.filter(r => !r.matched && r.unitPrice > 0 && r.itemName.trim()).length;
+  const actionableCount = matchedCount + newCount;
 
   return (
     <div style={{ position:'fixed', inset:0, background:'rgba(20,14,8,.5)', zIndex:500, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}
@@ -443,36 +465,50 @@ function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => voi
             applied ? (
               <div style={{ textAlign:'center', padding:'40px 20px' }}>
                 <CheckCircle size={48} color="var(--green)" style={{ marginBottom:12 }} />
-                <div style={{ fontSize:16, fontWeight:700, color:'var(--t1)', marginBottom:8 }}>Priser uppdaterade!</div>
-                <div style={{ fontSize:13, color:'var(--t2)', marginBottom:24 }}>{matchedCount} ingredienser har fått nya priser.</div>
-                <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', border:'none', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>Stäng och se recept</button>
+                <div style={{ fontSize:16, fontWeight:700, color:'var(--t1)', marginBottom:8 }}>Faktura importerad!</div>
+                <div style={{ fontSize:13, color:'var(--t2)', marginBottom:24, lineHeight:1.6 }}>
+                  {applySummary.updated > 0 && <span>{applySummary.updated} priser uppdaterade.<br /></span>}
+                  {applySummary.added > 0 && <span>{applySummary.added} nya ingredienser tillagda.<br /></span>}
+                  {applySummary.updated === 0 && applySummary.added === 0 && 'Inga rader kunde sparas.'}
+                </div>
+                <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', border:'none', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>Stäng och se ingredienser</button>
               </div>
             ) : (
               <>
                 <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:20 }}>
                   <CheckCircle size={18} color="var(--green)" />
-                  <span style={{ fontSize:14, fontWeight:600, color:'var(--t1)' }}>Hittade {results.length} ingredienser — {matchedCount} matchade dina befintliga</span>
+                  <span style={{ fontSize:14, fontWeight:600, color:'var(--t1)' }}>
+                    Hittade {results.length} rader — {matchedCount} matchade, {newCount} nya
+                  </span>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:6, marginBottom:20, maxHeight:300, overflow:'auto' }}>
                   {results.map((r, i) => (
                     <div key={i} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 14px', borderRadius:10, background:r.matched?'var(--goldbg)':'var(--muted)', border:'1px solid var(--border)' }}>
                       <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                        <span style={{ fontSize:14 }}>{r.matched?'✅':'⚪'}</span>
+                        <span style={{ fontSize:14 }}>{r.matched ? '✅' : '➕'}</span>
                         <div>
                           <div style={{ fontSize:13, fontWeight:600, color:'var(--t1)' }}>{r.itemName}</div>
-                          <div style={{ fontSize:11, color:'var(--t3)' }}>{r.matched?'Matchar din ingrediens':'Ej i din databas'} - {r.quantity} {r.unit} - {r.supplierName}</div>
+                          <div style={{ fontSize:11, color:'var(--t3)' }}>{r.matched ? 'Uppdaterar pris' : 'Läggs till som ny'} · {r.quantity} {r.unit} · {r.supplierName}</div>
                         </div>
                       </div>
                       <div className="font-mono" style={{ fontSize:14, fontWeight:700, color:'var(--brown)' }}>{r.unitPrice} kr/{r.unit}</div>
                     </div>
                   ))}
                 </div>
-                {matchedCount === 0 && <div style={{ padding:'12px 16px', background:'rgba(185,28,28,.06)', border:'1px solid rgba(185,28,28,.15)', borderRadius:10, fontSize:13, color:'var(--red)', marginBottom:16 }}>Inga ingredienser matchade. Lägg till ingredienserna i din databas först.</div>}
+                {actionableCount === 0 && (
+                  <div style={{ padding:'12px 16px', background:'rgba(185,28,28,.06)', border:'1px solid rgba(185,28,28,.15)', borderRadius:10, fontSize:13, color:'var(--red)', marginBottom:16 }}>
+                    Inga rader kunde importeras. Kontrollera att fakturan innehåller produkter med pris.
+                  </div>
+                )}
                 <div style={{ display:'flex', gap:10, justifyContent:'flex-end' }}>
                   <button onClick={onClose} style={{ padding:'10px 20px', borderRadius:10, border:'1px solid var(--border)', background:'none', cursor:'pointer', fontSize:13, color:'var(--t2)' }}>Avbryt</button>
-                  <button onClick={applyPrices} disabled={matchedCount===0||applying}
-                    style={{ padding:'10px 24px', borderRadius:10, background:matchedCount>0?'var(--brown)':'var(--border)', border:'none', color:matchedCount>0?'#fff':'var(--t3)', fontSize:13, fontWeight:600, cursor:matchedCount>0?'pointer':'not-allowed' }}>
-                    {applying?'Uppdaterar...':(`Uppdatera ${matchedCount} priser`)}
+                  <button onClick={applyPrices} disabled={actionableCount === 0 || applying}
+                    style={{ padding:'10px 24px', borderRadius:10, background:actionableCount > 0 ? 'var(--brown)' : 'var(--border)', border:'none', color:actionableCount > 0 ? '#fff' : 'var(--t3)', fontSize:13, fontWeight:600, cursor:actionableCount > 0 ? 'pointer' : 'not-allowed' }}>
+                    {applying ? 'Sparar...' : newCount > 0 && matchedCount > 0
+                      ? `Uppdatera ${matchedCount} och lägg till ${newCount}`
+                      : newCount > 0
+                        ? `Lägg till ${newCount} ingredienser`
+                        : `Uppdatera ${matchedCount} priser`}
                   </button>
                 </div>
               </>

@@ -67,13 +67,40 @@ function isLikelyProductLine(line: Record<string, unknown>): boolean {
 
 function guessCategory(name: string): string {
   const n = normalizeName(name);
-  if (/(lax|fisk|torsk|tonfisk|sej|roding)/.test(n)) return 'Fisk';
-  if (/(oxfile|not|kyckling|flask|lamm|kott)/.test(n)) return 'Kott';
-  if (/(rak|hummer|mussl|skaldjur)/.test(n)) return 'Skaldjur';
-  if (/(smor|gradde|mjolk|ost|parmigiano|yoghurt)/.test(n)) return 'Mejeri';
-  if (/(ris|pasta|mjol|socker|olja|soja)/.test(n)) return 'Torrvaror';
-  if (/(avokado|rucola|tomat|gurka|potatis|morot|lok|gronsak)/.test(n)) return 'Gronsaker';
-  return 'Ovrigt';
+  if (/(lax|fisk|torsk|tonfisk|sej|roding|kolja|sill|makrill)/.test(n)) return 'Fisk';
+  if (/(oxfile|not|kyckling|flask|lamm|kott|bacon|korv|anka|vilt|kalv|gris)/.test(n)) return 'Kött';
+  if (/(rak|hummer|mussl|skaldjur|scampi|krabba|rom)/.test(n)) return 'Skaldjur';
+  if (/(smor|gradde|mjolk|ost|parmigiano|yoghurt|feta|mozzarella|brie|comte)/.test(n)) return 'Mejeri';
+  if (/(ris|pasta|mjol|socker|olja|soja|bulgur|couscous|not|linser|kikart)/.test(n)) return 'Torrvaror';
+  if (/(tryffel|svamp|kantarell|shiitake|portabello|champignon)/.test(n)) return 'Svamp';
+  if (/(avokado|rucola|tomat|gurka|potatis|morot|lok|gronsak|spenat|salad|basilika|dill|persilja|broccoli|paprika)/.test(n)) return 'Grönsaker';
+  if (/(olja|vinager|senap|krydda|salt|peppar|fond|sas|sås|honung)/.test(n)) return 'Kryddor';
+  return 'Torrvaror';
+}
+
+export function normalizePurchaseUnit(unit: string): string {
+  const u = unit.toLowerCase().trim();
+  if (u === 'l' || u === 'lt' || u === 'liter' || u === 'litre') return 'liter';
+  if (u === 'ml' || u === 'cl' || u === 'dl') return 'liter';
+  if (u === 'kg' || u === 'kilo' || u === 'kilogram') return 'kg';
+  if (u === 'g' || u === 'gram' || u === 'gr') return 'kg';
+  if (u === 'st' || u === 'styck' || u === 'stycke' || u === 'pcs') return 'st';
+  return 'kg';
+}
+
+export function createIngredientFromInvoiceItem(item: ParsedInvoiceItem): Ingredient {
+  const today = new Date().toISOString().slice(0, 10);
+  return {
+    id: crypto.randomUUID(),
+    name: item.itemName.trim(),
+    category: item.category === 'Gronsaker' ? 'Grönsaker' : item.category === 'Kott' ? 'Kött' : item.category,
+    unit: normalizePurchaseUnit(item.unit),
+    priceSek: item.unitPrice,
+    prevPriceSek: item.unitPrice,
+    supplier: item.supplierName || undefined,
+    priceHistory: [{ date: today, priceSek: item.unitPrice }],
+    updatedAt: today,
+  };
 }
 
 function findMatch(itemName: string, ingredients: Ingredient[]): Ingredient | undefined {
