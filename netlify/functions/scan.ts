@@ -29,18 +29,18 @@ export const handler: Handler = async (event) => {
 
     const systems: Record<string, string> = {
       invoice: [
-        'Du ar ett system som laser leveransfakturor fran svenska livsmedelsgrossister.',
+        'Du är ett system som läser leveransfakturor från svenska livsmedelsgrossister.',
         'Extrahera endast riktiga produktrader/ingredienser. Ignorera moms, frakt, rabatter, totalsummor, OCR, artikelrubriker och sidfot.',
-        'Behall produktnamn pa fakturans sprak. Oversatt inte Laxfile, Menigo, Martin & Servera eller vanliga kokstermer.',
+        'Behåll produktnamn på fakturans språk. Översätt inte Laxfilé, Menigo, Martin & Servera eller vanliga kökstermer.',
         'Svara endast med giltig JSON i detta format:',
         '{"supplierName":"Menigo","invoiceId":"optional","invoiceDate":"YYYY-MM-DD","items":[{"name":"Laxfile","category":"Fisk","quantity":5,"unit":"kg","unitPrice":162,"totalPrice":810,"confidence":0.92}]}',
-        'Om quantity saknas, anvand 1. Om unitPrice saknas men totalPrice finns, anvand totalPrice som unitPrice.',
+        'Om quantity saknas, använd 1. Om unitPrice saknas men totalPrice finns, använd totalPrice som unitPrice.',
       ].join(' '),
       recipe: [
-        'Du ar ett system som laser recept fran svenska restaurangkok.',
+        'Du är ett system som läser recept från svenska restaurangkök.',
         'Svara endast med giltig JSON:',
         '{"name":"Namn","category":"Huvudratter","servings":1,"sellingPrice":null,"ingredients":[{"name":"Lax","quantity":120,"unit":"g"}]}',
-        'Satt quantity till null om du ar osaker.',
+        'Sätt quantity till null om du är osäker.',
       ].join(' '),
     };
 
@@ -61,7 +61,7 @@ export const handler: Handler = async (event) => {
             role: 'user',
             content: [
               { type: isPdf ? 'document' : 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-              { type: 'text', text: type === 'invoice' ? 'Las denna faktura.' : 'Las detta recept.' },
+              { type: 'text', text: type === 'invoice' ? 'Läs denna faktura.' : 'Läs detta recept.' },
             ],
           },
         ],
