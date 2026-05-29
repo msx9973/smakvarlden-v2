@@ -5,6 +5,8 @@ import { store, margin, totalCost, marginColor, suggested } from '../store';
 import type { Recipe } from '../store';
 import { parseInvoiceData } from '../lib/invoice-parser';
 import type { ParsedInvoiceItem } from '../lib/invoice-parser';
+import { useAuth } from '../lib/auth-context';
+import { fileToBase64, scanDocument } from '../lib/scan-api';
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
@@ -20,7 +22,13 @@ function incrementScans() {
   localStorage.setItem(SCAN_KEY, String(getScansUsed() + 1));
 }
 
+function canScan(used: number, isPro: boolean): boolean {
+  return isPro || used < SCAN_LIMIT;
+}
+
 export default function Recipes() {
+  const { user } = useAuth();
+  const isPro = user?.plan === 'pro';
   const [recipes, setRecipes] = useState(() => store.getRecipes());
   const [search, setSearch]   = useState('');
   const [cat, setCat]         = useState('Alla');
@@ -146,8 +154,8 @@ export default function Recipes() {
       )}
 
       {showNew && <NewRecipeModal onClose={() => { setShowNew(false); setRecipes(store.getRecipes()); }} />}
-      {showScanner && <InvoiceScanner onClose={() => { setShowScanner(false); setRecipes(store.getRecipes()); }} />}
-      {showRecipeScanner && <RecipeScanner onClose={() => { setShowRecipeScanner(false); setRecipes(store.getRecipes()); }} />}
+      {showScanner && <InvoiceScanner isPro={isPro} onClose={() => { setShowScanner(false); setRecipes(store.getRecipes()); }} />}
+      {showRecipeScanner && <RecipeScanner isPro={isPro} onClose={() => { setShowRecipeScanner(false); setRecipes(store.getRecipes()); }} />}
     </div>
   );
 }
@@ -157,8 +165,8 @@ interface ScannedIng { name:string; quantity:number|null; unit:string; matchedId
 interface ScannedRec { name:string; category:string; sellingPrice:number|null; servings:number; ingredients:ScannedIng[]; }
 type RSState = 'idle'|'scanning'|'review'|'done'|'error'|'limit';
 
-function RecipeScanner({ onClose }:{ onClose:()=>void }) {
-  const [state,setState]=useState<RSState>(getRecipeScansUsed()>=SCAN_LIMIT?'limit':'idle');
+function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
+  const [state,setState]=useState<RSState>(canScan(getRecipeScansUsed(), isPro)?'idle':'limit');
   const [file,setFile]=useState<File|null>(null);
   const [preview,setPreview]=useState<string|null>(null);
   const [scanned,setScanned]=useState<ScannedRec|null>(null);
@@ -175,24 +183,14 @@ function RecipeScanner({ onClose }:{ onClose:()=>void }) {
   async function scan(){
     if(!file)return; setState('scanning'); setError('');
     try{
-      const b64=await new Promise<string>((res,rej)=>{const r=new FileReader();r.onload=()=>res((r.result as string).split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
-      const isPdf=file.type==='application/pdf';
-      const mt=isPdf?'application/pdf':file.type as 'image/jpeg'|'image/png'|'image/webp';
-      const resp=await fetch('/.netlify/functions/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-        type:'recipe',
-        base64:b64,
-        mediaType:mt,
-        system:'Du är ett system som läser recept från svenska restaurangkök. Svara ENDAST med giltig JSON: {"name":"Namn","category":"Huvudrätter","servings":1,"sellingPrice":null,"ingredients":[{"name":"Lax","quantity":120,"unit":"g"}]}. Sätt quantity till null om osäker.',
-        messages:[{role:'user',content:[{type:isPdf?'document':'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:'Läs detta recept.'}]}]
-      })});
-      const data=await resp.json();
-      if(!resp.ok)throw new Error(data.error?.message||'API-fel');
-      const parsed:ScannedRec=data;
+      const { base64, mediaType } = await fileToBase64(file);
+      const data = await scanDocument({ type: 'recipe', base64, mediaType }) as ScannedRec;
       const si=store.getIngredients();
-      const matched=parsed.ingredients.map(x=>{const f=si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));return{...x,matchedId:f?.id,priceSek:f?.priceSek};});
-      incrementRecipeScans(); setScanned({...parsed,ingredients:matched});
-      setRName(parsed.name); setRCat(parsed.category||'Huvudrätter');
-      setRPrice(parsed.sellingPrice?String(parsed.sellingPrice):''); setRServ(String(parsed.servings||1)); setIngs(matched);
+      const matched=data.ingredients.map(x=>{const f=si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));return{...x,matchedId:f?.id,priceSek:f?.priceSek};});
+      if (!isPro) incrementRecipeScans();
+      setScanned({...data,ingredients:matched});
+      setRName(data.name); setRCat(data.category||'Huvudrätter');
+      setRPrice(data.sellingPrice?String(data.sellingPrice):''); setRServ(String(data.servings||1)); setIngs(matched);
       setState('review');
     }catch(e:unknown){setError(e instanceof Error?e.message:'Något gick fel.');setState('error');}
   }
@@ -226,7 +224,7 @@ function RecipeScanner({ onClose }:{ onClose:()=>void }) {
         <div style={{padding:'24px'}}>
           {state==='limit'&&<div style={{textAlign:'center',padding:'40px 20px'}}><div style={{fontSize:40,marginBottom:16}}>⏳</div><div style={{fontSize:16,fontWeight:700,color:'var(--t1)',marginBottom:16}}>Månadens skanning är slut</div><Link to="/upgrade" onClick={onClose} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',color:'#fff',fontSize:13,fontWeight:600,textDecoration:'none'}}>Uppgradera till Pro</Link></div>}
           {state==='idle'&&(<>
-            <div style={{fontSize:13,color:'var(--t2)',lineHeight:1.6,marginBottom:20}}>Ta en bild på ett recept — handskrivet eller tryckt. <strong>Inga krav på snygg handstil.</strong> AI läser ingredienser och mängder. Om något saknas frågar vi dig.<span style={{color:'var(--gold)',fontWeight:600}}> {SCAN_LIMIT-getRecipeScansUsed()} av {SCAN_LIMIT} gratisskanning kvar.</span></div>
+            <div style={{fontSize:13,color:'var(--t2)',lineHeight:1.6,marginBottom:20}}>Ta en bild på ett recept — handskrivet eller tryckt. <strong>Inga krav på snygg handstil.</strong> AI läser ingredienser och mängder. Om något saknas frågar vi dig.<span style={{color:'var(--gold)',fontWeight:600}}> {isPro ? 'Pro — obegränsat' : `${SCAN_LIMIT-getRecipeScansUsed()} av ${SCAN_LIMIT} gratisskanning kvar`}.</span></div>
             <div onDrop={handleDrop} onDragOver={e=>e.preventDefault()} style={{border:'2px dashed var(--border)',borderRadius:16,padding:'40px 20px',textAlign:'center',marginBottom:16,cursor:'pointer',transition:'all .2s'}} onClick={()=>document.getElementById('rfi')?.click()} onMouseEnter={e=>(e.currentTarget.style.borderColor='var(--gold)')} onMouseLeave={e=>(e.currentTarget.style.borderColor='var(--border)')}>
               <input id="rfi" type="file" accept="image/*,application/pdf" style={{display:'none'}} onChange={e=>e.target.files?.[0]&&handleFile(e.target.files[0])}/>
               <Camera size={28} color="var(--t3)" style={{marginBottom:12}}/>
@@ -280,8 +278,8 @@ function RecipeScanner({ onClose }:{ onClose:()=>void }) {
 type ScanResult = ParsedInvoiceItem;
 type ScanState = 'idle' | 'uploading' | 'scanning' | 'done' | 'error' | 'limit';
 
-function InvoiceScanner({ onClose }: { onClose: () => void }) {
-  const [state, setState] = useState<ScanState>(getScansUsed() >= SCAN_LIMIT ? 'limit' : 'idle');
+function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }) {
+  const [state, setState] = useState<ScanState>(canScan(getScansUsed(), isPro) ? 'idle' : 'limit');
   const [file, setFile]   = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [results, setResults] = useState<ScanResult[]>([]);
@@ -306,28 +304,11 @@ function InvoiceScanner({ onClose }: { onClose: () => void }) {
     if (!file) return;
     setState('scanning'); setError('');
     try {
-      const base64 = await new Promise<string>((res, rej) => {
-        const reader = new FileReader();
-        reader.onload = () => res((reader.result as string).split(',')[1]);
-        reader.onerror = rej;
-        reader.readAsDataURL(file);
-      });
-      const isPdf = file.type === 'application/pdf';
-      const mediaType = isPdf ? 'application/pdf' : file.type as 'image/jpeg'|'image/png'|'image/webp';
-      const response = await fetch('/.netlify/functions/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'invoice',
-          base64,
-          mediaType,
-        })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || 'API-fel');
+      const { base64, mediaType } = await fileToBase64(file);
+      const data = await scanDocument({ type: 'invoice', base64, mediaType });
       const existing = store.getIngredients();
       const matched = parseInvoiceData(data, 'demo-restaurant', existing);
-      incrementScans();
+      if (!isPro) incrementScans();
       setResults(matched);
       setState('done');
     } catch (e: unknown) {
@@ -377,7 +358,7 @@ function InvoiceScanner({ onClose }: { onClose: () => void }) {
             <>
               <div style={{ fontSize:13, color:'var(--t2)', marginBottom:20, lineHeight:1.6 }}>
                 Ladda upp en bild eller PDF på din leveransfaktura. Vi läser av alla priser automatiskt.
-                <span style={{ color:'var(--gold)', fontWeight:600 }}> {SCAN_LIMIT - getScansUsed()} av {SCAN_LIMIT} gratisskanning kvar.</span>
+                <span style={{ color:'var(--gold)', fontWeight:600 }}> {isPro ? 'Pro — obegränsat' : `${SCAN_LIMIT - getScansUsed()} av ${SCAN_LIMIT} gratisskanning kvar`}.</span>
               </div>
               <div onDrop={handleDrop} onDragOver={e => e.preventDefault()}
                 style={{ border:'2px dashed var(--border)', borderRadius:16, padding:'40px 20px', textAlign:'center', marginBottom:16, cursor:'pointer', transition:'all .2s' }}

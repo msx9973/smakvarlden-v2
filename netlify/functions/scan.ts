@@ -2,29 +2,49 @@ import type { Handler } from '@netlify/functions';
 
 const ALLOWED_TYPES = ['invoice', 'recipe'];
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+function jsonResponse(statusCode: number, body: unknown) {
+  return {
+    statusCode,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  };
+}
+
 function extractJson(text: string) {
   return text.trim().replace(/```json|```/g, '').trim();
 }
 
 export const handler: Handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: corsHeaders, body: '' };
+  }
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method not allowed' };
+    return jsonResponse(405, { error: 'Method not allowed' });
   }
 
   try {
     const { type, base64, mediaType } = JSON.parse(event.body || '{}');
 
     if (!ALLOWED_TYPES.includes(type)) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Invalid type' }) };
+      return jsonResponse(400, { error: 'Invalid type' });
     }
 
     if (!base64 || !mediaType) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Missing data' }) };
+      return jsonResponse(400, { error: 'Missing data' });
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Server not configured' }) };
+      return jsonResponse(500, {
+        error: 'Server not configured. Add ANTHROPIC_API_KEY in Netlify environment variables.',
+      });
     }
 
     const systems: Record<string, string> = {
@@ -70,24 +90,19 @@ export const handler: Handler = async (event) => {
 
     const data = await response.json();
     if (!response.ok) {
-      return { statusCode: 500, body: JSON.stringify({ error: data.error?.message || 'AI error' }) };
+      return jsonResponse(500, { error: data.error?.message || 'AI error' });
     }
 
     const text = data.content?.[0]?.text;
     if (!text) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'AI returned no text' }) };
+      return jsonResponse(500, { error: 'AI returned no text' });
     }
 
     const parsed = JSON.parse(extractJson(text));
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(parsed),
-    };
+    return jsonResponse(200, parsed);
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err instanceof Error ? err.message : 'Unknown error' }),
-    };
+    return jsonResponse(500, {
+      error: err instanceof Error ? err.message : 'Unknown error',
+    });
   }
 };
