@@ -153,7 +153,15 @@ This repo is configured for Netlify:
 - Build command: `npm run build`
 - Publish directory: `dist`
 - SPA redirects and function CORS headers are defined in `netlify.toml`
-- Invoice/recipe scanning uses `netlify/functions/scan.ts` and requires `ANTHROPIC_API_KEY` in Netlify environment variables
+- Invoice/recipe scanning uses `netlify/functions/scan.mts` and requires `ANTHROPIC_API_KEY` in Netlify environment variables
+
+### Scanning setup on Netlify
+
+1. Go to **Site configuration → Environment variables**
+2. Add `ANTHROPIC_API_KEY` with your Anthropic API key
+3. Set scope to **Functions** (or **All scopes**) — Build-only scope will not work at runtime
+4. **Deploy → Trigger deploy → Deploy site** (required after adding or changing the key)
+5. Verify: open `https://YOUR-SITE.netlify.app/.netlify/functions/scan` in the browser — you should see `{"ok":true,"scanConfigured":true,...}`
 
 ## Important Prototype Limits
 

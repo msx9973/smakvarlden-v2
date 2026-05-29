@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
@@ -6,7 +6,7 @@ import type { Recipe } from '../store';
 import { parseInvoiceData } from '../lib/invoice-parser';
 import type { ParsedInvoiceItem } from '../lib/invoice-parser';
 import { useAuth } from '../lib/auth-context';
-import { fileToBase64, scanDocument } from '../lib/scan-api';
+import { fileToBase64, fetchScanHealth, scanDocument } from '../lib/scan-api';
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
@@ -24,6 +24,41 @@ function incrementScans() {
 
 function canScan(used: number, isPro: boolean): boolean {
   return isPro || used < SCAN_LIMIT;
+}
+
+function useScanServiceStatus() {
+  const [status, setStatus] = useState<'checking' | 'ready' | 'missing' | 'offline'>('checking');
+
+  useEffect(() => {
+    let active = true;
+    fetchScanHealth()
+      .then((health) => {
+        if (!active) return;
+        if (health.ok && health.scanConfigured) setStatus('ready');
+        else if (health.ok) setStatus('missing');
+        else setStatus('offline');
+      })
+      .catch(() => {
+        if (active) setStatus('offline');
+      });
+    return () => { active = false; };
+  }, []);
+
+  return status;
+}
+
+function ScanServiceNotice({ status }: { status: ReturnType<typeof useScanServiceStatus> }) {
+  if (status === 'checking' || status === 'ready') return null;
+
+  const message = status === 'missing'
+    ? 'Skanningstjänsten körs men ANTHROPIC_API_KEY saknas. Lägg till nyckeln i Netlify (scope: Functions) och deploya om.'
+    : 'Skanningstjänsten svarar inte. Kontrollera att sidan är deployad på Netlify med funktionen scan, eller kör npm run dev:netlify lokalt.';
+
+  return (
+    <div style={{ padding:'12px 16px', background:'rgba(185,28,28,.06)', border:'1px solid rgba(185,28,28,.15)', borderRadius:10, fontSize:13, color:'var(--red)', marginBottom:16, lineHeight:1.5 }}>
+      {message}
+    </div>
+  );
 }
 
 export default function Recipes() {
@@ -166,6 +201,7 @@ interface ScannedRec { name:string; category:string; sellingPrice:number|null; s
 type RSState = 'idle'|'scanning'|'review'|'done'|'error'|'limit';
 
 function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
+  const scanStatus = useScanServiceStatus();
   const [state,setState]=useState<RSState>(canScan(getRecipeScansUsed(), isPro)?'idle':'limit');
   const [file,setFile]=useState<File|null>(null);
   const [preview,setPreview]=useState<string|null>(null);
@@ -224,6 +260,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
         <div style={{padding:'24px'}}>
           {state==='limit'&&<div style={{textAlign:'center',padding:'40px 20px'}}><div style={{fontSize:40,marginBottom:16}}>⏳</div><div style={{fontSize:16,fontWeight:700,color:'var(--t1)',marginBottom:16}}>Månadens skanning är slut</div><Link to="/upgrade" onClick={onClose} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',color:'#fff',fontSize:13,fontWeight:600,textDecoration:'none'}}>Uppgradera till Pro</Link></div>}
           {state==='idle'&&(<>
+            <ScanServiceNotice status={scanStatus} />
             <div style={{fontSize:13,color:'var(--t2)',lineHeight:1.6,marginBottom:20}}>Ta en bild på ett recept — handskrivet eller tryckt. <strong>Inga krav på snygg handstil.</strong> AI läser ingredienser och mängder. Om något saknas frågar vi dig.<span style={{color:'var(--gold)',fontWeight:600}}> {isPro ? 'Pro — obegränsat' : `${SCAN_LIMIT-getRecipeScansUsed()} av ${SCAN_LIMIT} gratisskanning kvar`}.</span></div>
             <div onDrop={handleDrop} onDragOver={e=>e.preventDefault()} style={{border:'2px dashed var(--border)',borderRadius:16,padding:'40px 20px',textAlign:'center',marginBottom:16,cursor:'pointer',transition:'all .2s'}} onClick={()=>document.getElementById('rfi')?.click()} onMouseEnter={e=>(e.currentTarget.style.borderColor='var(--gold)')} onMouseLeave={e=>(e.currentTarget.style.borderColor='var(--border)')}>
               <input id="rfi" type="file" accept="image/*,application/pdf" style={{display:'none'}} onChange={e=>e.target.files?.[0]&&handleFile(e.target.files[0])}/>
@@ -279,6 +316,7 @@ type ScanResult = ParsedInvoiceItem;
 type ScanState = 'idle' | 'uploading' | 'scanning' | 'done' | 'error' | 'limit';
 
 function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }) {
+  const scanStatus = useScanServiceStatus();
   const [state, setState] = useState<ScanState>(canScan(getScansUsed(), isPro) ? 'idle' : 'limit');
   const [file, setFile]   = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -356,6 +394,7 @@ function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => voi
           )}
           {state === 'idle' && (
             <>
+              <ScanServiceNotice status={scanStatus} />
               <div style={{ fontSize:13, color:'var(--t2)', marginBottom:20, lineHeight:1.6 }}>
                 Ladda upp en bild eller PDF på din leveransfaktura. Vi läser av alla priser automatiskt.
                 <span style={{ color:'var(--gold)', fontWeight:600 }}> {isPro ? 'Pro — obegränsat' : `${SCAN_LIMIT - getScansUsed()} av ${SCAN_LIMIT} gratisskanning kvar`}.</span>

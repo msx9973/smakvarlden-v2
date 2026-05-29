@@ -1,10 +1,11 @@
 import type { Handler } from '@netlify/functions';
 
 const ALLOWED_TYPES = ['invoice', 'recipe'];
+const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-6';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -25,6 +26,14 @@ export const handler: Handler = async (event) => {
     return { statusCode: 204, headers: corsHeaders, body: '' };
   }
 
+  if (event.httpMethod === 'GET') {
+    return jsonResponse(200, {
+      ok: true,
+      scanConfigured: Boolean(process.env.ANTHROPIC_API_KEY),
+      model: MODEL,
+    });
+  }
+
   if (event.httpMethod !== 'POST') {
     return jsonResponse(405, { error: 'Method not allowed' });
   }
@@ -43,7 +52,8 @@ export const handler: Handler = async (event) => {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return jsonResponse(500, {
-        error: 'Server not configured. Add ANTHROPIC_API_KEY in Netlify environment variables.',
+        error:
+          'ANTHROPIC_API_KEY saknas. Lägg till nyckeln under Netlify → Site configuration → Environment variables (scope: Functions) och deploya om.',
       });
     }
 
@@ -73,14 +83,17 @@ export const handler: Handler = async (event) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: MODEL,
         max_tokens: 1800,
         system: systems[type],
         messages: [
           {
             role: 'user',
             content: [
-              { type: isPdf ? 'document' : 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+              {
+                type: isPdf ? 'document' : 'image',
+                source: { type: 'base64', media_type: mediaType, data: base64 },
+              },
               { type: 'text', text: type === 'invoice' ? 'Läs denna faktura.' : 'Läs detta recept.' },
             ],
           },
