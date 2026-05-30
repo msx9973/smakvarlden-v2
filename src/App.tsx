@@ -24,7 +24,17 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
+function AppRoutes() {
+  const { user } = useAuth();
+
+  return (
+    <Routes key={user?.id ?? 'guest'}>
           {/* Public routes */}
           <Route path="/"             element={<Landing />} />
           <Route path="/login"        element={<LoginPage />} />
@@ -49,8 +59,6 @@ export default function App() {
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    </Routes>
   );
 }

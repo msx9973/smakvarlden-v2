@@ -104,7 +104,9 @@ This is not real production security. It is only a browser demo gate.
 - Register: name, valid email, and password with at least 6 characters
 - Use an email containing `pro` to simulate a Pro user
 
-All demo user/session data is stored in the browser.
+All demo user/session data is stored in the browser, **scoped per account** (each login gets its own ingredients, recipes, and scan limits).
+
+Register creates a new account with its own starter data. Logging in with the same email always opens that account's data.
 
 ## Quality Checks
 

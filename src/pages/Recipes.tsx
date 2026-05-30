@@ -11,16 +11,15 @@ import { calculateLineCostWithUnits, convertQuantity, inferPurchaseUnit } from '
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
-const SCAN_KEY = 'sv_scans_' + new Date().toISOString().slice(0,7);
-const RECIPE_SCAN_KEY = 'sv_rscans_' + new Date().toISOString().slice(0,7);
-function getRecipeScansUsed(): number { return parseInt(localStorage.getItem(RECIPE_SCAN_KEY) || '0'); }
-function incrementRecipeScans() { localStorage.setItem(RECIPE_SCAN_KEY, String(getRecipeScansUsed() + 1)); }
+
+function getRecipeScansUsed(): number { return store.getRecipeScansUsed(); }
+function incrementRecipeScans() { store.incrementRecipeScans(); }
 
 function getScansUsed(): number {
-  return parseInt(localStorage.getItem(SCAN_KEY) || '0');
+  return store.getInvoiceScansUsed();
 }
 function incrementScans() {
-  localStorage.setItem(SCAN_KEY, String(getScansUsed() + 1));
+  store.incrementInvoiceScans();
 }
 
 function canScan(used: number, isPro: boolean): boolean {

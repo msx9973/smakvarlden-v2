@@ -222,13 +222,95 @@ function load<T>(key: string, fallback: T): T {
   catch { return fallback; }
 }
 function save<T>(key: string, val: T) { localStorage.setItem(key, JSON.stringify(val)); }
-const K = { ing: 'sv_ing4', rec: 'sv_rec3', user: 'sv_user' };
+
+const K = {
+  session: 'sv_session',
+  users: 'sv_users',
+  legacyUser: 'sv_user',
+  legacyIng: 'sv_ing4',
+  legacyRec: 'sv_rec3',
+};
+
+function userKey(userId: string, kind: 'ing' | 'rec') {
+  return `sv_${kind}_${userId}`;
+}
+
+function cloneSeed<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data)) as T;
+}
+
+function emailKey(email: string) {
+  return email.trim().toLowerCase();
+}
+
+function getUserRegistry(): Record<string, User> {
+  return load(K.users, {});
+}
+
+function saveUserRegistry(registry: Record<string, User>) {
+  save(K.users, registry);
+}
+
+function initUserData(userId: string) {
+  save(userKey(userId, 'ing'), cloneSeed(SEED_ING));
+  save(userKey(userId, 'rec'), cloneSeed(SEED_REC));
+}
+
+function migrateLegacyData(userId: string) {
+  if (localStorage.getItem(userKey(userId, 'ing'))) return;
+
+  const legacyUser = load<User | null>(K.legacyUser, null);
+  const legacyIng = localStorage.getItem(K.legacyIng);
+  const legacyRec = localStorage.getItem(K.legacyRec);
+  const shouldMigrate = legacyUser?.id === userId || (!legacyUser && (legacyIng || legacyRec));
+
+  if (!shouldMigrate) return;
+
+  if (legacyIng) save(userKey(userId, 'ing'), JSON.parse(legacyIng));
+  else save(userKey(userId, 'ing'), cloneSeed(SEED_ING));
+
+  if (legacyRec) save(userKey(userId, 'rec'), JSON.parse(legacyRec));
+  else save(userKey(userId, 'rec'), cloneSeed(SEED_REC));
+}
+
+function currentUserId(): string | null {
+  return load<User | null>(K.session, null)?.id ?? null;
+}
+
+function requireUserId(): string {
+  const id = currentUserId();
+  if (!id) throw new Error('Du måste vara inloggad.');
+  return id;
+}
+
+function scanMonthKey(userId: string, kind: 'invoice' | 'recipe') {
+  const month = new Date().toISOString().slice(0, 7);
+  return kind === 'invoice' ? `sv_scans_${userId}_${month}` : `sv_rscans_${userId}_${month}`;
+}
 
 export const store = {
-  getIngredients: (): Ingredient[] => load(K.ing, SEED_ING),
+  getUser: (): User | null => {
+    const session = load<User | null>(K.session, null);
+    if (session) return session;
+    const legacy = load<User | null>(K.legacyUser, null);
+    if (legacy) {
+      save(K.session, legacy);
+      return legacy;
+    }
+    return null;
+  },
+
+  getIngredients: (): Ingredient[] => {
+    const userId = currentUserId();
+    if (!userId) return cloneSeed(SEED_ING);
+    migrateLegacyData(userId);
+    return load(userKey(userId, 'ing'), cloneSeed(SEED_ING));
+  },
 
   saveIngredient(ing: Ingredient) {
-    const list = this.getIngredients();
+    const userId = requireUserId();
+    const key = userKey(userId, 'ing');
+    const list = load(key, cloneSeed(SEED_ING));
     const idx  = list.findIndex(x => x.id === ing.id);
     if (idx >= 0) {
       const prev = list[idx];
@@ -240,33 +322,113 @@ export const store = {
       ing.priceHistory = [{ date: ing.updatedAt, priceSek: ing.priceSek }];
       list.unshift(ing);
     }
-    save(K.ing, list);
+    save(key, list);
   },
 
-  deleteIngredient(id: string) { save(K.ing, this.getIngredients().filter(x => x.id !== id)); },
-  getRecipes: (): Recipe[] => load(K.rec, SEED_REC),
+  deleteIngredient(id: string) {
+    const userId = requireUserId();
+    const key = userKey(userId, 'ing');
+    save(key, load(key, cloneSeed(SEED_ING)).filter(x => x.id !== id));
+  },
+
+  getRecipes: (): Recipe[] => {
+    const userId = currentUserId();
+    if (!userId) return cloneSeed(SEED_REC);
+    migrateLegacyData(userId);
+    return load(userKey(userId, 'rec'), cloneSeed(SEED_REC));
+  },
 
   saveRecipe(rec: Recipe) {
-    const list = this.getRecipes();
+    const userId = requireUserId();
+    const key = userKey(userId, 'rec');
+    const list = load(key, cloneSeed(SEED_REC));
     const idx  = list.findIndex(x => x.id === rec.id);
     if (idx >= 0) list[idx] = rec; else list.unshift(rec);
-    save(K.rec, list);
+    save(key, list);
   },
 
-  deleteRecipe(id: string) { save(K.rec, this.getRecipes().filter(x => x.id !== id)); },
-  getUser: (): User | null => load(K.user, null),
+  deleteRecipe(id: string) {
+    const userId = requireUserId();
+    const key = userKey(userId, 'rec');
+    save(key, load(key, cloneSeed(SEED_REC)).filter(x => x.id !== id));
+  },
+
+  getInvoiceScansUsed(): number {
+    const userId = currentUserId();
+    if (!userId) return 0;
+    return parseInt(localStorage.getItem(scanMonthKey(userId, 'invoice')) || '0', 10);
+  },
+
+  incrementInvoiceScans() {
+    const userId = requireUserId();
+    const key = scanMonthKey(userId, 'invoice');
+    localStorage.setItem(key, String(this.getInvoiceScansUsed() + 1));
+  },
+
+  getRecipeScansUsed(): number {
+    const userId = currentUserId();
+    if (!userId) return 0;
+    return parseInt(localStorage.getItem(scanMonthKey(userId, 'recipe')) || '0', 10);
+  },
+
+  incrementRecipeScans() {
+    const userId = requireUserId();
+    const key = scanMonthKey(userId, 'recipe');
+    localStorage.setItem(key, String(this.getRecipeScansUsed() + 1));
+  },
 
   login(email: string, pw: string): User {
     if (!email.includes('@') || pw.length < 4) throw new Error('Ogiltig e-post eller lösenord');
-    const u: User = { id:'u1', name: email.split('@')[0], email, plan: email.includes('pro') ? 'pro' : 'free' };
-    save(K.user, u); return u;
+
+    const registry = getUserRegistry();
+    const key = emailKey(email);
+    let user = registry[key];
+
+    if (!user) {
+      user = {
+        id: crypto.randomUUID(),
+        name: email.split('@')[0],
+        email: email.trim(),
+        plan: email.includes('pro') ? 'pro' : 'free',
+      };
+      registry[key] = user;
+      saveUserRegistry(registry);
+      initUserData(user.id);
+    } else {
+      user = {
+        ...user,
+        plan: email.includes('pro') ? 'pro' : user.plan,
+      };
+      registry[key] = user;
+      saveUserRegistry(registry);
+      migrateLegacyData(user.id);
+    }
+
+    save(K.session, user);
+    return user;
   },
 
   register(name: string, email: string, pw: string): User {
     if (!name || !email.includes('@') || pw.length < 6) throw new Error('Fyll i alla fält (lösenord minst 6 tecken)');
-    const u: User = { id:crypto.randomUUID(), name, email, plan:'free' };
-    save(K.user, u); return u;
+
+    const registry = getUserRegistry();
+    const key = emailKey(email);
+    if (registry[key]) throw new Error('Det finns redan ett konto med den e-posten. Logga in i stället.');
+
+    const user: User = {
+      id: crypto.randomUUID(),
+      name: name.trim(),
+      email: email.trim(),
+      plan: 'free',
+    };
+    registry[key] = user;
+    saveUserRegistry(registry);
+    initUserData(user.id);
+    save(K.session, user);
+    return user;
   },
 
-  logout() { localStorage.removeItem(K.user); },
+  logout() {
+    localStorage.removeItem(K.session);
+  },
 };
