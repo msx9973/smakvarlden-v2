@@ -132,6 +132,7 @@ function IngredientModal({ ing, onClose }: { ing: Ingredient|null; onClose:()=>v
   const [price, setPrice]       = useState(ing?.priceSek?.toString() || '');
   const [supplier, setSupplier] = useState(ing?.supplier || '');
   const [err, setErr]           = useState('');
+  const recentHistory = (ing?.priceHistory ?? []).slice(-6).reverse();
 
   const CATS2 = ['Fisk','Kött','Grönsaker','Mejeri','Torrvaror','Kryddor','Skaldjur','Svamp','Dryck','Kaffe','Förpackning'];
   const UNITS = ['kg','g','liter','dl','cl','ml','st','flaska','burk','klyfta'];
@@ -192,6 +193,30 @@ function IngredientModal({ ing, onClose }: { ing: Ingredient|null; onClose:()=>v
               </div>
             )}
           </div>
+          {isEdit && recentHistory.length > 0 && (
+            <div style={{ padding:'12px 14px', border:'1px solid var(--border)', borderRadius:12, background:'var(--muted)' }}>
+              <div style={{ fontSize:11, fontWeight:800, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:8 }}>
+                Prishistorik
+              </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                {recentHistory.map((point, idx) => {
+                  const previous = recentHistory[idx + 1];
+                  const delta = previous && previous.priceSek > 0
+                    ? ((point.priceSek - previous.priceSek) / previous.priceSek) * 100
+                    : 0;
+                  return (
+                    <div key={`${point.date}-${idx}`} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, fontSize:12 }}>
+                      <span style={{ color:'var(--t2)' }}>{point.date}</span>
+                      <span className="font-mono" style={{ color:'var(--t1)', fontWeight:700 }}>{point.priceSek} kr/{unit}</span>
+                      <span className="font-mono" style={{ color:delta > 0 ? 'var(--red)' : delta < 0 ? 'var(--green)' : 'var(--t3)', fontSize:11, minWidth:54, textAlign:'right' }}>
+                        {previous ? `${delta > 0 ? '+' : ''}${delta.toFixed(1)}%` : 'start'}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div>
             <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Leverantör (valfritt)</label>
             <input className="inp" placeholder="T.ex. Menigo" value={supplier} onChange={e=>setSupplier(e.target.value)} />

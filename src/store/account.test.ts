@@ -48,6 +48,27 @@ describe('per-account store', () => {
     expect(store.getInvoiceScansUsed()).toBe(0);
   });
 
+  it('keeps ingredient price history when prices are updated', () => {
+    store.register('Chef', 'chef@test.se', 'secret1');
+    const ingredient = store.getIngredients()[0];
+    const initialHistoryLength = ingredient.priceHistory.length;
+
+    store.saveIngredient({
+      ...ingredient,
+      priceSek: ingredient.priceSek + 12,
+      supplier: 'Menigo',
+      updatedAt: '2026-05-30',
+    });
+
+    const updated = store.getIngredients().find(i => i.id === ingredient.id)!;
+    expect(updated.prevPriceSek).toBe(ingredient.priceSek);
+    expect(updated.priceHistory).toHaveLength(Math.min(initialHistoryLength + 1, 20));
+    expect(updated.priceHistory.at(-1)).toEqual({
+      date: '2026-05-30',
+      priceSek: ingredient.priceSek + 12,
+    });
+  });
+
   it('syncs public recipes to shared catalog', () => {
     store.register('Anna', 'anna@test.se', 'secret1');
     const recipe = {
