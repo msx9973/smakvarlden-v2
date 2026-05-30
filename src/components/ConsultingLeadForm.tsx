@@ -51,11 +51,11 @@ export default function ConsultingLeadForm({ source, tone = 'light' }: Consultin
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encodeForm(formData),
       });
-      if (!response.ok) throw new Error('Could not send request');
+      if (!response.ok) throw new Error('Kunde inte skicka förfrågan');
       form.reset();
       setStatus('sent');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not send request');
+      setError(err instanceof Error ? err.message : 'Kunde inte skicka förfrågan');
       setStatus('error');
     }
   }
@@ -82,48 +82,48 @@ export default function ConsultingLeadForm({ source, tone = 'light' }: Consultin
       <input type="hidden" name="source" value={source} />
       <p style={{ display: 'none' }}>
         <label>
-          Do not fill this out: <input name="bot-field" />
+          Fyll inte i detta: <input name="bot-field" />
         </label>
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <label>
-          <span style={labelStyle(tone)}>Restaurant</span>
-          <input name="restaurant" required placeholder="Restaurant name" style={fieldStyle(tone)} />
+          <span style={labelStyle(tone)}>Restaurang</span>
+          <input name="restaurant" required placeholder="Restaurangnamn" style={fieldStyle(tone)} />
         </label>
         <label>
-          <span style={labelStyle(tone)}>Contact person</span>
-          <input name="name" required placeholder="Your name" style={fieldStyle(tone)} />
+          <span style={labelStyle(tone)}>Kontaktperson</span>
+          <input name="name" required placeholder="Ditt namn" style={fieldStyle(tone)} />
         </label>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <label>
-          <span style={labelStyle(tone)}>Email</span>
+          <span style={labelStyle(tone)}>E-post</span>
           <input name="email" type="email" required placeholder="chef@restaurant.se" style={fieldStyle(tone)} />
         </label>
         <label>
-          <span style={labelStyle(tone)}>City</span>
+          <span style={labelStyle(tone)}>Stad</span>
           <input name="city" placeholder="Upplands Väsby" style={fieldStyle(tone)} />
         </label>
       </div>
 
       <label>
-        <span style={labelStyle(tone)}>Main need</span>
+        <span style={labelStyle(tone)}>Vad vill ni testa?</span>
         <select name="need" defaultValue="invoice-audit" style={fieldStyle(tone)}>
-          <option value="invoice-audit">Invoice audit</option>
-          <option value="recipe-setup">Recipe setup</option>
-          <option value="supplier-prices">Supplier price control</option>
-          <option value="demo">Book a demo</option>
+          <option value="invoice-audit">Fakturakoll</option>
+          <option value="recipe-setup">Lägga in produkter</option>
+          <option value="supplier-prices">Kontrollera leverantörspriser</option>
+          <option value="demo">Boka demo</option>
         </select>
       </label>
 
       <label>
-        <span style={labelStyle(tone)}>Message</span>
+        <span style={labelStyle(tone)}>Meddelande</span>
         <textarea
           name="message"
           rows={4}
-          placeholder="Tell us which supplier invoices, recipes or menu items you want to check first."
+          placeholder="Skriv vilka fakturor, produkter eller menypriser ni vill kontrollera först."
           style={{ ...fieldStyle(tone), resize: 'vertical' }}
         />
       </label>
@@ -141,21 +141,21 @@ export default function ConsultingLeadForm({ source, tone = 'light' }: Consultin
           fontWeight: 900,
         }}
       >
-        {status === 'sending' ? 'Sending...' : 'Request free analysis'}
+        {status === 'sending' ? 'Skickar...' : 'Boka gratis marginalkoll'}
       </button>
 
       {status === 'sent' && (
         <div style={{ color: tone === 'dark' ? 'var(--goldl)' : 'var(--green)', fontSize: 13, fontWeight: 800 }}>
-          Thank you. Your request is saved and we will reply from chef@smakvarlden.se.
+          Tack! Din förfrågan är sparad och vi återkommer från chef@smakvarlden.se.
         </div>
       )}
       {status === 'error' && (
         <div style={{ color: tone === 'dark' ? '#fca5a5' : 'var(--red)', fontSize: 13, fontWeight: 800 }}>
-          {error}. You can also email chef@smakvarlden.se.
+          {error}. Du kan också mejla chef@smakvarlden.se.
         </div>
       )}
       <p style={{ color: muted, fontSize: 11, lineHeight: 1.5 }}>
-        Submissions are stored in Netlify Forms and can be exported as CSV for Excel.
+        Förfrågningar sparas i Netlify Forms och kan exporteras som CSV till Excel.
       </p>
     </form>
   );
