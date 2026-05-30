@@ -26,9 +26,14 @@ export default function Layout({ children }: { children: ReactNode }) {
       <aside className="app-sidebar">
 
         <div style={{ padding:'20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,.08)' }}>
-          <div className="font-serif" style={{ fontSize:17, fontWeight:600, color:'var(--goldl)', letterSpacing:'-.1px' }}>Smakvärlden</div>
-          <div style={{ fontSize:11, color:'rgba(255,255,255,.45)', marginTop:4, lineHeight:1.4 }}>
-            {isEnglish ? 'Food prices and margin control' : 'Hjälp med matpriser och marginal'}
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <img src="/logo-mark.svg" alt="" width={34} height={34} style={{ borderRadius:10, flexShrink:0 }} />
+            <div>
+              <div className="font-serif" style={{ fontSize:17, fontWeight:600, color:'var(--goldl)', letterSpacing:'-.1px' }}>Smakvärlden</div>
+              <div style={{ fontSize:10, color:'rgba(255,255,255,.45)', marginTop:3, lineHeight:1.35 }}>
+                {isEnglish ? 'Food cost under control' : 'Koll på matkostnaden'}
+              </div>
+            </div>
           </div>
         </div>
 

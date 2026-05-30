@@ -38,7 +38,7 @@ export default function Landing() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(247,244,239,.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)', padding: '0 40px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 20, fontWeight: 700, color: 'var(--brown)', fontStyle: 'italic' }}>Smakvärlden</div>
+        <img src="/logo.svg" alt="Smakvärlden - Koll på matkostnaden" style={{ width: 206, height: 'auto', display: 'block' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <a href="#consulting" style={{ fontSize: 13, color: 'var(--t2)', textDecoration: 'none', padding: '8px 16px', fontWeight: 600 }}>Profit support</a>
           <Link to="/login" style={{ fontSize: 13, fontWeight: 700, color: 'var(--white)', background: 'var(--brown)', padding: '8px 20px', borderRadius: 9, textDecoration: 'none' }}>Log in</Link>
@@ -48,14 +48,14 @@ export default function Landing() {
       <section style={{ background: 'var(--brown)', padding: '96px 48px 108px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ display: 'inline-block', fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold)', border: '1px solid rgba(201,168,76,.3)', padding: '5px 16px', borderRadius: 100, marginBottom: 28 }}>
-          Kitchen Operating System
+          Koll på matkostnaden
         </div>
         <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(42px, 6vw, 80px)', fontWeight: 700, letterSpacing: -2, lineHeight: 1.05, color: '#fff', marginBottom: 22 }}>
           Stop Guessing.<br />
           <span style={{ color: 'var(--goldl)', fontStyle: 'italic' }}>Start Profiting.</span>
         </h1>
         <p style={{ fontSize: 17, color: 'rgba(255,255,255,.62)', lineHeight: 1.78, maxWidth: 620, margin: '0 auto 44px' }}>
-          Smakvärlden combines invoice scanning, recipe costing and practical profit support so restaurants can protect food cost before money leaks out.
+          Smakvärlden hjälper restauranger att skanna menyer, recept och fakturor så matkostnad och marginal syns innan vinsten läcker ut.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="#consulting" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '13px 30px', borderRadius: 10, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}>
@@ -161,7 +161,10 @@ export default function Landing() {
       </section>
 
       <footer style={{ background: '#0A0604', padding: '32px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--goldl)', fontWeight: 700, fontStyle: 'italic' }}>Smakvärlden</div>
+        <div>
+          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--goldl)', fontWeight: 700 }}>Smakvärlden</div>
+          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 1.4, color: 'rgba(201,168,76,.55)', textTransform: 'uppercase', marginTop: 3 }}>Koll på matkostnaden</div>
+        </div>
         <div style={{ display: 'flex', gap: 20 }}>
           <Link to="/trust" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>How it works</Link>
           <Link to="/login" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Log in</Link>

@@ -95,14 +95,10 @@ export function LoginPage() {
     <div style={{ minHeight:'100vh', background:'var(--cream)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div style={{ width:'100%', maxWidth:400 }}>
         <div style={{ textAlign:'center', marginBottom:32 }}>
-          <div style={{ width:44, height:44, background:'var(--brown)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
-            <svg width="20" height="20" viewBox="0 0 15 15" fill="none" stroke="hsl(44 54% 50%)" strokeWidth="1.6" strokeLinecap="round">
-              <path d="M7.5 1.5v5M5 3.5l2.5 3 2.5-3M2 9.5h11M3.5 9.5V13M11.5 9.5V13"/>
-            </svg>
-          </div>
+          <img src="/logo-mark.svg" alt="Smakvärlden" width={48} height={48} style={{ borderRadius:14, margin:'0 auto 12px', display:'block' }} />
           <h1 className="font-serif" style={{ fontSize:24, fontWeight:600, color:'var(--brown)' }}>Välkommen!</h1>
           <p style={{ fontSize:15, color:'var(--t2)', marginTop:8, lineHeight:1.5 }}>
-            Fota fakturan, spara dina rätter — se om priset räcker.
+            Koll på matkostnaden — fota fakturan, spara dina rätter och se om priset räcker.
           </p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>
