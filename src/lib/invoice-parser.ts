@@ -67,6 +67,9 @@ function isLikelyProductLine(line: Record<string, unknown>): boolean {
 
 function guessCategory(name: string): string {
   const n = normalizeName(name);
+  if (/(ol|lager|ipa|pilsner|vin|prosecco|cava|champagne|whisky|whiskey|vodka|gin|rom|tequila|aperol|likor|sprit|cola|coca|fanta|sprite|tonic|juice|must|lask|dryck|mineralvatten|ramlosa|loka)/.test(n)) return 'Dryck';
+  if (/(kaffe|espresso|brygg|arabica|robusta|kaffebonor|kaffebon|te|chai|kakao)/.test(n)) return 'Kaffe';
+  if (/(takeaway|take away|matlada|box|bagasse|servett|pase|mugg|lock|sugror|forpack|emballage|kartong)/.test(n)) return 'Förpackning';
   if (/(lax|fisk|torsk|tonfisk|sej|roding|kolja|sill|makrill)/.test(n)) return 'Fisk';
   if (/(oxfile|not|kyckling|flask|lamm|kott|bacon|korv|anka|vilt|kalv|gris)/.test(n)) return 'Kött';
   if (/(rak|hummer|mussl|skaldjur|scampi|krabba|rom)/.test(n)) return 'Skaldjur';
@@ -78,13 +81,31 @@ function guessCategory(name: string): string {
   return 'Torrvaror';
 }
 
+function packageVolumeLiters(name: string): number | null {
+  const n = normalizeName(name);
+  const match = n.match(/(\d+(?:[.,]\d+)?)\s*(cl|ml|l|liter)/);
+  if (!match) return null;
+
+  const amount = toNumber(match[1]);
+  const unit = match[2];
+  if (amount <= 0) return null;
+  if (unit === 'cl') return amount / 100;
+  if (unit === 'ml') return amount / 1000;
+  return amount;
+}
+
+function shouldPriceBeveragePerLiter(name: string): boolean {
+  const n = normalizeName(name);
+  return /(whisky|whiskey|vodka|gin|rom|rum|tequila|aperol|likor|sprit|vin|prosecco|cava|champagne)/.test(n);
+}
+
 export function normalizePurchaseUnit(unit: string): string {
   const u = unit.toLowerCase().trim();
   if (u === 'l' || u === 'lt' || u === 'liter' || u === 'litre') return 'liter';
   if (u === 'ml' || u === 'cl' || u === 'dl') return 'liter';
   if (u === 'kg' || u === 'kilo' || u === 'kilogram') return 'kg';
   if (u === 'g' || u === 'gram' || u === 'gr') return 'kg';
-  if (u === 'st' || u === 'styck' || u === 'stycke' || u === 'pcs') return 'st';
+  if (u === 'st' || u === 'styck' || u === 'stycke' || u === 'pcs' || u === 'flaska' || u === 'fl' || u === 'bottle' || u === 'burk' || u === 'kolli') return 'st';
   return 'kg';
 }
 
@@ -138,10 +159,23 @@ export function parseInvoiceData(
     .filter(isLikelyProductLine)
     .map(line => {
       const itemName = String(line.name ?? line.itemName ?? line.text ?? line.description ?? '').trim();
-      const quantity = Math.max(0, toNumber(line.quantity ?? line.qty, 1));
-      const unit = String(line.unit ?? line.uom ?? 'st').trim() || 'st';
-      const unitPrice = toNumber(line.unitPrice ?? line.price ?? line.unit_price);
-      const totalPrice = toNumber(line.totalPrice ?? line.total ?? line.amount, quantity * unitPrice);
+      const category = guessCategory(itemName);
+      let quantity = Math.max(0, toNumber(line.quantity ?? line.qty, 1));
+      let unit = String(line.unit ?? line.uom ?? 'st').trim() || 'st';
+      let unitPrice = toNumber(line.unitPrice ?? line.price ?? line.unit_price);
+      let totalPrice = toNumber(line.totalPrice ?? line.total ?? line.amount, quantity * unitPrice);
+      const volumeLiters = packageVolumeLiters(itemName);
+      if (
+        category === 'Dryck' &&
+        shouldPriceBeveragePerLiter(itemName) &&
+        volumeLiters &&
+        normalizePurchaseUnit(unit) === 'st'
+      ) {
+        quantity = quantity * volumeLiters;
+        unit = 'liter';
+        unitPrice = unitPrice / volumeLiters;
+        totalPrice = quantity * unitPrice;
+      }
       const matchedIngredient = findMatch(itemName, ingredients);
 
       return {
@@ -150,7 +184,7 @@ export function parseInvoiceData(
         invoiceId,
         itemName,
         normalizedName: normalizeName(itemName),
-        category: guessCategory(itemName),
+        category,
         quantity,
         unit,
         unitPrice,

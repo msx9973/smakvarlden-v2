@@ -26,6 +26,8 @@ describe('calculations', () => {
   it('converts grams and milliliters to purchase units before costing', () => {
     expect(calculateLineCostWithUnits(120, 'g', 58, 'l')).toBeCloseTo(6.96, 2);
     expect(calculateLineCostWithUnits(200, 'ml', 60, 'l')).toBeCloseTo(12, 2);
+    expect(calculateLineCostWithUnits(4, 'cl', 400, 'liter')).toBeCloseTo(16, 2);
+    expect(calculateLineCostWithUnits(1, 'flaska', 14, 'st')).toBeCloseTo(14, 2);
     expect(convertQuantity(120, 'g', 'kg')).toBeCloseTo(0.12, 4);
     expect(convertQuantity(250, 'ml', 'l')).toBeCloseTo(0.25, 4);
   });

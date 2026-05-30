@@ -169,6 +169,20 @@ const ROWS: Row[] = [
   ['Shiitake färsk', 'Svamp', 'kg', 285, 265, 'Menigo'],
   ['Portabello', 'Svamp', 'kg', 125, 118, 'Snabbgross'],
   ['Kantarell färsk', 'Svamp', 'kg', 320, 295, 'Menigo'],
+
+  // Dryck, kaffe & förpackning (12)
+  ['Lageröl 50cl', 'Dryck', 'st', 14.2, 12.8, 'Martin & Servera'],
+  ['Coca-Cola 33cl', 'Dryck', 'st', 8.6, 7.8, 'Menigo'],
+  ['Tonic Water 20cl', 'Dryck', 'st', 7.2, 6.8, 'Snabbgross'],
+  ['Jameson Whiskey', 'Dryck', 'liter', 398, 356, 'Martin & Servera'],
+  ['Husets Gin', 'Dryck', 'liter', 318, 302, 'Menigo'],
+  ['Husets Vodka', 'Dryck', 'liter', 285, 270, 'Snabbgross'],
+  ['Husets Rödvin', 'Dryck', 'liter', 86, 82, 'Martin & Servera'],
+  ['Prosecco', 'Dryck', 'liter', 118, 110, 'Menigo'],
+  ['Kaffebönor Arabica', 'Kaffe', 'kg', 198, 184, 'Johan & Nyström'],
+  ['Baristamjölk', 'Mejeri', 'liter', 18.5, 17.2, 'Menigo'],
+  ['Apelsinjuice', 'Dryck', 'liter', 22, 20, 'Snabbgross'],
+  ['Takeawaylåda 750ml', 'Förpackning', 'st', 2.4, 2.1, 'Martin & Servera'],
 ];
 
 export const SEED_ING: SeedIngredient[] = ROWS.map(([name, category, unit, priceSek, prevPriceSek, supplier], index) => ({

@@ -134,7 +134,7 @@ function IngredientModal({ ing, onClose }: { ing: Ingredient|null; onClose:()=>v
   const [err, setErr]           = useState('');
 
   const CATS2 = ['Fisk','Kött','Grönsaker','Mejeri','Torrvaror','Kryddor','Skaldjur','Svamp','Dryck','Kaffe','Förpackning'];
-  const UNITS = ['kg','g','liter','dl','st','klyfta'];
+  const UNITS = ['kg','g','liter','dl','cl','ml','st','flaska','burk','klyfta'];
 
   function save() {
     if (!name.trim() || !price) { setErr('Namn och pris krävs'); return; }

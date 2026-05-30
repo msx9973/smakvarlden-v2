@@ -219,6 +219,47 @@ const SEED_REC: Recipe[] = [
       { ingredientId:'i13', name:'Tomat kvist',    quantity:0.06, unit:'kg',    unitPrice:35 },
     ],
   },
+  {
+    id:'r7', name:'Lageröl 50cl', category:'Dryck', servings:1, sellingPriceSek:79, createdAt:'2026-05-16',
+    ingredients:[
+      { ingredientId:'i125', name:'Lageröl 50cl', quantity:1, unit:'st', unitPrice:14.2 },
+    ],
+  },
+  {
+    id:'r8', name:'Whiskey 4cl', category:'Dryck', servings:1, sellingPriceSek:95, createdAt:'2026-05-16',
+    ingredients:[
+      { ingredientId:'i128', name:'Jameson Whiskey', quantity:0.04, unit:'liter', unitPrice:398 },
+    ],
+  },
+  {
+    id:'r9', name:'Coca-Cola 33cl', category:'Dryck', servings:1, sellingPriceSek:35, createdAt:'2026-05-16',
+    ingredients:[
+      { ingredientId:'i126', name:'Coca-Cola 33cl', quantity:1, unit:'st', unitPrice:8.6 },
+    ],
+  },
+  {
+    id:'r10', name:'Gin & Tonic', category:'Dryck', servings:1, sellingPriceSek:135, createdAt:'2026-05-16',
+    ingredients:[
+      { ingredientId:'i129', name:'Husets Gin', quantity:0.04, unit:'liter', unitPrice:318 },
+      { ingredientId:'i127', name:'Tonic Water 20cl', quantity:1, unit:'st', unitPrice:7.2 },
+      { ingredientId:'i23', name:'Lime', quantity:0.02, unit:'kg', unitPrice:65 },
+    ],
+  },
+  {
+    id:'r11', name:'Cappuccino', category:'Kaffe', servings:1, sellingPriceSek:49, createdAt:'2026-05-16',
+    ingredients:[
+      { ingredientId:'i133', name:'Kaffebönor Arabica', quantity:0.018, unit:'kg', unitPrice:198 },
+      { ingredientId:'i134', name:'Baristamjölk', quantity:0.15, unit:'liter', unitPrice:18.5 },
+    ],
+  },
+  {
+    id:'r12', name:'Lunchlåda takeaway', category:'Catering', servings:1, sellingPriceSek:125, createdAt:'2026-05-16',
+    ingredients:[
+      { ingredientId:'i136', name:'Takeawaylåda 750ml', quantity:1, unit:'st', unitPrice:2.4 },
+      { ingredientId:'i14', name:'Kycklingfilé', quantity:0.12, unit:'kg', unitPrice:112 },
+      { ingredientId:'i2', name:'Japanskt Ris', quantity:0.1, unit:'kg', unitPrice:59 },
+    ],
+  },
 ];
 
 // ─── STORE ────────────────────────────────────────────────────────────────────

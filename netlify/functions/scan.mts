@@ -63,6 +63,8 @@ export const handler: Handler = async (event) => {
         'Extrahera endast riktiga produktrader/ingredienser. Ignorera moms, frakt, rabatter, totalsummor, OCR, artikelrubriker och sidfot.',
         'Behåll produktnamn på fakturans språk. Översätt inte Laxfilé, Menigo, Martin & Servera eller vanliga kökstermer.',
         'Använd kategorier som Fisk, Kött, Grönsaker, Mejeri, Torrvaror, Kryddor, Skaldjur, Svamp, Dryck, Kaffe eller Förpackning.',
+        'För sprit/vin på flaska, returnera gärna unit "liter" och unitPrice per liter när flaskstorleken syns. Exempel: 70cl flaska 279 kr => quantity 0.7, unit "liter", unitPrice 398.57.',
+        'För öl, läsk och styckförpackade drycker som säljs som en hel burk/flaska, behåll unit "st" och unitPrice per styck.',
         'Svara endast med giltig JSON i detta format:',
         '{"supplierName":"Menigo","invoiceId":"optional","invoiceDate":"YYYY-MM-DD","items":[{"name":"Laxfile","category":"Fisk","quantity":5,"unit":"kg","unitPrice":162,"totalPrice":810,"confidence":0.92}]}',
         'Om quantity saknas, använd 1. Om unitPrice saknas men totalPrice finns, använd totalPrice som unitPrice.',

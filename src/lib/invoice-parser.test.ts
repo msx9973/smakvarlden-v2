@@ -12,6 +12,7 @@ describe('invoice parser import helpers', () => {
     expect(normalizePurchaseUnit('kg')).toBe('kg');
     expect(normalizePurchaseUnit('st')).toBe('st');
     expect(normalizePurchaseUnit('g')).toBe('kg');
+    expect(normalizePurchaseUnit('flaska')).toBe('st');
   });
 
   it('creates a new ingredient from an unmatched invoice row', () => {
@@ -53,5 +54,37 @@ describe('invoice parser import helpers', () => {
     expect(parsed).toHaveLength(1);
     expect(parsed[0].matched).toBe(true);
     expect(parsed[0].ingredientId).toBe('i14');
+  });
+
+  it('categorizes beverage and packaging invoice rows', () => {
+    const parsed = parseInvoiceData(
+      {
+        supplierName: 'Martin & Servera',
+        items: [
+          { name: 'Jameson Whiskey 70cl', quantity: 6, unit: 'flaska', unitPrice: 279 },
+          { name: 'Coca-Cola 33cl', quantity: 24, unit: 'st', unitPrice: 8.6 },
+          { name: 'Takeaway box 750ml', quantity: 200, unit: 'st', unitPrice: 2.4 },
+        ],
+      },
+      'demo',
+      [],
+    );
+
+    expect(parsed.map(item => item.category)).toEqual(['Dryck', 'Dryck', 'Förpackning']);
+  });
+
+  it('normalizes spirits in bottles to liter prices for serving calculations', () => {
+    const [whiskey] = parseInvoiceData(
+      {
+        supplierName: 'Martin & Servera',
+        items: [{ name: 'Jameson Whiskey 70cl', quantity: 6, unit: 'flaska', unitPrice: 279 }],
+      },
+      'demo',
+      [],
+    );
+
+    expect(whiskey.unit).toBe('liter');
+    expect(whiskey.quantity).toBeCloseTo(4.2, 2);
+    expect(whiskey.unitPrice).toBeCloseTo(398.57, 2);
   });
 });

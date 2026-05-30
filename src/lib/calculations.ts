@@ -22,7 +22,7 @@ export function normalizeUnit(unit: string): string {
   if (['cl', 'centiliter'].includes(u)) return 'cl';
   if (['dl', 'deciliter'].includes(u)) return 'dl';
   if (['l', 'liter', 'litre', 'lt'].includes(u)) return 'l';
-  if (['st', 'styck', 'stycke', 'pcs'].includes(u)) return 'st';
+  if (['st', 'styck', 'stycke', 'pcs', 'flaska', 'fl', 'bottle', 'burk', 'can'].includes(u)) return 'st';
   if (['msk', 'matsked', 'tbsp'].includes(u)) return 'msk';
   if (['tsk', 'tesked', 'tsp'].includes(u)) return 'tsk';
   return u;
