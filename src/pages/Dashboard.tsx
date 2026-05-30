@@ -45,6 +45,55 @@ export default function Dashboard() {
         </SimpleTip>
       )}
 
+      <div style={{ background:'linear-gradient(135deg, var(--white) 0%, var(--goldbg) 100%)', border:'1px solid var(--goldb)', borderRadius:18, padding:'20px', marginTop:20, boxShadow:'0 6px 20px var(--shad)' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', gap:16, alignItems:'flex-start', marginBottom:14 }}>
+          <div>
+            <div style={{ fontSize:11, fontWeight:800, textTransform:'uppercase', letterSpacing:'.8px', color:'var(--gold)', marginBottom:6 }}>
+              {isEnglish ? 'Customer demo' : 'Kunddemo'}
+            </div>
+            <h2 className="font-serif" style={{ fontSize:24, fontWeight:600, color:'var(--t1)', letterSpacing:'-.4px', marginBottom:6 }}>
+              {isEnglish ? 'Show value in 5 minutes' : 'Visa värdet på 5 minuter'}
+            </h2>
+            <p style={{ fontSize:14, color:'var(--t2)', lineHeight:1.55, maxWidth:560 }}>
+              {isEnglish
+                ? 'Use this flow with a restaurant owner: menu estimate, real invoice prices, then old vs new margin impact.'
+                : 'Använd detta flöde med en restaurangägare: menyestimat, riktiga fakturapriser och sedan gammal vs ny marginal.'}
+            </p>
+          </div>
+          <span style={{ flexShrink:0, padding:'5px 10px', borderRadius:999, background:'var(--brown)', color:'var(--goldl)', fontSize:11, fontWeight:800 }}>
+            {isEnglish ? 'Pilot ready' : 'Pilotklar'}
+          </span>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:10 }}>
+          {[
+            {
+              n:'1',
+              title:isEnglish ? 'Scan menu' : 'Skanna meny',
+              text:isEnglish ? 'AI finds food, drinks and prices.' : 'AI hittar mat, dryck och priser.',
+              to:'/recipes?scan=menu',
+            },
+            {
+              n:'2',
+              title:isEnglish ? 'Scan invoice' : 'Skanna faktura',
+              text:isEnglish ? 'Update beer, cola, whiskey and food costs.' : 'Uppdatera öl, cola, whiskey och matkostnader.',
+              to:'/recipes?scan=invoice',
+            },
+            {
+              n:'3',
+              title:isEnglish ? 'Show impact' : 'Visa påverkan',
+              text:isEnglish ? 'Old price, new price and affected margins.' : 'Gammalt pris, nytt pris och påverkade marginaler.',
+              to:'/price-intel',
+            },
+          ].map(step => (
+            <Link key={step.n} to={step.to} style={{ background:'rgba(255,255,255,.72)', border:'1px solid rgba(201,168,76,.28)', borderRadius:13, padding:'13px', textDecoration:'none' }}>
+              <div style={{ width:24, height:24, borderRadius:999, background:'var(--brown)', color:'var(--goldl)', display:'grid', placeItems:'center', fontSize:12, fontWeight:800, marginBottom:8 }}>{step.n}</div>
+              <div style={{ fontSize:13, fontWeight:800, color:'var(--t1)', marginBottom:4 }}>{step.title}</div>
+              <div style={{ fontSize:12, color:'var(--t2)', lineHeight:1.45 }}>{step.text}</div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <div style={{ marginTop:20, marginBottom:12 }}>
         <h2 style={{ fontSize:13, fontWeight:800, textTransform:'uppercase', letterSpacing:'.7px', color:'var(--t3)', marginBottom:14 }}>
           {isEnglish ? 'Start here' : 'Börja här'}
