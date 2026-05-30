@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
-import type { Recipe, RecipeVisibility } from '../store';
+import type { Ingredient, Recipe, RecipeVisibility } from '../store';
 import { parseInvoiceData, createIngredientFromInvoiceItem } from '../lib/invoice-parser';
 import type { ParsedInvoiceItem } from '../lib/invoice-parser';
 import { useAuth } from '../lib/auth-context';
+import { useLanguage } from '../lib/language';
 import RecipeVisibilityPicker from '../components/RecipeVisibilityPicker';
 import { SimpleTip } from '../components/SimpleGuide';
 import { fileToBase64, fetchScanHealth, scanDocument } from '../lib/scan-api';
-import { calculateLineCostWithUnits, convertQuantity, inferPurchaseUnit } from '../lib/calculations';
+import { calculateLineCostWithUnits, convertQuantity, inferPurchaseUnit, normalizeUnit } from '../lib/calculations';
 
 const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
@@ -65,6 +66,7 @@ function ScanServiceNotice({ status }: { status: ReturnType<typeof useScanServic
 
 export default function Recipes() {
   const { user } = useAuth();
+  const { isEnglish } = useLanguage();
   const isPro = user?.plan === 'pro';
   const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<'mine' | 'public'>('mine');
@@ -75,12 +77,14 @@ export default function Recipes() {
   const [showNew, setShowNew] = useState(false);
   const [showScanner, setShowScanner]       = useState(false);
   const [showRecipeScanner, setShowRecipeScanner] = useState(false);
+  const [showMenuScanner, setShowMenuScanner] = useState(false);
 
   useEffect(() => {
     const scan = searchParams.get('scan');
     const isNew = searchParams.get('new');
     if (scan === 'invoice') setShowScanner(true);
     if (scan === 'recipe') setShowRecipeScanner(true);
+    if (scan === 'menu') setShowMenuScanner(true);
     if (isNew === '1') setShowNew(true);
     if (scan || isNew) setSearchParams({}, { replace: true });
   }, [searchParams, setSearchParams]);
@@ -105,38 +109,97 @@ export default function Recipes() {
 
   return (
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>
-      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:24 }}>
+      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:16, marginBottom:24 }}>
         <div>
-          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Dina rätter</h1>
+          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>{isEnglish ? 'Your dishes' : 'Dina rätter'}</h1>
           <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
-            Här sparar du rätter och ser om priset på menyn räcker.
+            {isEnglish
+              ? 'Save dishes, scan menus, and see whether menu prices still protect your margin.'
+              : 'Här sparar du rätter, skannar menyer och ser om priset på menyn räcker.'}
           </p>
         </div>
-        <div style={{ display:'flex', gap:10 }}>
+        <div style={{ display:'flex', gap:10, flexWrap:'wrap', justifyContent:'flex-end' }}>
+          <button onClick={() => setShowMenuScanner(true)}
+            style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--goldb)', background:'var(--goldbg)', fontSize:13, fontWeight:700, color:'var(--brown)', cursor:'pointer' }}>
+            <ScanLine size={14} /> {isEnglish ? 'Scan menu' : 'Skanna meny'}
+          </button>
           <button onClick={() => setShowRecipeScanner(true)}
             style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
-            <Camera size={14} /> Fota recept
+            <Camera size={14} /> {isEnglish ? 'Scan recipe' : 'Skanna recept'}
           </button>
           <button onClick={() => setShowScanner(true)}
             style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
-            <ScanLine size={14} /> Fota faktura
+            <ScanLine size={14} /> {isEnglish ? 'Scan invoice' : 'Skanna faktura'}
           </button>
           <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 20px' }}>
-            <Plus size={15} /> Ny rätt
+            <Plus size={15} /> {isEnglish ? 'New dish' : 'Ny rätt'}
           </button>
         </div>
       </div>
 
       <div style={{ marginBottom:16 }}>
         <SimpleTip>
-          <strong>Tips:</strong> Fota fakturan först — då får rätt pris på ingredienser. Sedan lägger du in rätter.
+          <strong>{isEnglish ? 'Best demo flow:' : 'Bästa demo-flödet:'}</strong>{' '}
+          {isEnglish
+            ? 'Scan menu for fast editable estimates, scan recipes for accuracy, then scan invoices to replace estimates with real supplier prices.'
+            : 'Skanna meny för snabba redigerbara estimat, skanna recept för högre precision och skanna fakturor för riktiga leverantörspriser.'}
         </SimpleTip>
       </div>
 
+      {view === 'mine' && (
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:12, marginBottom:20 }}>
+          {[
+            {
+              title: isEnglish ? 'Menu scanner' : 'Menyskanner',
+              badge: '70-80%',
+              text: isEnglish ? 'Fast estimate from menu photos. Customer can edit ingredients and portions.' : 'Snabbt estimat från menybild. Kunden kan ändra ingredienser och mängder.',
+              action: () => setShowMenuScanner(true),
+              cta: isEnglish ? 'Estimate menu' : 'Estimera meny',
+              tone: 'gold',
+            },
+            {
+              title: isEnglish ? 'Recipe scanner' : 'Receptskanner',
+              badge: '90-100%',
+              text: isEnglish ? 'More accurate when recipes include amounts.' : 'Mer exakt när receptet innehåller mängder.',
+              action: () => setShowRecipeScanner(true),
+              cta: isEnglish ? 'Scan recipe' : 'Skanna recept',
+              tone: 'white',
+            },
+            {
+              title: isEnglish ? 'Invoice scanner' : 'Fakturaskanner',
+              badge: isEnglish ? 'Real prices' : 'Riktiga priser',
+              text: isEnglish ? 'Updates ingredient prices and shows old vs new margin.' : 'Uppdaterar råvarupriser och visar gammal mot ny marginal.',
+              action: () => setShowScanner(true),
+              cta: isEnglish ? 'Update prices' : 'Uppdatera priser',
+              tone: 'dark',
+            },
+          ].map(card => (
+            <button key={card.title} onClick={card.action} style={{
+              textAlign:'left',
+              border:'1px solid',
+              borderColor:card.tone === 'gold' ? 'var(--goldb)' : card.tone === 'dark' ? 'transparent' : 'var(--border)',
+              borderRadius:16,
+              padding:'16px',
+              cursor:'pointer',
+              background:card.tone === 'dark' ? 'linear-gradient(135deg, var(--brown), hsl(17 47% 20%))' : card.tone === 'gold' ? 'var(--goldbg)' : 'var(--white)',
+              color:card.tone === 'dark' ? '#fff' : 'var(--t1)',
+              boxShadow:'0 4px 14px var(--shad)',
+            }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginBottom:10 }}>
+                <span style={{ fontSize:15, fontWeight:800 }}>{card.title}</span>
+                <span style={{ fontSize:10, fontWeight:800, padding:'3px 8px', borderRadius:999, background:card.tone === 'dark' ? 'rgba(255,255,255,.12)' : 'rgba(201,148,76,.16)', color:card.tone === 'dark' ? 'var(--goldl)' : 'var(--brown)' }}>{card.badge}</span>
+              </div>
+              <div style={{ fontSize:12, lineHeight:1.5, minHeight:38, color:card.tone === 'dark' ? 'rgba(255,255,255,.66)' : 'var(--t2)' }}>{card.text}</div>
+              <div style={{ marginTop:12, fontSize:12, fontWeight:800, color:card.tone === 'dark' ? 'var(--goldl)' : 'var(--gold)' }}>{card.cta} →</div>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div style={{ display:'flex', gap:8, marginBottom:16 }}>
         {([
-          ['mine', 'Mina rätter'],
-          ['public', 'Andras rätter'],
+          ['mine', isEnglish ? 'My dishes' : 'Mina rätter'],
+          ['public', isEnglish ? 'Public dishes' : 'Andras rätter'],
         ] as const).map(([id, label]) => (
           <button
             key={id}
@@ -165,16 +228,16 @@ export default function Recipes() {
             <ScanLine size={20} color="var(--goldl)" />
           </div>
           <div>
-            <div style={{ fontSize:14, fontWeight:700, color:'#fff', marginBottom:2 }}>Uppdatera priser från faktura</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', marginBottom:2 }}>{isEnglish ? 'Update prices from invoice' : 'Uppdatera priser från faktura'}</div>
             <div style={{ fontSize:13, color:'rgba(255,255,255,.6)', lineHeight:1.45 }}>
-              Fota leveransfakturan — vi skriver in priserna åt dig.
-              {' '}<span style={{ color:'var(--goldl)' }}>{SCAN_LIMIT - getScansUsed()} gratis kvar den här månaden.</span>
+              {isEnglish ? 'Upload a supplier invoice and we fill in the latest ingredient prices.' : 'Fota leveransfakturan — vi skriver in priserna åt dig.'}
+              {' '}<span style={{ color:'var(--goldl)' }}>{isEnglish ? `${SCAN_LIMIT - getScansUsed()} free left this month.` : `${SCAN_LIMIT - getScansUsed()} gratis kvar den här månaden.`}</span>
             </div>
           </div>
         </div>
         <button onClick={() => setShowScanner(true)}
           style={{ padding:'9px 18px', borderRadius:9, background:'var(--gold)', border:'none', color:'var(--brown)', fontSize:13, fontWeight:700, cursor:'pointer', flexShrink:0 }}>
-          Skanna nu
+          {isEnglish ? 'Scan now' : 'Skanna nu'}
         </button>
       </div>
       )}
@@ -182,7 +245,7 @@ export default function Recipes() {
       <div style={{ display:'flex', gap:10, marginBottom:20, flexWrap:'wrap', alignItems:'center' }}>
         <div style={{ position:'relative', flex:1, minWidth:200 }}>
           <Search size={14} style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', color:'var(--t3)' }} />
-          <input className="inp" style={{ paddingLeft:36 }} placeholder="Sök recept..." value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="inp" style={{ paddingLeft:36 }} placeholder={isEnglish ? 'Search dishes...' : 'Sök recept...'} value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <div style={{ display:'flex', gap:4 }}>
           {CATS.map(c => (
@@ -201,10 +264,10 @@ export default function Recipes() {
       {filtered.length === 0 ? (
         <div style={{ textAlign:'center', padding:'60px 0', color:'var(--t3)', fontSize:14 }}>
           {view === 'public'
-            ? 'Inga offentliga recept från andra konton ännu.'
-            : <>Inga recept hittades.{' '}
+            ? isEnglish ? 'No public dishes from other accounts yet.' : 'Inga offentliga recept från andra konton ännu.'
+            : <>{isEnglish ? 'No dishes found.' : 'Inga recept hittades.'}{' '}
           <button onClick={() => setShowNew(true)} style={{ color:'var(--gold)', background:'none', border:'none', cursor:'pointer', fontWeight:600 }}>
-            Skapa ett
+            {isEnglish ? 'Create one' : 'Skapa ett'}
           </button></>}
         </div>
       ) : (
@@ -221,25 +284,25 @@ export default function Recipes() {
                     <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:2, flexWrap:'wrap' }}>
                       <span style={{ fontSize:14, fontWeight:600, color:'var(--t1)' }}>{r.name}</span>
                       {r.visibility === 'public' && (
-                        <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:999, background:'var(--goldbg)', color:'hsl(44 54% 35%)' }}>Offentligt</span>
+                        <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:999, background:'var(--goldbg)', color:'hsl(44 54% 35%)' }}>{isEnglish ? 'Public' : 'Offentligt'}</span>
                       )}
                     </div>
                     <div style={{ fontSize:12, color:'var(--t3)' }}>
-                      {r.category} · {r.ingredients.length} ingredienser
-                      {view === 'public' && r.ownerName && <> · av {r.ownerName}</>}
+                      {r.category} · {r.ingredients.length} {isEnglish ? 'ingredients' : 'ingredienser'}
+                      {view === 'public' && r.ownerName && <> · {isEnglish ? 'by' : 'av'} {r.ownerName}</>}
                     </div>
                   </div>
                   <div style={{ textAlign:'right', flexShrink:0 }}>
                     <div className="font-mono" style={{ fontSize:13, fontWeight:700, color:marginColor(m) }}>{m.toFixed(1)}%</div>
-                    <div style={{ fontSize:11, color:'var(--t3)' }}>marginal</div>
+                    <div style={{ fontSize:11, color:'var(--t3)' }}>{isEnglish ? 'margin' : 'marginal'}</div>
                   </div>
                   <div style={{ textAlign:'right', flexShrink:0 }}>
                     <div className="font-mono" style={{ fontSize:13, fontWeight:600, color:'var(--t1)' }}>{tc.toFixed(0)} kr</div>
-                    <div style={{ fontSize:11, color:'var(--t3)' }}>kostnad</div>
+                    <div style={{ fontSize:11, color:'var(--t3)' }}>{isEnglish ? 'cost' : 'kostnad'}</div>
                   </div>
                   <div style={{ textAlign:'right', flexShrink:0 }}>
                     <div className="font-mono" style={{ fontSize:13, fontWeight:600, color:'var(--t1)' }}>{r.sellingPriceSek} kr</div>
-                    <div style={{ fontSize:11, color:'var(--t3)' }}>pris</div>
+                    <div style={{ fontSize:11, color:'var(--t3)' }}>{isEnglish ? 'price' : 'pris'}</div>
                   </div>
                   <ChevronRight size={15} style={{ color:'var(--t3)', flexShrink:0 }} />
                 </Link>
@@ -257,8 +320,370 @@ export default function Recipes() {
       )}
 
       {showNew && <NewRecipeModal onClose={() => { setShowNew(false); refreshLists(); }} />}
+      {showMenuScanner && <MenuScanner isPro={isPro} onClose={() => { setShowMenuScanner(false); refreshLists(); }} />}
       {showScanner && <InvoiceScanner isPro={isPro} onClose={() => { setShowScanner(false); refreshLists(); }} />}
       {showRecipeScanner && <RecipeScanner isPro={isPro} onClose={() => { setShowRecipeScanner(false); refreshLists(); }} />}
+    </div>
+  );
+}
+
+interface ScannedMenuIng {
+  name: string;
+  quantity: number | null;
+  unit: string;
+  estimatedPriceSek?: number;
+  priceUnit?: string;
+  category?: string;
+  confidence?: number;
+  matchedId?: string;
+}
+interface ScannedMenuItem {
+  id: string;
+  name: string;
+  category: string;
+  menuPrice: number | null;
+  confidence: number;
+  selected: boolean;
+  ingredients: ScannedMenuIng[];
+}
+interface ScannedMenu { items?: Omit<ScannedMenuItem, 'id' | 'selected'>[]; }
+type MSState = 'idle' | 'scanning' | 'review' | 'saved' | 'error' | 'limit';
+
+function normalizeMenuPriceUnit(unit?: string) {
+  const normalized = normalizeUnit(unit || '');
+  if (normalized === 'l') return 'l';
+  if (normalized === 'styck') return 'st';
+  return normalized || 'kg';
+}
+
+function matchExistingIngredient(name: string, ingredients: Ingredient[]) {
+  const needle = name.toLowerCase().trim();
+  if (!needle) return undefined;
+  return ingredients.find(item => {
+    const hay = item.name.toLowerCase();
+    return hay.includes(needle) || needle.includes(hay);
+  });
+}
+
+function menuIngredientPriceUnit(ing: ScannedMenuIng) {
+  return normalizeMenuPriceUnit(ing.priceUnit || inferPurchaseUnit(ing.unit));
+}
+
+function estimatedMenuRawCost(item: ScannedMenuItem, ingredients: Ingredient[]) {
+  return item.ingredients.reduce((sum, ing) => {
+    const match = ing.matchedId
+      ? ingredients.find(i => i.id === ing.matchedId)
+      : matchExistingIngredient(ing.name, ingredients);
+    const unitPrice = match?.priceSek ?? ing.estimatedPriceSek ?? 0;
+    const purchaseUnit = match?.unit ?? menuIngredientPriceUnit(ing);
+    return sum + calculateLineCostWithUnits(ing.quantity || 0, ing.unit || purchaseUnit, unitPrice, purchaseUnit);
+  }, 0);
+}
+
+function MenuScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }) {
+  const { isEnglish } = useLanguage();
+  const scanStatus = useScanServiceStatus();
+  const [state, setState] = useState<MSState>(canScan(getRecipeScansUsed(), isPro) ? 'idle' : 'limit');
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [items, setItems] = useState<ScannedMenuItem[]>([]);
+  const [error, setError] = useState('');
+  const [savedCount, setSavedCount] = useState(0);
+
+  function handleFile(f: File) {
+    setFile(f);
+    setPreview(f.type.startsWith('image/') ? URL.createObjectURL(f) : null);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  }
+
+  async function scan() {
+    if (!file) return;
+    setState('scanning');
+    setError('');
+    try {
+      const { base64, mediaType } = await fileToBase64(file);
+      const data = await scanDocument({ type: 'menu', base64, mediaType }) as ScannedMenu;
+      const existing = store.getIngredients();
+      const menuItems = (data.items || []).map((item, index): ScannedMenuItem => ({
+        id: crypto.randomUUID(),
+        name: item.name || `Menu item ${index + 1}`,
+        category: item.category || 'Huvudrätter',
+        menuPrice: item.menuPrice ?? null,
+        confidence: item.confidence ?? 0.72,
+        selected: true,
+        ingredients: (item.ingredients || []).map(ing => ({
+          name: ing.name || '',
+          quantity: ing.quantity ?? null,
+          unit: ing.unit || 'g',
+          estimatedPriceSek: ing.estimatedPriceSek,
+          priceUnit: ing.priceUnit || inferPurchaseUnit(ing.unit || 'g'),
+          category: ing.category || 'Torrvaror',
+          confidence: ing.confidence ?? item.confidence ?? 0.7,
+          matchedId: matchExistingIngredient(ing.name || '', existing)?.id,
+        })),
+      }));
+      if (!isPro) incrementRecipeScans();
+      setItems(menuItems);
+      setState('review');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : isEnglish ? 'Something went wrong.' : 'Något gick fel.');
+      setState('error');
+    }
+  }
+
+  function updateItem(index: number, field: 'name' | 'category' | 'menuPrice' | 'selected', value: string | number | boolean | null) {
+    setItems(prev => prev.map((item, i) => i === index ? { ...item, [field]: value } : item));
+  }
+
+  function updateIngredient(itemIndex: number, ingIndex: number, field: keyof ScannedMenuIng, value: string | number | null) {
+    setItems(prev => prev.map((item, i) => {
+      if (i !== itemIndex) return item;
+      return {
+        ...item,
+        ingredients: item.ingredients.map((ing, j) => j === ingIndex ? { ...ing, [field]: value } : ing),
+      };
+    }));
+  }
+
+  function removeIngredient(itemIndex: number, ingIndex: number) {
+    setItems(prev => prev.map((item, i) => i === itemIndex
+      ? { ...item, ingredients: item.ingredients.filter((_, j) => j !== ingIndex) }
+      : item));
+  }
+
+  function addIngredient(itemIndex: number) {
+    setItems(prev => prev.map((item, i) => i === itemIndex
+      ? { ...item, ingredients: [...item.ingredients, { name: '', quantity: null, unit: 'g', estimatedPriceSek: 0, priceUnit: 'kg', category: 'Torrvaror', confidence: 0.55 }] }
+      : item));
+  }
+
+  function ensureIngredient(ing: ScannedMenuIng): Ingredient {
+    const existing = store.getIngredients();
+    const matched = ing.matchedId
+      ? existing.find(item => item.id === ing.matchedId)
+      : matchExistingIngredient(ing.name, existing);
+    if (matched) return matched;
+
+    const priceUnit = menuIngredientPriceUnit(ing);
+    const estimatedPrice = Math.max(0, Number(ing.estimatedPriceSek || 0));
+    const created: Ingredient = {
+      id: crypto.randomUUID(),
+      name: ing.name.trim(),
+      category: ing.category || 'Torrvaror',
+      unit: priceUnit,
+      priceSek: estimatedPrice,
+      prevPriceSek: estimatedPrice,
+      supplier: isEnglish ? 'AI market estimate' : 'AI marknadsestimat',
+      priceHistory: [],
+      updatedAt: new Date().toISOString().slice(0, 10),
+    };
+    store.saveIngredient(created);
+    return created;
+  }
+
+  function saveSelected() {
+    let count = 0;
+    items.filter(item => item.selected && item.name.trim()).forEach(item => {
+      const recipeIngredients = item.ingredients
+        .filter(ing => ing.name.trim() && (ing.quantity || 0) > 0)
+        .map(ing => {
+          const stored = ensureIngredient(ing);
+          return {
+            ingredientId: stored.id,
+            name: stored.name,
+            quantity: convertQuantity(ing.quantity || 0, ing.unit || stored.unit, stored.unit),
+            unit: stored.unit,
+            unitPrice: stored.priceSek,
+          };
+        });
+      if (recipeIngredients.length === 0) return;
+      const raw = recipeIngredients.reduce(
+        (sum, ing) => sum + calculateLineCostWithUnits(ing.quantity, ing.unit, ing.unitPrice, ing.unit),
+        0,
+      );
+      store.saveRecipe({
+        id: crypto.randomUUID(),
+        name: item.name.trim(),
+        category: item.category || 'Huvudrätter',
+        servings: 1,
+        sellingPriceSek: item.menuPrice || suggested(raw),
+        ingredients: recipeIngredients,
+        createdAt: new Date().toISOString().slice(0, 10),
+        visibility: 'private',
+      });
+      count++;
+    });
+    setSavedCount(count);
+    setState('saved');
+  }
+
+  const selectedCount = items.filter(item => item.selected).length;
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(20,14,8,.55)', zIndex:500, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }} onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ background:'var(--white)', borderRadius:24, width:'100%', maxWidth:860, maxHeight:'92vh', overflow:'auto', boxShadow:'0 32px 80px rgba(20,14,8,.3)' }}>
+        <div style={{ padding:'20px 24px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, background:'var(--white)', zIndex:10 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <ScanLine size={18} color="var(--gold)" />
+            <div>
+              <h2 className="font-serif" style={{ fontSize:20, fontWeight:600, color:'var(--t1)' }}>
+                {state === 'review' ? isEnglish ? 'Review menu estimates' : 'Granska menyestimat' : isEnglish ? 'Menu scanner' : 'Menyskanner'}
+              </h2>
+              <div style={{ fontSize:11, color:'var(--t3)', marginTop:2 }}>
+                {isEnglish ? 'Fast estimate: about 70-80% until the customer edits it.' : 'Snabbt estimat: ca 70-80% tills kunden granskar det.'}
+              </div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--t3)', padding:4 }}><X size={18} /></button>
+        </div>
+        <div style={{ padding:'24px' }}>
+          {state === 'limit' && (
+            <div style={{ textAlign:'center', padding:'40px 20px' }}>
+              <div style={{ fontSize:40, marginBottom:16 }}>⏳</div>
+              <div style={{ fontSize:16, fontWeight:700, color:'var(--t1)', marginBottom:16 }}>{isEnglish ? 'Monthly free scans are used' : 'Månadens gratisskanningar är slut'}</div>
+              <Link to="/upgrade" onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none' }}>{isEnglish ? 'Upgrade to Pro' : 'Uppgradera till Pro'}</Link>
+            </div>
+          )}
+          {state === 'idle' && (
+            <>
+              <ScanServiceNotice status={scanStatus} />
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10, marginBottom:18 }}>
+                {[
+                  [isEnglish ? '1. Read menu' : '1. Läs meny', isEnglish ? 'Find dish names and prices.' : 'Hittar rätter och menypriser.'],
+                  [isEnglish ? '2. Guess cost' : '2. Gissa kostnad', isEnglish ? 'Suggest ingredients and market prices.' : 'Föreslår ingredienser och marknadspriser.'],
+                  [isEnglish ? '3. Edit & save' : '3. Ändra & spara', isEnglish ? 'Customer approves before cost cards are saved.' : 'Kunden godkänner innan kalkylkort sparas.'],
+                ].map(([title, text]) => (
+                  <div key={title} style={{ padding:'12px', border:'1px solid var(--border)', borderRadius:12, background:'var(--goldbg)' }}>
+                    <div style={{ fontSize:12, fontWeight:800, color:'var(--brown)', marginBottom:4 }}>{title}</div>
+                    <div style={{ fontSize:11, color:'var(--t2)', lineHeight:1.45 }}>{text}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize:13, color:'var(--t2)', lineHeight:1.6, marginBottom:20 }}>
+                {isEnglish ? 'Upload a photo/PDF of a restaurant menu. The estimate is intentionally editable because menu text does not contain exact portions.' : 'Ladda upp foto/PDF på en restaurangmeny. Estimatet är alltid redigerbart eftersom menyn inte innehåller exakta portioner.'}
+                <span style={{ color:'var(--gold)', fontWeight:600 }}> {isPro ? (isEnglish ? 'Pro — unlimited.' : 'Pro — obegränsat.') : isEnglish ? `${SCAN_LIMIT - getRecipeScansUsed()} of ${SCAN_LIMIT} free scans left.` : `${SCAN_LIMIT - getRecipeScansUsed()} av ${SCAN_LIMIT} gratisskanningar kvar.`}</span>
+              </div>
+              <div onDrop={handleDrop} onDragOver={e => e.preventDefault()} style={{ border:'2px dashed var(--border)', borderRadius:16, padding:'40px 20px', textAlign:'center', marginBottom:16, cursor:'pointer', transition:'all .2s' }} onClick={() => document.getElementById('menu-file-input')?.click()} onMouseEnter={e => (e.currentTarget.style.borderColor='var(--gold)')} onMouseLeave={e => (e.currentTarget.style.borderColor='var(--border)')}>
+                <input id="menu-file-input" type="file" accept="image/*,application/pdf" style={{ display:'none' }} onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
+                <Upload size={28} color="var(--t3)" style={{ marginBottom:12 }} />
+                <div style={{ fontSize:14, fontWeight:600, color:'var(--t1)', marginBottom:4 }}>{isEnglish ? 'Drop menu here or click' : 'Dra hit menyn eller klicka'}</div>
+                <div style={{ fontSize:12, color:'var(--t3)' }}>JPG, PNG eller PDF</div>
+              </div>
+              {preview && <div style={{ marginBottom:16, borderRadius:12, overflow:'hidden', border:'1px solid var(--border)' }}><img src={preview} alt={isEnglish ? 'Menu preview' : 'Meny'} style={{ width:'100%', maxHeight:220, objectFit:'cover' }} /></div>}
+              {file && !preview && <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 16px', background:'var(--goldbg)', borderRadius:10, marginBottom:16 }}><span>📄</span><span style={{ fontSize:13, fontWeight:600 }}>{file.name}</span></div>}
+              <div style={{ display:'flex', gap:10, justifyContent:'flex-end' }}>
+                <button onClick={onClose} style={{ padding:'10px 20px', borderRadius:10, border:'1px solid var(--border)', background:'none', cursor:'pointer', fontSize:13, color:'var(--t2)' }}>{isEnglish ? 'Cancel' : 'Avbryt'}</button>
+                <button onClick={scan} disabled={!file} style={{ padding:'10px 24px', borderRadius:10, background:file ? 'var(--brown)' : 'var(--border)', border:'none', color:file ? '#fff' : 'var(--t3)', fontSize:13, fontWeight:600, cursor:file ? 'pointer' : 'not-allowed' }}>
+                  <ScanLine size={14} style={{ display:'inline', marginRight:6 }} />{isEnglish ? 'Estimate menu' : 'Estimera meny'}
+                </button>
+              </div>
+            </>
+          )}
+          {state === 'scanning' && (
+            <div style={{ textAlign:'center', padding:'48px 20px' }}>
+              <div style={{ width:48, height:48, border:'3px solid var(--border)', borderTopColor:'var(--gold)', borderRadius:'50%', margin:'0 auto 20px', animation:'spin 1s linear infinite' }} />
+              <div style={{ fontSize:16, fontWeight:600, color:'var(--t1)', marginBottom:8 }}>{isEnglish ? 'Reading menu...' : 'Läser menyn...'}</div>
+              <div style={{ fontSize:13, color:'var(--t2)' }}>{isEnglish ? 'AI finds dishes, menu prices, and likely ingredients.' : 'AI hittar rätter, menypriser och sannolika ingredienser.'}</div>
+              <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            </div>
+          )}
+          {state === 'error' && (
+            <div style={{ textAlign:'center', padding:'40px 20px' }}>
+              <AlertCircle size={40} color="var(--red)" style={{ marginBottom:12 }} />
+              <div style={{ fontSize:15, fontWeight:600, color:'var(--t1)', marginBottom:8 }}>{isEnglish ? 'Something went wrong' : 'Något gick fel'}</div>
+              <div style={{ fontSize:13, color:'var(--t2)', marginBottom:24 }}>{error}</div>
+              <button onClick={() => setState('idle')} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', border:'none', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>{isEnglish ? 'Try again' : 'Försök igen'}</button>
+            </div>
+          )}
+          {state === 'saved' && (
+            <div style={{ textAlign:'center', padding:'40px 20px' }}>
+              <CheckCircle size={48} color="var(--green)" style={{ marginBottom:12 }} />
+              <div style={{ fontSize:16, fontWeight:700, color:'var(--t1)', marginBottom:8 }}>{isEnglish ? 'Menu estimates saved' : 'Menyestimaten sparades'} 🎉</div>
+              <div style={{ fontSize:13, color:'var(--t2)', lineHeight:1.6, marginBottom:24 }}>
+                {isEnglish ? `${savedCount} cost card${savedCount === 1 ? '' : 's'} created. Scan invoices later to replace AI market estimates with real prices.` : `${savedCount} kalkylkort skapades. Skanna fakturor senare för att ersätta AI-estimat med riktiga priser.`}
+              </div>
+              <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', border:'none', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>{isEnglish ? 'Close and view dishes' : 'Stäng och se rätter'}</button>
+            </div>
+          )}
+          {state === 'review' && (
+            <>
+              <div style={{ padding:'12px 16px', background:'var(--goldbg)', border:'1px solid var(--goldb)', borderRadius:12, fontSize:13, color:'hsl(17 47% 22%)', lineHeight:1.55, marginBottom:16 }}>
+                <strong>{isEnglish ? 'Customer review recommended:' : 'Kundgranskning rekommenderas:'}</strong>{' '}
+                {isEnglish ? 'AI guessed the recipe from menu text. Edit ingredients, portions, or prices before saving.' : 'AI har gissat receptet från menytexten. Ändra ingredienser, mängder eller priser innan du sparar.'}
+              </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:12, marginBottom:18 }}>
+                {items.map((item, itemIndex) => {
+                  const raw = estimatedMenuRawCost(item, store.getIngredients());
+                  const total = raw * 1.2;
+                  const menuPrice = item.menuPrice || suggested(raw);
+                  const marginPct = menuPrice > 0 ? ((menuPrice - total) / menuPrice) * 100 : 0;
+                  const confidencePct = Math.round((item.confidence || 0.7) * 100);
+                  return (
+                    <div key={item.id} style={{ border:'1px solid var(--border)', borderRadius:16, overflow:'hidden', background:item.selected ? 'var(--white)' : 'var(--muted)' }}>
+                      <div style={{ padding:'14px 16px', borderBottom:'1px solid var(--border)', display:'grid', gridTemplateColumns:'auto 1fr 110px 92px 92px', gap:10, alignItems:'center' }}>
+                        <input type="checkbox" checked={item.selected} onChange={e => updateItem(itemIndex, 'selected', e.target.checked)} />
+                        <input className="inp" value={item.name} onChange={e => updateItem(itemIndex, 'name', e.target.value)} style={{ padding:'8px 10px', fontWeight:700 }} />
+                        <input className="inp" type="number" value={item.menuPrice ?? ''} placeholder={isEnglish ? 'Price' : 'Pris'} onChange={e => updateItem(itemIndex, 'menuPrice', parseFloat(e.target.value) || null)} style={{ padding:'8px 10px' }} />
+                        <div style={{ textAlign:'right' }}>
+                          <div className="font-mono" style={{ fontSize:13, fontWeight:800, color:marginColor(marginPct) }}>{marginPct.toFixed(0)}%</div>
+                          <div style={{ fontSize:10, color:'var(--t3)' }}>{isEnglish ? 'margin' : 'marginal'}</div>
+                        </div>
+                        <div style={{ textAlign:'right' }}>
+                          <div className="font-mono" style={{ fontSize:13, fontWeight:800, color:'var(--brown)' }}>{raw.toFixed(0)} kr</div>
+                          <div style={{ fontSize:10, color:'var(--t3)' }}>{isEnglish ? 'est. cost' : 'est. kostnad'}</div>
+                        </div>
+                      </div>
+                      <div style={{ padding:'12px 16px' }}>
+                        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+                          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                            <span style={{ fontSize:11, fontWeight:800, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)' }}>{isEnglish ? 'Ingredients' : 'Ingredienser'}</span>
+                            <span style={{ fontSize:10, fontWeight:800, padding:'2px 7px', borderRadius:999, background:confidencePct >= 80 ? 'var(--greenbg)' : 'var(--goldbg)', color:confidencePct >= 80 ? 'var(--green)' : 'hsl(44 54% 35%)' }}>{confidencePct}%</span>
+                          </div>
+                          <button onClick={() => addIngredient(itemIndex)} style={{ fontSize:12, color:'var(--gold)', border:'none', background:'none', cursor:'pointer', fontWeight:700 }}>+ {isEnglish ? 'Add ingredient' : 'Lägg till ingrediens'}</button>
+                        </div>
+                        <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
+                          {item.ingredients.map((ing, ingIndex) => {
+                            const matched = ing.matchedId ? store.getIngredients().find(i => i.id === ing.matchedId) : matchExistingIngredient(ing.name, store.getIngredients());
+                            return (
+                              <div key={ingIndex} style={{ display:'grid', gridTemplateColumns:'1fr 86px 68px 92px 70px auto', gap:8, alignItems:'center' }}>
+                                <div>
+                                  <input className="inp" value={ing.name} placeholder={isEnglish ? 'Ingredient' : 'Ingrediens'} onChange={e => updateIngredient(itemIndex, ingIndex, 'name', e.target.value)} style={{ padding:'7px 10px', fontSize:13 }} />
+                                  <div style={{ fontSize:10, marginTop:2, color:matched ? 'var(--green)' : 'var(--t3)', fontWeight:matched ? 700 : 500 }}>
+                                    {matched ? isEnglish ? 'Uses your price database' : 'Använder din prisdatabas' : isEnglish ? 'Will be added with market estimate' : 'Läggs till med marknadsestimat'}
+                                  </div>
+                                </div>
+                                <input className="inp" type="number" value={ing.quantity ?? ''} placeholder={isEnglish ? 'Qty' : 'Mängd'} onChange={e => updateIngredient(itemIndex, ingIndex, 'quantity', parseFloat(e.target.value) || null)} style={{ padding:'7px 10px', fontSize:13 }} />
+                                <select className="inp" value={ing.unit || 'g'} onChange={e => updateIngredient(itemIndex, ingIndex, 'unit', e.target.value)} style={{ padding:'7px 8px', fontSize:12 }}>{['g','kg','ml','l','st','msk','tsk'].map(u => <option key={u}>{u}</option>)}</select>
+                                <input className="inp" type="number" value={matched?.priceSek ?? ing.estimatedPriceSek ?? ''} disabled={Boolean(matched)} placeholder="kr" onChange={e => updateIngredient(itemIndex, ingIndex, 'estimatedPriceSek', parseFloat(e.target.value) || 0)} style={{ padding:'7px 10px', fontSize:13, background:matched ? 'var(--muted)' : 'var(--white)' }} />
+                                <select className="inp" value={matched?.unit ?? menuIngredientPriceUnit(ing)} disabled={Boolean(matched)} onChange={e => updateIngredient(itemIndex, ingIndex, 'priceUnit', e.target.value)} style={{ padding:'7px 8px', fontSize:12, background:matched ? 'var(--muted)' : 'var(--white)' }}>{['kg','l','st'].map(u => <option key={u}>{u}</option>)}</select>
+                                <button onClick={() => removeIngredient(itemIndex, ingIndex)} style={{ padding:'7px 9px', borderRadius:8, border:'1px solid var(--border)', background:'none', cursor:'pointer', color:'var(--t3)' }}>✕</button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:12 }}>
+                <div style={{ fontSize:12, color:'var(--t2)', lineHeight:1.5 }}>
+                  {isEnglish ? `${selectedCount} selected. Missing ingredients are auto-added with AI market estimates.` : `${selectedCount} valda. Saknade ingredienser läggs till med AI-marknadsestimat.`}
+                </div>
+                <div style={{ display:'flex', gap:10 }}>
+                  <button onClick={onClose} style={{ padding:'10px 20px', borderRadius:10, border:'1px solid var(--border)', background:'none', cursor:'pointer', fontSize:13, color:'var(--t2)' }}>{isEnglish ? 'Cancel' : 'Avbryt'}</button>
+                  <button onClick={saveSelected} disabled={selectedCount === 0} style={{ padding:'10px 24px', borderRadius:10, background:selectedCount > 0 ? 'var(--brown)' : 'var(--border)', border:'none', color:selectedCount > 0 ? '#fff' : 'var(--t3)', fontSize:13, fontWeight:700, cursor:selectedCount > 0 ? 'pointer' : 'not-allowed' }}>{isEnglish ? 'Save cost cards' : 'Spara kalkylkort'}</button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

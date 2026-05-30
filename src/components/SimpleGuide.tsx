@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useLanguage } from '../lib/language';
 
 export function SimpleTip({ children }: { children: ReactNode }) {
   return (
@@ -71,16 +72,21 @@ export function BigStep({ emoji, title, text, to, button, highlight }: StepProps
   );
 }
 
-export const HOW_IT_WORKS = [
-  { n: '1', title: 'Fota fakturan', text: 'Vi läser priserna åt dig.' },
-  { n: '2', title: 'Spara dina rätter', text: 'Då ser du vad varje rätt kostar.' },
-  { n: '3', title: 'Få tips', text: 'Appen säger om priset på menyn är för lågt.' },
-] as const;
-
 export function HowItWorksStrip() {
+  const { isEnglish } = useLanguage();
+  const steps = isEnglish ? [
+    { n: '1', title: 'Scan the menu', text: 'Get fast AI cost estimates.' },
+    { n: '2', title: 'Review recipes', text: 'Edit portions before saving.' },
+    { n: '3', title: 'Scan invoices', text: 'Real supplier prices update margins.' },
+  ] : [
+    { n: '1', title: 'Skanna menyn', text: 'Få snabba AI-estimat på kostnad.' },
+    { n: '2', title: 'Granska recepten', text: 'Justera mängder innan du sparar.' },
+    { n: '3', title: 'Skanna fakturan', text: 'Riktiga leverantörspriser uppdaterar marginalen.' },
+  ];
+
   return (
     <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:10 }}>
-      {HOW_IT_WORKS.map(step => (
+      {steps.map(step => (
         <div key={step.n} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:12, padding:'14px 16px' }}>
           <div style={{
             width:28, height:28, borderRadius:999, background:'var(--brown)', color:'var(--goldl)',

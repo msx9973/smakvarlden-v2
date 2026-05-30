@@ -7,7 +7,7 @@ export interface ScanHealth {
 }
 
 export interface ScanRequest {
-  type: 'invoice' | 'recipe';
+  type: 'invoice' | 'recipe' | 'menu';
   base64: string;
   mediaType: string;
 }

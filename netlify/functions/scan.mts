@@ -1,6 +1,6 @@
 import type { Handler } from '@netlify/functions';
 
-const ALLOWED_TYPES = ['invoice', 'recipe'];
+const ALLOWED_TYPES = ['invoice', 'recipe', 'menu'];
 const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-6';
 
 const corsHeaders = {
@@ -72,6 +72,14 @@ export const handler: Handler = async (event) => {
         '{"name":"Namn","category":"Huvudratter","servings":1,"sellingPrice":null,"ingredients":[{"name":"Lax","quantity":120,"unit":"g"}]}',
         'Sätt quantity till null om du är osäker.',
       ].join(' '),
+      menu: [
+        'Du är ett system som läser restaurangmenyer från svenska restauranger.',
+        'Extrahera rätter, menypris och kategori. Gissa rimliga ingredienser, portionsmängder och svenska grossist-/marknadspriser när de inte står i menyn.',
+        'Detta är ett snabbt estimat, inte exakt receptkalkyl. Använd confidence 0.5-0.85 beroende på hur tydlig rätten är.',
+        'Svara endast med giltig JSON:',
+        '{"items":[{"name":"Carbonara","category":"Pasta","menuPrice":180,"confidence":0.78,"ingredients":[{"name":"Pasta","quantity":120,"unit":"g","estimatedPriceSek":32,"priceUnit":"kg","category":"Torrvaror","confidence":0.8}]}]}',
+        'Behåll rättnamn på menyns språk. Använd SEK-priser per priceUnit. Om pris saknas på menyn, sätt menuPrice null.',
+      ].join(' '),
     };
 
     const isPdf = mediaType === 'application/pdf';
@@ -94,7 +102,14 @@ export const handler: Handler = async (event) => {
                 type: isPdf ? 'document' : 'image',
                 source: { type: 'base64', media_type: mediaType, data: base64 },
               },
-              { type: 'text', text: type === 'invoice' ? 'Läs denna faktura.' : 'Läs detta recept.' },
+              {
+                type: 'text',
+                text: type === 'invoice'
+                  ? 'Läs denna faktura.'
+                  : type === 'menu'
+                    ? 'Läs denna meny och skapa redigerbara kostnadsestimat.'
+                    : 'Läs detta recept.',
+              },
             ],
           },
         ],
