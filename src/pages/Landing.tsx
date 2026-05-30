@@ -7,8 +7,8 @@ const services = [
     body: 'We review supplier invoices and show hidden price increases, unusual changes and ingredients that pressure your food cost.',
   },
   {
-    title: 'Recipe setup',
-    body: 'We help enter the first recipes, ingredients and menu prices so Smakvärlden becomes useful from the first week.',
+    title: 'Product setup',
+    body: 'We help enter the first dishes, drinks, ingredients and menu prices so Smakvärlden becomes useful from the first week.',
   },
   {
     title: 'Supplier discussion support',
@@ -23,7 +23,7 @@ const services = [
 const deliverSteps = [
   { title: 'Analyze', body: 'Send one recent invoice or bring it to a demo.' },
   { title: 'Identify', body: 'We find which price changes affect your dishes.' },
-  { title: 'Optimize', body: 'Recipes and food cost are connected to your real prices.' },
+  { title: 'Optimize', body: 'Dishes, drinks and food cost are connected to your real prices.' },
   { title: 'Profit', body: 'The kitchen gets clear decisions before margin disappears.' },
 ];
 
@@ -55,7 +55,7 @@ export default function Landing() {
           <span style={{ color: 'var(--goldl)', fontStyle: 'italic' }}>Start Profiting.</span>
         </h1>
         <p style={{ fontSize: 17, color: 'rgba(255,255,255,.62)', lineHeight: 1.78, maxWidth: 620, margin: '0 auto 44px' }}>
-          Smakvärlden hjälper restauranger att skanna menyer, recept och fakturor så matkostnad och marginal syns innan vinsten läcker ut.
+          Smakvärlden hjälper restauranger att skanna menyer, produkter och fakturor så matkostnad och marginal syns innan vinsten läcker ut.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="#consulting" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '13px 30px', borderRadius: 10, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}>

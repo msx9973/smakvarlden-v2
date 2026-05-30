@@ -76,11 +76,11 @@ export function HowItWorksStrip() {
   const { isEnglish } = useLanguage();
   const steps = isEnglish ? [
     { n: '1', title: 'Scan the menu', text: 'Get fast AI cost estimates.' },
-    { n: '2', title: 'Review recipes', text: 'Edit portions before saving.' },
+    { n: '2', title: 'Review products', text: 'Edit portions, drink measures and add-ons before saving.' },
     { n: '3', title: 'Scan invoices', text: 'Real supplier prices update margins.' },
   ] : [
     { n: '1', title: 'Skanna menyn', text: 'Få snabba AI-estimat på kostnad.' },
-    { n: '2', title: 'Granska recepten', text: 'Justera mängder innan du sparar.' },
+    { n: '2', title: 'Granska produkterna', text: 'Justera portioner, dryckesmått och tillbehör innan du sparar.' },
     { n: '3', title: 'Skanna fakturan', text: 'Riktiga leverantörspriser uppdaterar marginalen.' },
   ];
 

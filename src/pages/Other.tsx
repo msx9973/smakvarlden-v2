@@ -98,7 +98,7 @@ export function LoginPage() {
           <img src="/logo-mark.svg" alt="Smakvärlden" width={48} height={48} style={{ borderRadius:14, margin:'0 auto 12px', display:'block' }} />
           <h1 className="font-serif" style={{ fontSize:24, fontWeight:600, color:'var(--brown)' }}>Välkommen!</h1>
           <p style={{ fontSize:15, color:'var(--t2)', marginTop:8, lineHeight:1.5 }}>
-            Koll på matkostnaden — fota fakturan, spara dina rätter och se om priset räcker.
+            Koll på matkostnaden — fota fakturan, spara rätter och produkter och se om priset räcker.
           </p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>
@@ -142,7 +142,7 @@ export function LoginPage() {
           </form>
           {mode === 'login' && (
             <p style={{ textAlign:'center', marginTop:14, fontSize:12, color:'var(--t3)' }}>
-              Tips: använd samma e-post varje gång så hittar du dina rätter igen.
+              Tips: använd samma e-post varje gång så hittar du dina rätter och produkter igen.
             </p>
           )}
           <div style={{ display:'flex', justifyContent:'center', gap:10, marginTop:16, fontSize:12 }}>
@@ -158,10 +158,10 @@ export function LoginPage() {
 
 export function HowItWorks() {
   const steps = [
-    { step:'1', emoji:'📸', title:'Ta en bild på ditt recept', body:'Har du recept på papper? Ta en bild med telefonen. Appen läser av ingredienser och mängder automatiskt - handskrivet eller tryckt fungerar båda.', tip:'Inga krav på snygg handstil - AI förstår ändå.' },
+    { step:'1', emoji:'📸', title:'Ta en bild på recept eller produktblad', body:'Har du recept, drinklista eller produktkalkyl på papper? Ta en bild med telefonen. Appen läser av ingredienser och mängder automatiskt - handskrivet eller tryckt fungerar båda.', tip:'Inga krav på snygg handstil - AI förstår ändå.' },
     { step:'2', emoji:'✅', title:'Fyll i det som saknas', body:'Om något fattas, till exempel hur många gram, frågar appen dig om just det. Du ser allt tydligt och sparar med ett klick.', tip:'Du bestämmer alltid. Appen gissar aldrig på egen hand.' },
     { step:'3', emoji:'🧾', title:'Skanna din faktura varje vecka', body:'Faktura från Menigo eller Martin & Servera? Ta en bild. Appen läser av alla priser och uppdaterar dina ingredienser automatiskt.', tip:'Tar 10 sekunder. Gör det varje måndag morgon.' },
-    { step:'4', emoji:'📊', title:'Se vad du tjänar på varje rätt', body:'Nu visar appen exakt vad varje rätt kostar att laga och hur mycket du tjänar. Gick laxen upp? Du ser direkt vilka rätter som påverkas.', tip:'Röd = du förlorar pengar. Grön = bra marginal.' },
+    { step:'4', emoji:'📊', title:'Se vad du tjänar på varje produkt', body:'Nu visar appen vad varje rätt, dryck eller tillbehör kostar och hur mycket du tjänar. Gick laxen eller kaffet upp? Du ser direkt vilka produkter som påverkas.', tip:'Röd = du förlorar pengar. Grön = bra marginal.' },
     { step:'5', emoji:'💡', title:'Ta rätt beslut', body:'Höj priset lite? Minska portionen med 10 gram? Appen räknar ut vad som lönar sig. Du bestämmer, men nu med fakta istället för magkänsla.', tip:'De flesta restauranger sparar 3 000-10 000 kr/månad.' },
   ];
   return (
@@ -202,7 +202,7 @@ export function TrustPage() {
   const sections = [
     {
       title: 'Integritet',
-      body: 'Smakvärlden sparar dina recept, ingredienser och priser lokalt i din webbläsare. Ingen information skickas till någon server. Din data stannar hos dig.',
+      body: 'Smakvärlden sparar dina recept, produkter, ingredienser och priser lokalt i din webbläsare. Ingen information skickas till någon server. Din data stannar hos dig.',
     },
     {
       title: 'Villkor',
@@ -225,7 +225,7 @@ export function TrustPage() {
         <div style={{ background:'var(--brown)', color:'#fff', borderRadius:20, padding:'30px', marginBottom:18 }}>
           <div className="font-serif" style={{ fontSize:34, fontWeight:600, color:'var(--goldl)', marginBottom:10 }}>Integritet & villkor</div>
           <p style={{ color:'rgba(255,255,255,.72)', fontSize:15, maxWidth:660, lineHeight:1.7 }}>
-            Smakvärlden hjälper restauranger att hålla koll på ingredienspriser, receptkostnader och marginaler - allt på ett ställe.
+            Smakvärlden hjälper restauranger att hålla koll på ingredienspriser, produktkostnader och marginaler - allt på ett ställe.
           </p>
         </div>
         <div className="trust-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:14 }}>
@@ -248,10 +248,10 @@ export function UpgradePage() {
   const { user } = useAuth();
   const plans = [
     { name:'Gratis', price:'0 kr', per:'för alltid', featured:false,
-      feats:['Upp till 10 recept','Receptkalkylator','Ingrediensdatabas','Prisintelligens','Demo data'],
+      feats:['Upp till 10 produkter','Produktkalkylator','Ingrediensdatabas','Prisintelligens','Demo data'],
       btn:'Nuvarande plan', disabled:user?.plan === 'free' },
     { name:'Pro Kök', price:'59 kr', per:'/månad · 7 dagar gratis', featured:true,
-      feats:['Obegränsade recept','Liveprisövervakning','Prisvarningar','Marginalförlust per recept','Föreslagna prisåtgärder','Prioriterad support'],
+      feats:['Obegränsade produkter','Liveprisövervakning','Prisvarningar','Marginalförlust per produkt','Föreslagna prisåtgärder','Prioriterad support'],
       btn:user?.plan === 'pro' ? '✓ Aktiv plan' : 'Starta 7 dagar gratis', disabled:user?.plan === 'pro' },
     { name:'Företag', price:'Offert', per:'Flera anläggningar', featured:false,
       feats:['Allt i Pro','Flera kök','Teamkonton','Leverantörsintegrationer','Dedikerad support'],

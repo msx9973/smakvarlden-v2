@@ -11,8 +11,8 @@ import RecipeVisibilityPicker from '../components/RecipeVisibilityPicker';
 import { SimpleTip } from '../components/SimpleGuide';
 import { fileToBase64, fetchScanHealth, scanDocument } from '../lib/scan-api';
 import { calculateLineCostWithUnits, convertQuantity, inferPurchaseUnit, normalizeUnit } from '../lib/calculations';
+import { DEFAULT_PRODUCT_CATEGORY, PRODUCT_CATEGORIES, PRODUCT_CATEGORY_FILTERS } from '../lib/product-categories';
 
-const CATS = ['Alla','Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 const SCAN_LIMIT = 2;
 
 function getRecipeScansUsed(): number { return store.getRecipeScansUsed(); }
@@ -102,7 +102,7 @@ export default function Recipes() {
   }
 
   function del(id: string) {
-    if (!confirm('Ta bort receptet?')) return;
+    if (!confirm(isEnglish ? 'Delete this product?' : 'Ta bort produkten?')) return;
     store.deleteRecipe(id);
     refreshLists();
   }
@@ -111,11 +111,11 @@ export default function Recipes() {
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>
       <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:16, marginBottom:24 }}>
         <div>
-          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>{isEnglish ? 'Your dishes' : 'Dina rätter'}</h1>
+          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>{isEnglish ? 'Dishes & products' : 'Rätter & produkter'}</h1>
           <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
             {isEnglish
-              ? 'Save dishes, scan menus, and see whether menu prices still protect your margin.'
-              : 'Här sparar du rätter, skannar menyer och ser om priset på menyn räcker.'}
+              ? 'Save dishes, drinks, coffee, add-ons and catering products, then see whether each selling price protects your margin.'
+              : 'Spara rätter, dryck, kaffe, tillbehör och cateringprodukter — och se om varje pris skyddar marginalen.'}
           </p>
         </div>
         <div style={{ display:'flex', gap:10, flexWrap:'wrap', justifyContent:'flex-end' }}>
@@ -132,7 +132,7 @@ export default function Recipes() {
             <ScanLine size={14} /> {isEnglish ? 'Scan invoice' : 'Skanna faktura'}
           </button>
           <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 20px' }}>
-            <Plus size={15} /> {isEnglish ? 'New dish' : 'Ny rätt'}
+            <Plus size={15} /> {isEnglish ? 'New product' : 'Ny produkt'}
           </button>
         </div>
       </div>
@@ -141,8 +141,8 @@ export default function Recipes() {
         <SimpleTip>
           <strong>{isEnglish ? 'Best demo flow:' : 'Bästa demo-flödet:'}</strong>{' '}
           {isEnglish
-            ? 'Scan menu for fast editable estimates, scan recipes for accuracy, then scan invoices to replace estimates with real supplier prices.'
-            : 'Skanna meny för snabba redigerbara estimat, skanna recept för högre precision och skanna fakturor för riktiga leverantörspriser.'}
+            ? 'Scan menus for food and drink estimates, scan recipes for accuracy, then scan invoices to replace estimates with real supplier prices.'
+            : 'Skanna menyer för mat- och dryckesestimat, skanna recept för högre precision och skanna fakturor för riktiga leverantörspriser.'}
         </SimpleTip>
       </div>
 
@@ -152,7 +152,7 @@ export default function Recipes() {
             {
               title: isEnglish ? 'Menu scanner' : 'Menyskanner',
               badge: '70-80%',
-              text: isEnglish ? 'Fast estimate from menu photos. Customer can edit ingredients and portions.' : 'Snabbt estimat från menybild. Kunden kan ändra ingredienser och mängder.',
+              text: isEnglish ? 'Fast estimate from menu photos, including food, drinks, coffee and add-ons.' : 'Snabbt estimat från menybild, även mat, dryck, kaffe och tillbehör.',
               action: () => setShowMenuScanner(true),
               cta: isEnglish ? 'Estimate menu' : 'Estimera meny',
               tone: 'gold',
@@ -160,7 +160,7 @@ export default function Recipes() {
             {
               title: isEnglish ? 'Recipe scanner' : 'Receptskanner',
               badge: '90-100%',
-              text: isEnglish ? 'More accurate when recipes include amounts.' : 'Mer exakt när receptet innehåller mängder.',
+              text: isEnglish ? 'More accurate when dishes, drinks or products include amounts.' : 'Mer exakt när rätter, dryck eller produkter har tydliga mängder.',
               action: () => setShowRecipeScanner(true),
               cta: isEnglish ? 'Scan recipe' : 'Skanna recept',
               tone: 'white',
@@ -198,8 +198,8 @@ export default function Recipes() {
 
       <div style={{ display:'flex', gap:8, marginBottom:16 }}>
         {([
-          ['mine', isEnglish ? 'My dishes' : 'Mina rätter'],
-          ['public', isEnglish ? 'Public dishes' : 'Andras rätter'],
+          ['mine', isEnglish ? 'My products' : 'Mina produkter'],
+          ['public', isEnglish ? 'Public products' : 'Andras produkter'],
         ] as const).map(([id, label]) => (
           <button
             key={id}
@@ -245,10 +245,10 @@ export default function Recipes() {
       <div style={{ display:'flex', gap:10, marginBottom:20, flexWrap:'wrap', alignItems:'center' }}>
         <div style={{ position:'relative', flex:1, minWidth:200 }}>
           <Search size={14} style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', color:'var(--t3)' }} />
-          <input className="inp" style={{ paddingLeft:36 }} placeholder={isEnglish ? 'Search dishes...' : 'Sök recept...'} value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="inp" style={{ paddingLeft:36 }} placeholder={isEnglish ? 'Search products...' : 'Sök produkter...'} value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <div style={{ display:'flex', gap:4 }}>
-          {CATS.map(c => (
+          {PRODUCT_CATEGORY_FILTERS.map(c => (
             <button key={c} onClick={() => setCat(c)}
               style={{ padding:'7px 14px', borderRadius:9, border:'none', font:'500 13px DM Sans', cursor:'pointer', transition:'.15s',
                 background: cat===c ? 'var(--brown)' : 'var(--white)',
@@ -264,8 +264,8 @@ export default function Recipes() {
       {filtered.length === 0 ? (
         <div style={{ textAlign:'center', padding:'60px 0', color:'var(--t3)', fontSize:14 }}>
           {view === 'public'
-            ? isEnglish ? 'No public dishes from other accounts yet.' : 'Inga offentliga recept från andra konton ännu.'
-            : <>{isEnglish ? 'No dishes found.' : 'Inga recept hittades.'}{' '}
+            ? isEnglish ? 'No public products from other accounts yet.' : 'Inga offentliga produkter från andra konton ännu.'
+            : <>{isEnglish ? 'No products found.' : 'Inga produkter hittades.'}{' '}
           <button onClick={() => setShowNew(true)} style={{ color:'var(--gold)', background:'none', border:'none', cursor:'pointer', fontWeight:600 }}>
             {isEnglish ? 'Create one' : 'Skapa ett'}
           </button></>}
@@ -288,7 +288,7 @@ export default function Recipes() {
                       )}
                     </div>
                     <div style={{ fontSize:12, color:'var(--t3)' }}>
-                      {r.category} · {r.ingredients.length} {isEnglish ? 'ingredients' : 'ingredienser'}
+                      {r.category} · {r.ingredients.length} {isEnglish ? 'inputs' : 'ingredienser'}
                       {view === 'public' && r.ownerName && <> · {isEnglish ? 'by' : 'av'} {r.ownerName}</>}
                     </div>
                   </div>
@@ -412,7 +412,7 @@ function MenuScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }
       const menuItems = (data.items || []).map((item, index): ScannedMenuItem => ({
         id: crypto.randomUUID(),
         name: item.name || `Menu item ${index + 1}`,
-        category: item.category || 'Huvudrätter',
+        category: item.category || DEFAULT_PRODUCT_CATEGORY,
         menuPrice: item.menuPrice ?? null,
         confidence: item.confidence ?? 0.72,
         selected: true,
@@ -509,7 +509,7 @@ function MenuScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }
       store.saveRecipe({
         id: crypto.randomUUID(),
         name: item.name.trim(),
-        category: item.category || 'Huvudrätter',
+        category: item.category || DEFAULT_PRODUCT_CATEGORY,
         servings: 1,
         sellingPriceSek: item.menuPrice || suggested(raw),
         ingredients: recipeIngredients,
@@ -607,14 +607,14 @@ function MenuScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }
               <div style={{ fontSize:13, color:'var(--t2)', lineHeight:1.6, marginBottom:24 }}>
                 {isEnglish ? `${savedCount} cost card${savedCount === 1 ? '' : 's'} created. Scan invoices later to replace AI market estimates with real prices.` : `${savedCount} kalkylkort skapades. Skanna fakturor senare för att ersätta AI-estimat med riktiga priser.`}
               </div>
-              <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', border:'none', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>{isEnglish ? 'Close and view dishes' : 'Stäng och se rätter'}</button>
+              <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, background:'var(--brown)', border:'none', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>{isEnglish ? 'Close and view products' : 'Stäng och se produkter'}</button>
             </div>
           )}
           {state === 'review' && (
             <>
               <div style={{ padding:'12px 16px', background:'var(--goldbg)', border:'1px solid var(--goldb)', borderRadius:12, fontSize:13, color:'hsl(17 47% 22%)', lineHeight:1.55, marginBottom:16 }}>
                 <strong>{isEnglish ? 'Customer review recommended:' : 'Kundgranskning rekommenderas:'}</strong>{' '}
-                {isEnglish ? 'AI guessed the recipe from menu text. Edit ingredients, portions, or prices before saving.' : 'AI har gissat receptet från menytexten. Ändra ingredienser, mängder eller priser innan du sparar.'}
+                {isEnglish ? 'AI guessed the product costing from menu text. Edit ingredients, portions, drink measures, or prices before saving.' : 'AI har gissat produktkalkylen från menytexten. Ändra ingredienser, dryckesmått, mängder eller priser innan du sparar.'}
               </div>
               <div style={{ display:'flex', flexDirection:'column', gap:12, marginBottom:18 }}>
                 {items.map((item, itemIndex) => {
@@ -701,7 +701,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
   const [scanned,setScanned]=useState<ScannedRec|null>(null);
   const [error,setError]=useState('');
   const [rName,setRName]=useState('');
-  const [rCat,setRCat]=useState('Huvudrätter');
+  const [rCat,setRCat]=useState(DEFAULT_PRODUCT_CATEGORY);
   const [rPrice,setRPrice]=useState('');
   const [rServ,setRServ]=useState('1');
   const [rVisibility,setRVisibility]=useState<RecipeVisibility>('private');
@@ -719,7 +719,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
       const matched=data.ingredients.map(x=>{const f=si.find(s=>s.name.toLowerCase().includes(x.name.toLowerCase())||x.name.toLowerCase().includes(s.name.toLowerCase()));return{...x,matchedId:f?.id,priceSek:f?.priceSek};});
       if (!isPro) incrementRecipeScans();
       setScanned({...data,ingredients:matched});
-      setRName(data.name); setRCat(data.category||'Huvudrätter');
+      setRName(data.name); setRCat(data.category||DEFAULT_PRODUCT_CATEGORY);
       setRPrice(data.sellingPrice?String(data.sellingPrice):''); setRServ(String(data.servings||1)); setIngs(matched);
       setState('review');
     }catch(e:unknown){setError(e instanceof Error?e.message:'Något gick fel.');setState('error');}
@@ -773,13 +773,13 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
           </>)}
           {state==='scanning'&&<div style={{textAlign:'center',padding:'48px 20px'}}><div style={{width:48,height:48,border:'3px solid var(--border)',borderTopColor:'var(--gold)',borderRadius:'50%',margin:'0 auto 20px',animation:'spin 1s linear infinite'}}/><div style={{fontSize:16,fontWeight:600,color:'var(--t1)',marginBottom:8}}>Läser receptet...</div><div style={{fontSize:13,color:'var(--t2)'}}>AI analyserar ingredienser och mängder</div><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>}
           {state==='error'&&<div style={{textAlign:'center',padding:'40px 20px'}}><AlertCircle size={40} color="var(--red)" style={{marginBottom:12}}/><div style={{fontSize:15,fontWeight:600,color:'var(--t1)',marginBottom:8}}>Något gick fel</div><div style={{fontSize:13,color:'var(--t2)',marginBottom:24}}>{error}</div><button onClick={()=>setState('idle')} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer'}}>Försök igen</button></div>}
-          {state==='done'&&<div style={{textAlign:'center',padding:'40px 20px'}}><CheckCircle size={48} color="var(--green)" style={{marginBottom:12}}/><div style={{fontSize:16,fontWeight:700,color:'var(--t1)',marginBottom:8}}>Recept sparat! 🎉</div><div style={{fontSize:13,color:'var(--t2)',marginBottom:24}}><strong>{rName}</strong> är nu sparat med kalkyl. Skanna din faktura för att uppdatera priserna och se marginalen.</div><button onClick={onClose} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer'}}>Stäng och se recept</button></div>}
+          {state==='done'&&<div style={{textAlign:'center',padding:'40px 20px'}}><CheckCircle size={48} color="var(--green)" style={{marginBottom:12}}/><div style={{fontSize:16,fontWeight:700,color:'var(--t1)',marginBottom:8}}>Produkt sparad! 🎉</div><div style={{fontSize:13,color:'var(--t2)',marginBottom:24}}><strong>{rName}</strong> är nu sparad med kalkyl. Skanna din faktura för att uppdatera priserna och se marginalen.</div><button onClick={onClose} style={{padding:'10px 24px',borderRadius:10,background:'var(--brown)',border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer'}}>Stäng och se produkter</button></div>}
           {state==='review'&&scanned&&(<>
             {mq>0&&<div style={{padding:'12px 16px',background:'rgba(201,168,76,.1)',border:'1px solid rgba(201,168,76,.3)',borderRadius:10,fontSize:13,color:'hsl(44 54% 35%)',marginBottom:16}}>⚠️ <strong>{mq} ingrediens{mq>1?'er':''}</strong> saknar mängd — fyll i dem nedan så blir kalkylen rätt.</div>}
             {mp>0&&<div style={{padding:'12px 16px',background:'rgba(185,28,28,.06)',border:'1px solid rgba(185,28,28,.15)',borderRadius:10,fontSize:13,color:'var(--red)',marginBottom:16}}>ℹ️ <strong>{mp} ingrediens{mp>1?'er':''}</strong> finns inte i din ingrediensdatabas än. Lägg till dem under Ingredienser för att få rätt kalkyl.</div>}
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:20}}>
-              <div style={{gridColumn:'1/-1'}}><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Receptnamn</label><input className="inp" value={rName} onChange={e=>setRName(e.target.value)}/></div>
-              <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Kategori</label><select className="inp" value={rCat} onChange={e=>setRCat(e.target.value)}>{CATS.filter(c=>c!=='Alla').map(c=><option key={c}>{c}</option>)}</select></div>
+              <div style={{gridColumn:'1/-1'}}><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Produktnamn</label><input className="inp" value={rName} onChange={e=>setRName(e.target.value)}/></div>
+              <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Kategori</label><select className="inp" value={rCat} onChange={e=>setRCat(e.target.value)}>{PRODUCT_CATEGORIES.map(c=><option key={c}>{c}</option>)}</select></div>
               <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Portioner</label><input className="inp" type="number" min="1" value={rServ} onChange={e=>setRServ(e.target.value)}/></div>
               <div style={{gridColumn:'1/-1'}}><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Försäljningspris (kr) — lämna tomt = auto</label><input className="inp" type="number" placeholder="t.ex. 139" value={rPrice} onChange={e=>setRPrice(e.target.value)}/></div>
               <div style={{gridColumn:'1/-1'}}><RecipeVisibilityPicker value={rVisibility} onChange={setRVisibility} /></div>
@@ -800,7 +800,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
             </div>
             <div style={{display:'flex',gap:10,justifyContent:'flex-end'}}>
               <button onClick={onClose} style={{padding:'10px 20px',borderRadius:10,border:'1px solid var(--border)',background:'none',cursor:'pointer',fontSize:13,color:'var(--t2)'}}>Avbryt</button>
-              <button onClick={saveRecipe} disabled={!rName.trim()} style={{padding:'10px 24px',borderRadius:10,background:rName.trim()?'var(--brown)':'var(--border)',border:'none',color:rName.trim()?'#fff':'var(--t3)',fontSize:13,fontWeight:600,cursor:rName.trim()?'pointer':'not-allowed'}}>Spara recept</button>
+              <button onClick={saveRecipe} disabled={!rName.trim()} style={{padding:'10px 24px',borderRadius:10,background:rName.trim()?'var(--brown)':'var(--border)',border:'none',color:rName.trim()?'#fff':'var(--t3)',fontSize:13,fontWeight:600,cursor:rName.trim()?'pointer':'not-allowed'}}>Spara produkt</button>
             </div>
           </>)}
         </div>
@@ -1017,7 +1017,7 @@ function InvoiceScanner({ isPro, onClose }: { isPro: boolean; onClose: () => voi
 function NewRecipeModal({ onClose }: { onClose: () => void }) {
   const ingredients = store.getIngredients();
   const [name, setName]   = useState('');
-  const [cat, setCat]     = useState('Huvudrätter');
+  const [cat, setCat]     = useState(DEFAULT_PRODUCT_CATEGORY);
   const [price, setPrice] = useState('');
   const [servings, setServings] = useState('1');
   const [lines, setLines] = useState<{ingId:string;qty:string}[]>([{ingId:'',qty:''}]);
@@ -1059,29 +1059,29 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
       onClick={e => e.target === e.currentTarget && onClose()}>
       <div style={{ background:'var(--white)', borderRadius:20, width:'100%', maxWidth:560, maxHeight:'90vh', overflow:'auto', boxShadow:'0 24px 60px rgba(20,14,8,.25)' }}>
         <div style={{ padding:'20px 24px', borderBottom:'1px solid var(--border)' }}>
-          <h2 className="font-serif" style={{ fontSize:20, fontWeight:600, color:'var(--t1)' }}>Nytt recept</h2>
+          <h2 className="font-serif" style={{ fontSize:20, fontWeight:600, color:'var(--t1)' }}>Ny produkt</h2>
         </div>
         <div style={{ padding:'20px 24px', display:'flex', flexDirection:'column', gap:14 }}>
           {err && <div style={{ padding:'10px 14px', background:'var(--redbg)', border:'1px solid rgba(185,28,28,.2)', borderRadius:9, fontSize:13, color:'var(--red)' }}>{err}</div>}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
             <div>
               <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Namn</label>
-              <input className="inp" placeholder="Receptnamn" value={name} onChange={e=>setName(e.target.value)} />
+              <input className="inp" placeholder="T.ex. Cappuccino, extra ost eller lunchlåda" value={name} onChange={e=>setName(e.target.value)} />
             </div>
             <div>
               <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Kategori</label>
               <select className="inp" value={cat} onChange={e=>setCat(e.target.value)}>
-                {CATS.filter(c=>c!=='Alla').map(c=><option key={c}>{c}</option>)}
+                {PRODUCT_CATEGORIES.map(c=><option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
             <div>
-              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Portioner</label>
+              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Antal / portioner</label>
               <input className="inp" type="number" min="1" value={servings} onChange={e=>setServings(e.target.value)} />
             </div>
             <div>
-              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Försäljningspris (kr/port)</label>
+              <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Försäljningspris (kr/st)</label>
               <input className="inp" type="number" placeholder="Lämna tomt = auto" value={price} onChange={e=>setPrice(e.target.value)} />
             </div>
           </div>
@@ -1103,7 +1103,7 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
         </div>
         <div style={{ padding:'16px 24px', borderTop:'1px solid var(--border)', display:'flex', gap:10, justifyContent:'flex-end' }}>
           <button className="btn-outline" onClick={onClose}>Avbryt</button>
-          <button className="btn-brown" onClick={save}>Spara recept</button>
+          <button className="btn-brown" onClick={save}>Spara produkt</button>
         </div>
       </div>
     </div>

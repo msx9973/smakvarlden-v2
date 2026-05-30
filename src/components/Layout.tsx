@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const nav = useNavigate();
   const NAV = [
     { to:'/dashboard', icon:Home, label:isEnglish ? 'Home' : 'Hem' },
-    { to:'/recipes', icon:BookOpen, label:isEnglish ? 'Dishes' : 'Rätter' },
+    { to:'/recipes', icon:BookOpen, label:isEnglish ? 'Products' : 'Produkter' },
     { to:'/ingredients', icon:ShoppingBasket, label:isEnglish ? 'Prices' : 'Priser' },
     { to:'/calculator', icon:Calculator, label:isEnglish ? 'Calculator' : 'Räkna' },
   ];

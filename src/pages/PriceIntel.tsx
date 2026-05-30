@@ -108,7 +108,7 @@ function AlertCard({ alert, index }: { alert: IngredientAlert; index: number }) 
           </div>
           <div style={{ fontSize:12, color:'var(--t2)' }}>
             {alert.ingredient.prevPriceSek.toFixed(0)} → {alert.ingredient.priceSek.toFixed(0)} kr/{alert.ingredient.unit}
-            {' · '}{alert.affectedRecipes.length} rätt{alert.affectedRecipes.length !== 1 ? 'er' : ''} påverkade
+            {' · '}{alert.affectedRecipes.length} produkt{alert.affectedRecipes.length !== 1 ? 'er' : ''} påverkade
             {isUp && worstDelta < -1 && (
               <span style={{ color:'var(--red)', marginLeft:8 }}>
                 · Marginal ↓ upp till {Math.abs(worstDelta).toFixed(1)}%
@@ -162,16 +162,16 @@ export default function PriceIntel() {
       <div style={{ marginBottom:28 }}>
         <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Priset har ändrats</h1>
         <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
-          Här ser du vilka rätter som behöver höjt pris när en ingrediens blir dyrare.
+          Här ser du vilka rätter, drycker och produkter som behöver höjt pris när en råvara blir dyrare.
         </p>
       </div>
 
       {/* Summary KPIs */}
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:24 }}>
         {[
-          { label:'Dyrare ingredienser', value:String(increases.length), color:'var(--red)',   sub:'kolla rätterna'            },
+          { label:'Dyrare ingredienser', value:String(increases.length), color:'var(--red)',   sub:'kolla produkterna'            },
           { label:'Billigare ingredienser', value:String(decreases.length), color:'var(--green)', sub:'bra för marginalen'       },
-          { label:'Rätter som påverkas',   value:String(totalRecipesAffected), color:'var(--t1)', sub:'totalt'                  },
+          { label:'Produkter som påverkas',   value:String(totalRecipesAffected), color:'var(--t1)', sub:'totalt'                  },
         ].map(k => (
           <div key={k.label} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:14, padding:'16px 18px' }}>
             <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>{k.label}</div>
@@ -185,7 +185,7 @@ export default function PriceIntel() {
       <div style={{ padding:'12px 16px', background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', borderRadius:11, marginBottom:24, fontSize:13, color:'#1d4ed8', lineHeight:1.6 }}>
         💡 <strong>Hur det fungerar:</strong> Gå till{' '}
         <a href="/ingredients" style={{ color:'#1d4ed8', fontWeight:700 }}>Ingredienser</a>
-        {' '}och uppdatera ett pris. Systemet jämför mot föregående pris, beräknar exakt påverkan på alla berörda recept och ger konkreta åtgärdsförslag direkt.
+        {' '}och uppdatera ett pris. Systemet jämför mot föregående pris, beräknar exakt påverkan på alla berörda produkter och ger konkreta åtgärdsförslag direkt.
       </div>
 
       {/* Increases */}
@@ -222,7 +222,7 @@ export default function PriceIntel() {
           <div style={{ fontSize:16, fontWeight:600, color:'var(--t1)', marginBottom:8 }}>Inga prisförändringar registrerade</div>
           <div style={{ fontSize:14, color:'var(--t2)', maxWidth:380, margin:'0 auto', lineHeight:1.7 }}>
             Gå till <a href="/ingredients" style={{ color:'var(--gold)', fontWeight:600 }}>Ingredienser</a> och ange ett nytt pris på en ingrediens.
-            Systemet beräknar automatiskt hur marginalen förändras i alla berörda recept.
+            Systemet beräknar automatiskt hur marginalen förändras i alla berörda produkter.
           </div>
         </div>
       )}

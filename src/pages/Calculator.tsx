@@ -3,8 +3,7 @@ import { Plus, Trash2, Save } from 'lucide-react';
 import { store, suggested } from '../store';
 import type { Recipe, RecipeIngredient, RecipeVisibility } from '../store';
 import RecipeVisibilityPicker from '../components/RecipeVisibilityPicker';
-
-const CATS = ['Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
+import { DEFAULT_PRODUCT_CATEGORY, PRODUCT_CATEGORIES } from '../lib/product-categories';
 
 interface Line { ingId: string; qty: string; }
 
@@ -12,7 +11,7 @@ export default function Calculator() {
   const ingredients = store.getIngredients();
   const [lines, setLines]       = useState<Line[]>([{ ingId:'', qty:'' }]);
   const [name, setName]         = useState('');
-  const [cat, setCat]           = useState('Huvudrätter');
+  const [cat, setCat]           = useState(DEFAULT_PRODUCT_CATEGORY);
   const [servings, setServings] = useState('1');
   const [priceIn, setPriceIn]   = useState('');
   const [visibility, setVisibility] = useState<RecipeVisibility>('private');
@@ -43,7 +42,7 @@ export default function Calculator() {
 
   function saveRecipe() {
     setErr('');
-    if (!name.trim()) { setErr('Skriv vad rätten heter'); return; }
+    if (!name.trim()) { setErr('Skriv vad produkten heter'); return; }
     if (recipeIngs.length === 0) { setErr('Välj minst en ingrediens'); return; }
     const rec: Recipe = {
       id: crypto.randomUUID(), name: name.trim(), category: cat,
@@ -59,9 +58,9 @@ export default function Calculator() {
   return (
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>
       <div style={{ marginBottom:28 }}>
-        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Räkna på en rätt</h1>
+        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Räkna på en produkt</h1>
         <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
-          Välj ingredienser — appen visar vad rätten kostar och om priset är bra.
+          Välj ingredienser eller råvaror för mat, dryck, kaffe, tillbehör och catering — appen visar kostnad och marginal.
         </p>
       </div>
 
@@ -72,23 +71,23 @@ export default function Calculator() {
           <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:16, padding:'20px' }}>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:12 }}>
               <div>
-                <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Receptnamn</label>
-                <input className="inp" placeholder="T.ex. Laxpoke Bowl" value={name} onChange={e=>setName(e.target.value)} />
+                <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Produktnamn</label>
+                <input className="inp" placeholder="T.ex. cappuccino, extra ost eller lunchlåda" value={name} onChange={e=>setName(e.target.value)} />
               </div>
               <div>
                 <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Kategori</label>
                 <select className="inp" value={cat} onChange={e=>setCat(e.target.value)}>
-                  {CATS.map(c=><option key={c}>{c}</option>)}
+                  {PRODUCT_CATEGORIES.map(c=><option key={c}>{c}</option>)}
                 </select>
               </div>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
               <div>
-                <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Portioner</label>
+                <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Antal / portioner</label>
                 <input className="inp" type="number" min="1" value={servings} onChange={e=>setServings(e.target.value)} />
               </div>
               <div>
-                <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Försäljningspris / port (kr)</label>
+                <label style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', display:'block', marginBottom:6 }}>Försäljningspris / st (kr)</label>
                 <input className="inp" type="number" placeholder={`Auto: ${suggested(rawCostTotal)} kr`} value={priceIn} onChange={e=>setPriceIn(e.target.value)} />
               </div>
             </div>
@@ -145,7 +144,7 @@ export default function Calculator() {
 
           <button className="btn-brown" onClick={saveRecipe} style={{ display:'flex', alignItems:'center', gap:8, justifyContent:'center', padding:'13px' }}>
             <Save size={15} />
-            {saved ? '✓ Sparat!' : 'Spara rätten'}
+            {saved ? '✓ Sparat!' : 'Spara produkten'}
           </button>
         </div>
 
@@ -159,7 +158,7 @@ export default function Calculator() {
               <Row k="Råvarukostnad"        v={`${rawCostTotal.toFixed(2)} kr`} />
               <Row k="Svinn (+20%)"         v={`+${wasteCost.toFixed(2)} kr`} red />
               <div style={{ height:1, background:'rgba(255,255,255,.07)', margin:'4px 0' }} />
-              <Row k="Totalkostnad / port"  v={`${totalCost.toFixed(2)} kr`} />
+              <Row k="Totalkostnad / st"  v={`${totalCost.toFixed(2)} kr`} />
               <Row k="Försäljningspris"     v={`${sp} kr`} gold />
             </div>
 
@@ -185,7 +184,7 @@ export default function Calculator() {
             {recipeIngs.length > 0 && (
               <div style={{ margin:'0 16px 16px', background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.08)', borderRadius:12, padding:'14px' }}>
                 <div style={{ display:'flex', justifyContent:'space-between', marginBottom:8 }}>
-                  <span style={{ fontSize:12, color:'rgba(255,255,255,.4)' }}>Bruttovinst / port</span>
+                  <span style={{ fontSize:12, color:'rgba(255,255,255,.4)' }}>Bruttovinst / st</span>
                   <span className="font-mono" style={{ fontSize:14, fontWeight:700, color: profit>0?'#4ade80':'#f87171' }}>
                     {profit>0?'+':''}{profit.toFixed(2)} kr
                   </span>

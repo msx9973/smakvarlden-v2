@@ -25,8 +25,8 @@ export default function Dashboard() {
         </h1>
         <p style={{ fontSize:16, color:'var(--t2)', lineHeight:1.5 }}>
           {isEnglish
-            ? 'See if your dishes make money and what to do next.'
-            : 'Här ser du om dina rätter tjänar pengar — och vad du ska göra härnäst.'}
+            ? 'See if your dishes, drinks and products make money and what to do next.'
+            : 'Här ser du om dina rätter, drycker och produkter tjänar pengar — och vad du ska göra härnäst.'}
         </p>
       </div>
 
@@ -40,7 +40,7 @@ export default function Dashboard() {
             : priceWarnings.length === 1
               ? `${priceWarnings[0].ingredient.name} kostar mer nu.`
               : `${priceWarnings.length} ingredienser kostar mer nu.`}
-          {' '}{isEnglish ? 'Check which menu prices need attention.' : 'Kolla vilka rätter som behöver höjt pris.'}{' '}
+          {' '}{isEnglish ? 'Check which menu prices need attention.' : 'Kolla vilka produkter som behöver höjt pris.'}{' '}
           <Link to="/price-intel" style={{ color:'var(--brown)', fontWeight:700 }}>{isEnglish ? 'Show me' : 'Visa mig'} →</Link>
         </SimpleTip>
       )}
@@ -53,7 +53,7 @@ export default function Dashboard() {
           <BigStep
             emoji="📸"
             title={isEnglish ? 'Scan your menu' : 'Skanna din meny'}
-            text={isEnglish ? 'Upload a menu photo. AI finds dishes, guesses ingredients, and gives editable food-cost estimates.' : 'Ladda upp en menybild. AI hittar rätter, gissar ingredienser och ger kostnadsestimat som du kan ändra.'}
+            text={isEnglish ? 'Upload a menu photo. AI finds food, drinks, add-ons and prices, then gives editable cost estimates.' : 'Ladda upp en menybild. AI hittar mat, dryck, tillbehör och priser och ger kostnadsestimat som du kan ändra.'}
             to="/recipes?scan=menu"
             button={isEnglish ? 'Open menu scanner' : 'Öppna menyskanner'}
             highlight
@@ -61,7 +61,7 @@ export default function Dashboard() {
           <BigStep
             emoji="🍽️"
             title={isEnglish ? 'Scan a recipe' : 'Skanna ett recept'}
-            text={isEnglish ? 'Use the recipe scanner for accurate ingredients, portions, and saved cost cards.' : 'Använd receptskannern för mer exakta ingredienser, mängder och sparade kalkylkort.'}
+            text={isEnglish ? 'Use the recipe scanner for accurate ingredients, drink measures, portions, and saved cost cards.' : 'Använd receptskannern för exakta ingredienser, dryckesmått, mängder och sparade kalkylkort.'}
             to="/recipes?scan=recipe"
             button={isEnglish ? 'Scan recipe' : 'Skanna recept'}
           />
@@ -86,8 +86,8 @@ export default function Dashboard() {
         <div style={{ marginTop:28 }}>
           <h2 style={{ fontSize:13, fontWeight:800, textTransform:'uppercase', letterSpacing:'.7px', color:'var(--t3)', marginBottom:14 }}>
             {weakRecipes.length > 0
-              ? isEnglish ? 'Dishes that may need a higher price' : 'Rätter som kan behöva höjt pris'
-              : isEnglish ? 'Your dishes' : 'Dina rätter'}
+              ? isEnglish ? 'Products that may need a higher price' : 'Produkter som kan behöva höjt pris'
+              : isEnglish ? 'Your products' : 'Dina produkter'}
           </h2>
           <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:16, overflow:'hidden' }}>
             {(weakRecipes.length > 0 ? weakRecipes : recipes.slice(0, 5)).map((r, idx, arr) => {
@@ -133,7 +133,7 @@ export default function Dashboard() {
             })}
             {recipes.length > 5 && (
               <Link to="/recipes" style={{ display:'block', padding:'12px 18px', textAlign:'center', fontSize:13, fontWeight:600, color:'var(--gold)', textDecoration:'none' }}>
-                {isEnglish ? `See all ${recipes.length} dishes` : `Se alla ${recipes.length} rätter`} →
+                {isEnglish ? `See all ${recipes.length} products` : `Se alla ${recipes.length} produkter`} →
               </Link>
             )}
           </div>
@@ -145,8 +145,8 @@ export default function Dashboard() {
           <SimpleTip>
             <strong>{isEnglish ? 'New here?' : 'Ny här?'}</strong>{' '}
             {isEnglish
-              ? 'Start by scanning a menu or invoice. The app fills in a lot for you.'
-              : 'Börja med att skanna en meny eller faktura. Appen fyller i mycket åt dig.'}
+              ? 'Start by scanning a menu or invoice. The app fills in food, drinks and product costs for you.'
+              : 'Börja med att skanna en meny eller faktura. Appen fyller i mat, dryck och produktkostnader åt dig.'}
           </SimpleTip>
         </div>
       )}

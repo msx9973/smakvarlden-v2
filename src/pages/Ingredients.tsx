@@ -4,7 +4,7 @@ import { Plus, Pencil, Trash2, Search, TrendingUp, TrendingDown } from 'lucide-r
 import { store } from '../store';
 import type { Ingredient } from '../store';
 
-const CATS = ['Alla','Fisk','Kött','Grönsaker','Mejeri','Torrvaror','Kryddor','Skaldjur','Svamp'];
+const CATS = ['Alla','Fisk','Kött','Grönsaker','Mejeri','Torrvaror','Kryddor','Skaldjur','Svamp','Dryck','Kaffe','Förpackning'];
 
 export default function Ingredients() {
   const [ingredients, setIngredients] = useState(() => store.getIngredients());
@@ -133,7 +133,7 @@ function IngredientModal({ ing, onClose }: { ing: Ingredient|null; onClose:()=>v
   const [supplier, setSupplier] = useState(ing?.supplier || '');
   const [err, setErr]           = useState('');
 
-  const CATS2 = ['Fisk','Kött','Grönsaker','Mejeri','Torrvaror','Kryddor','Skaldjur','Svamp'];
+  const CATS2 = ['Fisk','Kött','Grönsaker','Mejeri','Torrvaror','Kryddor','Skaldjur','Svamp','Dryck','Kaffe','Förpackning'];
   const UNITS = ['kg','g','liter','dl','st','klyfta'];
 
   function save() {

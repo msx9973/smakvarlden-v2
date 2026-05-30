@@ -15,7 +15,7 @@ export default function RecipeDetail() {
 
   if (!recipe) return (
     <div style={{ padding:'60px 36px', textAlign:'center' }}>
-      <p style={{ color:'var(--t2)' }}>Receptet hittades inte.</p>
+      <p style={{ color:'var(--t2)' }}>Produkten hittades inte.</p>
       <Link to="/recipes" style={{ color:'var(--gold)', fontWeight:600 }}>← Tillbaka</Link>
     </div>
   );
@@ -37,7 +37,7 @@ export default function RecipeDetail() {
   return (
     <div style={{ padding:'32px 36px', maxWidth:900, margin:'0 auto' }}>
       <Link to="/recipes" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, color:'var(--t2)', textDecoration:'none', marginBottom:24, fontWeight:500 }}>
-        <ArrowLeft size={14} /> Tillbaka till rätter
+        <ArrowLeft size={14} /> Tillbaka till produkter
       </Link>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
@@ -48,7 +48,7 @@ export default function RecipeDetail() {
               {recipe.name}
             </h1>
             <div style={{ fontSize:13, color:'var(--t2)' }}>
-              {recipe.category} · {recipe.servings} portion{recipe.servings>1?'er':''}
+              {recipe.category} · {recipe.servings} st/portion{recipe.servings>1?'er':''}
               {recipe.visibility === 'public' && recipe.ownerName && !isOwner && (
                 <> · av {recipe.ownerName}</>
               )}
@@ -59,7 +59,7 @@ export default function RecipeDetail() {
               </span>
             </div>
             {!isOwner && recipe.visibility === 'public' && (
-              <p style={{ fontSize:13, color:'var(--t3)', marginTop:8, lineHeight:1.5 }}>Det här är någon annans rätt. Priserna räknas med dina ingredienser.</p>
+              <p style={{ fontSize:13, color:'var(--t3)', marginTop:8, lineHeight:1.5 }}>Det här är någon annans produkt. Priserna räknas med dina ingredienser.</p>
             )}
             {isOwner && (
               <div style={{ marginTop:16, maxWidth:420 }}>
@@ -118,7 +118,7 @@ export default function RecipeDetail() {
               ))}
               <div style={{ height:1, background:'rgba(255,255,255,.07)', margin:'4px 0' }} />
               <div style={{ display:'flex', justifyContent:'space-between', padding:'8px 12px', borderRadius:8, fontSize:13 }}>
-                <span style={{ color:'rgba(255,255,255,.5)' }}>Totalkostnad / portion</span>
+                <span style={{ color:'rgba(255,255,255,.5)' }}>Totalkostnad / st</span>
                 <span className="font-mono" style={{ color:'#fff', fontWeight:500 }}>{total.toFixed(2)} kr</span>
               </div>
               <div style={{ display:'flex', justifyContent:'space-between', padding:'9px 12px', borderRadius:9, fontSize:14, background:'rgba(201,148,76,.15)', border:'1px solid rgba(201,148,76,.22)' }}>
@@ -146,7 +146,7 @@ export default function RecipeDetail() {
           {/* Summary cards */}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
             {[
-              { label:'Bruttovinst / port', value:`${profit > 0 ? '+' : ''}${profit.toFixed(0)} kr`, color: profit>0?'var(--green)':'var(--red)' },
+              { label:'Bruttovinst / st', value:`${profit > 0 ? '+' : ''}${profit.toFixed(0)} kr`, color: profit>0?'var(--green)':'var(--red)' },
               { label:'Råvarukostnad %',    value:`${((total/sp)*100).toFixed(1)}%`,                   color:'var(--t1)' },
             ].map(c => (
               <div key={c.label} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:12, padding:'14px 16px' }}>
