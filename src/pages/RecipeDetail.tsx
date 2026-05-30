@@ -1,12 +1,17 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { store, rawCost, margin, suggested } from '../store';
+import type { Recipe, RecipeVisibility } from '../store';
 import { calculateLineCostWithUnits, inferPurchaseUnit } from '../lib/calculations';
+import RecipeVisibilityPicker from '../components/RecipeVisibilityPicker';
 
 export default function RecipeDetail() {
   const { id } = useParams<{ id: string }>();
-  const recipe = store.getRecipes().find(r => r.id === id);
+  const initial = id ? store.getRecipeById(id) : undefined;
+  const [recipe, setRecipe] = useState(initial);
   const ingredients = store.getIngredients();
+  const isOwner = recipe ? store.isRecipeOwner(recipe) : false;
 
   if (!recipe) return (
     <div style={{ padding:'60px 36px', textAlign:'center' }}>
@@ -22,10 +27,17 @@ export default function RecipeDetail() {
   const m     = margin(recipe);
   const profit = sp - total;
 
+  function updateVisibility(visibility: RecipeVisibility) {
+    if (!recipe) return;
+    const updated: Recipe = { ...recipe, visibility };
+    store.saveRecipe(updated);
+    setRecipe(updated);
+  }
+
   return (
     <div style={{ padding:'32px 36px', maxWidth:900, margin:'0 auto' }}>
       <Link to="/recipes" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, color:'var(--t2)', textDecoration:'none', marginBottom:24, fontWeight:500 }}>
-        <ArrowLeft size={14} /> Tillbaka till recept
+        <ArrowLeft size={14} /> Tillbaka till rätter
       </Link>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
@@ -37,8 +49,23 @@ export default function RecipeDetail() {
             </h1>
             <div style={{ fontSize:13, color:'var(--t2)' }}>
               {recipe.category} · {recipe.servings} portion{recipe.servings>1?'er':''}
+              {recipe.visibility === 'public' && recipe.ownerName && !isOwner && (
+                <> · av {recipe.ownerName}</>
+              )}
             </div>
-            <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
+            <div style={{ display:'flex', gap:8, marginTop:10, flexWrap:'wrap' }}>
+              <span style={{ fontSize:11, fontWeight:700, padding:'4px 10px', borderRadius:999, background: recipe.visibility === 'public' ? 'var(--goldbg)' : 'var(--muted)', color: recipe.visibility === 'public' ? 'hsl(44 54% 35%)' : 'var(--t2)' }}>
+                {recipe.visibility === 'public' ? 'Alla kan se' : 'Bara du'}
+              </span>
+            </div>
+            {!isOwner && recipe.visibility === 'public' && (
+              <p style={{ fontSize:13, color:'var(--t3)', marginTop:8, lineHeight:1.5 }}>Det här är någon annans rätt. Priserna räknas med dina ingredienser.</p>
+            )}
+            {isOwner && (
+              <div style={{ marginTop:16, maxWidth:420 }}>
+                <RecipeVisibilityPicker value={recipe.visibility ?? 'private'} onChange={updateVisibility} />
+              </div>
+            )}
           </div>
 
           {/* Ingredient breakdown */}
@@ -77,7 +104,7 @@ export default function RecipeDetail() {
           {/* Dark cost card */}
           <div style={{ background:'var(--brown)', borderRadius:16, overflow:'hidden' }}>
             <div style={{ padding:'14px 20px', borderBottom:'1px solid rgba(255,255,255,.08)' }}>
-              <span style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.7px', color:'rgba(255,255,255,.35)' }}>Kostnadsanalys</span>
+              <span style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.7px', color:'rgba(255,255,255,.35)' }}>Vad tjänar du?</span>
             </div>
             <div style={{ padding:'16px 20px', display:'flex', flexDirection:'column', gap:4 }}>
               {[
@@ -111,7 +138,7 @@ export default function RecipeDetail() {
                 <div style={{ height:'100%', width:`${Math.min(m,100)}%`, borderRadius:100, background: m>62 ? 'linear-gradient(90deg,#15803d,#4ade80)' : m>45 ? '#fbbf24' : '#f87171', transition:'width .6s ease' }} />
               </div>
               <div style={{ fontSize:11, color:'rgba(255,255,255,.3)', marginTop:6 }}>
-                {m > 62 ? '✓ Utmärkt marginal' : m > 45 ? '⚠ Acceptabel — kan förbättras' : '✗ För låg — se över priset'}
+                { m > 62 ? '✓ Bra! Du tjänar pengar' : m > 45 ? '⚠ Okej — kan bli bättre' : '✗ Priset är för lågt — höj det'}
               </div>
             </div>
           </div>

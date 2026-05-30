@@ -34,6 +34,8 @@ export interface RecipeIngredient {
   unitPrice: number;
 }
 
+export type RecipeVisibility = 'private' | 'public';
+
 export interface Recipe {
   id: string;
   name: string;
@@ -42,6 +44,9 @@ export interface Recipe {
   sellingPriceSek: number;
   ingredients: RecipeIngredient[];
   createdAt: string;
+  visibility?: RecipeVisibility;
+  ownerId?: string;
+  ownerName?: string;
 }
 
 export interface User {
@@ -226,6 +231,7 @@ function save<T>(key: string, val: T) { localStorage.setItem(key, JSON.stringify
 const K = {
   session: 'sv_session',
   users: 'sv_users',
+  publicRecipes: 'sv_public_recipes',
   legacyUser: 'sv_user',
   legacyIng: 'sv_ing4',
   legacyRec: 'sv_rec3',
@@ -283,6 +289,42 @@ function requireUserId(): string {
   return id;
 }
 
+function requireUser(): User {
+  const user = load<User | null>(K.session, null);
+  if (!user) throw new Error('Du måste vara inloggad.');
+  return user;
+}
+
+function normalizeRecipe(rec: Recipe): Recipe {
+  return {
+    ...rec,
+    visibility: rec.visibility ?? 'private',
+  };
+}
+
+function getPublicRecipeList(): Recipe[] {
+  return load(K.publicRecipes, []).map(normalizeRecipe);
+}
+
+function savePublicRecipeList(list: Recipe[]) {
+  save(K.publicRecipes, list);
+}
+
+function syncPublicRecipe(rec: Recipe) {
+  const normalized = normalizeRecipe(rec);
+  const publicList = getPublicRecipeList().filter(r => r.id !== normalized.id);
+
+  if (normalized.visibility === 'public' && normalized.ownerId) {
+    publicList.unshift(normalized);
+  }
+
+  savePublicRecipeList(publicList);
+}
+
+function removePublicRecipe(recipeId: string) {
+  savePublicRecipeList(getPublicRecipeList().filter(r => r.id !== recipeId));
+}
+
 function scanMonthKey(userId: string, kind: 'invoice' | 'recipe') {
   const month = new Date().toISOString().slice(0, 7);
   return kind === 'invoice' ? `sv_scans_${userId}_${month}` : `sv_rscans_${userId}_${month}`;
@@ -333,24 +375,58 @@ export const store = {
 
   getRecipes: (): Recipe[] => {
     const userId = currentUserId();
-    if (!userId) return cloneSeed(SEED_REC);
+    if (!userId) return cloneSeed(SEED_REC).map(normalizeRecipe);
     migrateLegacyData(userId);
-    return load(userKey(userId, 'rec'), cloneSeed(SEED_REC));
+    return load(userKey(userId, 'rec'), cloneSeed(SEED_REC)).map(normalizeRecipe);
+  },
+
+  getPublicRecipes: (): Recipe[] => {
+    return getPublicRecipeList();
+  },
+
+  getPublicRecipesFromOthers: (): Recipe[] => {
+    const userId = currentUserId();
+    return getPublicRecipeList().filter(r => r.visibility === 'public' && r.ownerId !== userId);
+  },
+
+  getRecipeById(id: string): Recipe | undefined {
+    const userId = currentUserId();
+    if (userId) {
+      migrateLegacyData(userId);
+      const own = load(userKey(userId, 'rec'), cloneSeed(SEED_REC))
+        .map(normalizeRecipe)
+        .find(r => r.id === id);
+      if (own) return own;
+    }
+    return getPublicRecipeList().find(r => r.id === id);
+  },
+
+  isRecipeOwner: (recipe: Recipe): boolean => {
+    const userId = currentUserId();
+    return Boolean(userId && recipe.ownerId === userId);
   },
 
   saveRecipe(rec: Recipe) {
-    const userId = requireUserId();
+    const user = requireUser();
+    const userId = user.id;
     const key = userKey(userId, 'rec');
-    const list = load(key, cloneSeed(SEED_REC));
-    const idx  = list.findIndex(x => x.id === rec.id);
-    if (idx >= 0) list[idx] = rec; else list.unshift(rec);
+    const list = load(key, cloneSeed(SEED_REC)).map(normalizeRecipe);
+    const normalized = normalizeRecipe({
+      ...rec,
+      ownerId: user.id,
+      ownerName: user.name,
+    });
+    const idx  = list.findIndex(x => x.id === normalized.id);
+    if (idx >= 0) list[idx] = normalized; else list.unshift(normalized);
     save(key, list);
+    syncPublicRecipe(normalized);
   },
 
   deleteRecipe(id: string) {
     const userId = requireUserId();
     const key = userKey(userId, 'rec');
     save(key, load(key, cloneSeed(SEED_REC)).filter(x => x.id !== id));
+    removePublicRecipe(id);
   },
 
   getInvoiceScansUsed(): number {

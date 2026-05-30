@@ -100,12 +100,14 @@ export function LoginPage() {
               <path d="M7.5 1.5v5M5 3.5l2.5 3 2.5-3M2 9.5h11M3.5 9.5V13M11.5 9.5V13"/>
             </svg>
           </div>
-          <h1 className="font-serif" style={{ fontSize:22, fontWeight:600, color:'var(--brown)' }}>Smakvärlden</h1>
-          <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Demo mode för kökets operativsystem</p>
+          <h1 className="font-serif" style={{ fontSize:24, fontWeight:600, color:'var(--brown)' }}>Välkommen!</h1>
+          <p style={{ fontSize:15, color:'var(--t2)', marginTop:8, lineHeight:1.5 }}>
+            Fota fakturan, spara dina rätter — se om priset räcker.
+          </p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>
-          <div style={{ padding:'11px 13px', borderRadius:11, background:'rgba(59,130,246,.07)', border:'1px solid rgba(59,130,246,.18)', color:'#1d4ed8', fontSize:12.5, lineHeight:1.5, marginBottom:16 }}>
-            <strong>Demo only.</strong> This login is local browser demo access, not real account security. Demo data and example calculations are used throughout the app.
+          <div style={{ padding:'12px 14px', borderRadius:11, background:'var(--goldbg)', border:'1px solid var(--goldb)', color:'hsl(17 47% 22%)', fontSize:13, lineHeight:1.5, marginBottom:16 }}>
+            Ditt konto sparas i webbläsaren på den här datorn. Skapa konto med valfri e-post och lösenord (minst 4 tecken).
           </div>
           <div style={{ display:'flex', gap:2, padding:4, background:'var(--muted)', borderRadius:12, marginBottom:22 }}>
             {(['login','register'] as const).map((m) => (
@@ -144,7 +146,7 @@ export function LoginPage() {
           </form>
           {mode === 'login' && (
             <p style={{ textAlign:'center', marginTop:14, fontSize:12, color:'var(--t3)' }}>
-              Demo: use any email + password with 4+ characters.
+              Tips: använd samma e-post varje gång så hittar du dina rätter igen.
             </p>
           )}
           <div style={{ display:'flex', justifyContent:'center', gap:10, marginTop:16, fontSize:12 }}>

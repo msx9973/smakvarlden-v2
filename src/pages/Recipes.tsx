@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Plus, Search, Trash2, ChevronRight, ScanLine, Upload, X, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { store, margin, totalCost, marginColor, suggested } from '../store';
-import type { Recipe } from '../store';
+import type { Recipe, RecipeVisibility } from '../store';
 import { parseInvoiceData, createIngredientFromInvoiceItem } from '../lib/invoice-parser';
 import type { ParsedInvoiceItem } from '../lib/invoice-parser';
 import { useAuth } from '../lib/auth-context';
+import RecipeVisibilityPicker from '../components/RecipeVisibilityPicker';
+import { SimpleTip } from '../components/SimpleGuide';
 import { fileToBase64, fetchScanHealth, scanDocument } from '../lib/scan-api';
 import { calculateLineCostWithUnits, convertQuantity, inferPurchaseUnit } from '../lib/calculations';
 
@@ -64,56 +66,109 @@ function ScanServiceNotice({ status }: { status: ReturnType<typeof useScanServic
 export default function Recipes() {
   const { user } = useAuth();
   const isPro = user?.plan === 'pro';
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [view, setView] = useState<'mine' | 'public'>('mine');
   const [recipes, setRecipes] = useState(() => store.getRecipes());
+  const [publicRecipes, setPublicRecipes] = useState(() => store.getPublicRecipesFromOthers());
   const [search, setSearch]   = useState('');
   const [cat, setCat]         = useState('Alla');
   const [showNew, setShowNew] = useState(false);
   const [showScanner, setShowScanner]       = useState(false);
   const [showRecipeScanner, setShowRecipeScanner] = useState(false);
 
-  const filtered = recipes.filter(r =>
+  useEffect(() => {
+    const scan = searchParams.get('scan');
+    const isNew = searchParams.get('new');
+    if (scan === 'invoice') setShowScanner(true);
+    if (scan === 'recipe') setShowRecipeScanner(true);
+    if (isNew === '1') setShowNew(true);
+    if (scan || isNew) setSearchParams({}, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  const activeRecipes = view === 'mine' ? recipes : publicRecipes;
+
+  const filtered = activeRecipes.filter(r =>
     (cat === 'Alla' || r.category === cat) &&
     r.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  function refreshLists() {
+    setRecipes(store.getRecipes());
+    setPublicRecipes(store.getPublicRecipesFromOthers());
+  }
+
   function del(id: string) {
     if (!confirm('Ta bort receptet?')) return;
     store.deleteRecipe(id);
-    setRecipes(store.getRecipes());
+    refreshLists();
   }
 
   return (
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>
       <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:24 }}>
         <div>
-          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Recept</h1>
-          <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>{recipes.length} recept · klicka för att se kalkyl</p>
+          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Dina rätter</h1>
+          <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
+            Här sparar du rätter och ser om priset på menyn räcker.
+          </p>
         </div>
         <div style={{ display:'flex', gap:10 }}>
           <button onClick={() => setShowRecipeScanner(true)}
             style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
-            <Camera size={14} /> Skanna recept
+            <Camera size={14} /> Fota recept
           </button>
           <button onClick={() => setShowScanner(true)}
             style={{ display:'flex', alignItems:'center', gap:7, padding:'10px 16px', borderRadius:11, border:'1.5px solid var(--border)', background:'var(--white)', fontSize:13, fontWeight:600, color:'var(--brown)', cursor:'pointer' }}>
-            <ScanLine size={14} /> Skanna faktura
+            <ScanLine size={14} /> Fota faktura
           </button>
           <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 20px' }}>
-            <Plus size={15} /> Nytt recept
+            <Plus size={15} /> Ny rätt
           </button>
         </div>
       </div>
 
+      <div style={{ marginBottom:16 }}>
+        <SimpleTip>
+          <strong>Tips:</strong> Fota fakturan först — då får rätt pris på ingredienser. Sedan lägger du in rätter.
+        </SimpleTip>
+      </div>
+
+      <div style={{ display:'flex', gap:8, marginBottom:16 }}>
+        {([
+          ['mine', 'Mina rätter'],
+          ['public', 'Andras rätter'],
+        ] as const).map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => { setView(id); if (id === 'public') setPublicRecipes(store.getPublicRecipesFromOthers()); }}
+            style={{
+              padding:'8px 16px',
+              borderRadius:999,
+              border:'none',
+              cursor:'pointer',
+              fontSize:13,
+              fontWeight:600,
+              background: view === id ? 'var(--brown)' : 'var(--white)',
+              color: view === id ? '#fff' : 'var(--t2)',
+              boxShadow: view === id ? 'none' : '0 1px 4px var(--shad)',
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {view === 'mine' && (
       <div style={{ background:'linear-gradient(135deg, var(--brown) 0%, hsl(17 47% 20%) 100%)', borderRadius:14, padding:'16px 20px', marginBottom:20, display:'flex', alignItems:'center', justifyContent:'space-between', gap:16 }}>
         <div style={{ display:'flex', alignItems:'center', gap:14 }}>
           <div style={{ width:40, height:40, borderRadius:10, background:'rgba(255,255,255,.1)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
             <ScanLine size={20} color="var(--goldl)" />
           </div>
           <div>
-            <div style={{ fontSize:14, fontWeight:700, color:'#fff', marginBottom:2 }}>Fakturaskanning</div>
-            <div style={{ fontSize:12, color:'rgba(255,255,255,.55)' }}>
-              Ta en bild eller ladda upp PDF på din leveransfaktura — vi uppdaterar alla ingredienspriser automatiskt.
-              {' '}<span style={{ color:'var(--goldl)' }}>{SCAN_LIMIT - getScansUsed()} av {SCAN_LIMIT} gratisskanning kvar.</span>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', marginBottom:2 }}>Uppdatera priser från faktura</div>
+            <div style={{ fontSize:13, color:'rgba(255,255,255,.6)', lineHeight:1.45 }}>
+              Fota leveransfakturan — vi skriver in priserna åt dig.
+              {' '}<span style={{ color:'var(--goldl)' }}>{SCAN_LIMIT - getScansUsed()} gratis kvar den här månaden.</span>
             </div>
           </div>
         </div>
@@ -122,6 +177,7 @@ export default function Recipes() {
           Skanna nu
         </button>
       </div>
+      )}
 
       <div style={{ display:'flex', gap:10, marginBottom:20, flexWrap:'wrap', alignItems:'center' }}>
         <div style={{ position:'relative', flex:1, minWidth:200 }}>
@@ -144,10 +200,12 @@ export default function Recipes() {
 
       {filtered.length === 0 ? (
         <div style={{ textAlign:'center', padding:'60px 0', color:'var(--t3)', fontSize:14 }}>
-          Inga recept hittades.{' '}
+          {view === 'public'
+            ? 'Inga offentliga recept från andra konton ännu.'
+            : <>Inga recept hittades.{' '}
           <button onClick={() => setShowNew(true)} style={{ color:'var(--gold)', background:'none', border:'none', cursor:'pointer', fontWeight:600 }}>
             Skapa ett
-          </button>
+          </button></>}
         </div>
       ) : (
         <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
@@ -160,8 +218,16 @@ export default function Recipes() {
                 onMouseLeave={e => (e.currentTarget.style.boxShadow='none')}>
                 <Link to={`/recipes/${r.id}`} style={{ flex:1, display:'flex', alignItems:'center', gap:16, padding:'16px 20px', textDecoration:'none' }}>
                   <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontSize:14, fontWeight:600, color:'var(--t1)', marginBottom:2 }}>{r.name}</div>
-                    <div style={{ fontSize:12, color:'var(--t3)' }}>{r.category} · {r.ingredients.length} ingredienser</div>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:2, flexWrap:'wrap' }}>
+                      <span style={{ fontSize:14, fontWeight:600, color:'var(--t1)' }}>{r.name}</span>
+                      {r.visibility === 'public' && (
+                        <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:999, background:'var(--goldbg)', color:'hsl(44 54% 35%)' }}>Offentligt</span>
+                      )}
+                    </div>
+                    <div style={{ fontSize:12, color:'var(--t3)' }}>
+                      {r.category} · {r.ingredients.length} ingredienser
+                      {view === 'public' && r.ownerName && <> · av {r.ownerName}</>}
+                    </div>
                   </div>
                   <div style={{ textAlign:'right', flexShrink:0 }}>
                     <div className="font-mono" style={{ fontSize:13, fontWeight:700, color:marginColor(m) }}>{m.toFixed(1)}%</div>
@@ -177,20 +243,22 @@ export default function Recipes() {
                   </div>
                   <ChevronRight size={15} style={{ color:'var(--t3)', flexShrink:0 }} />
                 </Link>
+                {view === 'mine' && (
                 <button onClick={() => del(r.id)}
                   style={{ padding:'0 18px', height:'100%', minHeight:64, background:'none', border:'none', borderLeft:'1px solid var(--border)', cursor:'pointer', color:'var(--t3)', display:'flex', alignItems:'center' }}
                   title="Ta bort">
                   <Trash2 size={14} />
                 </button>
+                )}
               </div>
             );
           })}
         </div>
       )}
 
-      {showNew && <NewRecipeModal onClose={() => { setShowNew(false); setRecipes(store.getRecipes()); }} />}
-      {showScanner && <InvoiceScanner isPro={isPro} onClose={() => { setShowScanner(false); setRecipes(store.getRecipes()); }} />}
-      {showRecipeScanner && <RecipeScanner isPro={isPro} onClose={() => { setShowRecipeScanner(false); setRecipes(store.getRecipes()); }} />}
+      {showNew && <NewRecipeModal onClose={() => { setShowNew(false); refreshLists(); }} />}
+      {showScanner && <InvoiceScanner isPro={isPro} onClose={() => { setShowScanner(false); refreshLists(); }} />}
+      {showRecipeScanner && <RecipeScanner isPro={isPro} onClose={() => { setShowRecipeScanner(false); refreshLists(); }} />}
     </div>
   );
 }
@@ -211,6 +279,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
   const [rCat,setRCat]=useState('Huvudrätter');
   const [rPrice,setRPrice]=useState('');
   const [rServ,setRServ]=useState('1');
+  const [rVisibility,setRVisibility]=useState<RecipeVisibility>('private');
   const [ings,setIngs]=useState<ScannedIng[]>([]);
 
   function handleFile(f:File){setFile(f);if(f.type.startsWith('image/'))setPreview(URL.createObjectURL(f));else setPreview(null);}
@@ -245,7 +314,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
       return{ingredientId:f?.id||'u_'+x.name,name:x.name,quantity,unit:purchaseUnit,unitPrice:f?.priceSek||0};
     });
     const raw=ri.reduce((s,x)=>s+calculateLineCostWithUnits(x.quantity,x.unit,x.unitPrice,x.unit),0);
-    store.saveRecipe({id:crypto.randomUUID(),name:rName.trim(),category:rCat,servings:parseInt(rServ)||1,sellingPriceSek:parseFloat(rPrice)||suggested(raw),ingredients:ri,createdAt:new Date().toISOString().slice(0,10)});
+    store.saveRecipe({id:crypto.randomUUID(),name:rName.trim(),category:rCat,servings:parseInt(rServ)||1,sellingPriceSek:parseFloat(rPrice)||suggested(raw),ingredients:ri,createdAt:new Date().toISOString().slice(0,10),visibility:rVisibility});
     setState('done');
   }
 
@@ -288,6 +357,7 @@ function RecipeScanner({ isPro, onClose }:{ isPro:boolean; onClose:()=>void }) {
               <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Kategori</label><select className="inp" value={rCat} onChange={e=>setRCat(e.target.value)}>{CATS.filter(c=>c!=='Alla').map(c=><option key={c}>{c}</option>)}</select></div>
               <div><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Portioner</label><input className="inp" type="number" min="1" value={rServ} onChange={e=>setRServ(e.target.value)}/></div>
               <div style={{gridColumn:'1/-1'}}><label style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',display:'block',marginBottom:6}}>Försäljningspris (kr) — lämna tomt = auto</label><input className="inp" type="number" placeholder="t.ex. 139" value={rPrice} onChange={e=>setRPrice(e.target.value)}/></div>
+              <div style={{gridColumn:'1/-1'}}><RecipeVisibilityPicker value={rVisibility} onChange={setRVisibility} /></div>
             </div>
             <div style={{marginBottom:20}}>
               <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'var(--t3)',marginBottom:10}}>Ingredienser — kontrollera mängder</div>
@@ -526,6 +596,7 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
   const [price, setPrice] = useState('');
   const [servings, setServings] = useState('1');
   const [lines, setLines] = useState<{ingId:string;qty:string}[]>([{ingId:'',qty:''}]);
+  const [visibility, setVisibility] = useState<RecipeVisibility>('private');
   const [err, setErr]     = useState('');
 
   function addLine()    { setLines(p => [...p, {ingId:'',qty:''}]); }
@@ -552,6 +623,7 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
       id: crypto.randomUUID(), name: name.trim(), category: cat,
       servings: parseInt(servings) || 1, sellingPriceSek: sp,
       ingredients: recipeIngredients, createdAt: new Date().toISOString().slice(0,10),
+      visibility,
     };
     store.saveRecipe(rec);
     onClose();
@@ -602,6 +674,7 @@ function NewRecipeModal({ onClose }: { onClose: () => void }) {
             ))}
             <button onClick={addLine} style={{ fontSize:13, color:'var(--gold)', background:'none', border:'none', cursor:'pointer', fontWeight:600, marginTop:4 }}>+ Lägg till ingrediens</button>
           </div>
+          <RecipeVisibilityPicker value={visibility} onChange={setVisibility} />
         </div>
         <div style={{ padding:'16px 24px', borderTop:'1px solid var(--border)', display:'flex', gap:10, justifyContent:'flex-end' }}>
           <button className="btn-outline" onClick={onClose}>Avbryt</button>

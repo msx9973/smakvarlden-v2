@@ -1,17 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Zap, BookOpen, ShoppingBasket, Calculator, TrendingUp, Trash2, LogOut, Crown, ShieldCheck } from 'lucide-react';
+import { Home, BookOpen, ShoppingBasket, Calculator, LogOut, Crown, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
 import type { ReactNode } from 'react';
 
 const NAV = [
-  { to:'/',            icon:LayoutDashboard, label:'Dashboard',       hot:false },
-  { to:'/price-intel', icon:Zap,             label:'Prisintelligens', hot:true  },
-  { to:'/recipes',     icon:BookOpen,        label:'Recept',          hot:false },
-  { to:'/ingredients', icon:ShoppingBasket,  label:'Ingredienser',    hot:false },
-  { to:'/calculator',  icon:Calculator,      label:'Kalkylator',      hot:false },
-  { to:'/analytics',   icon:TrendingUp,      label:'Köksanalys',      hot:false },
-  { to:'/waste',       icon:Trash2,          label:'Svinnanalys',     hot:false },
+  { to:'/dashboard',  icon:Home,            label:'Hem' },
+  { to:'/recipes',    icon:BookOpen,        label:'Rätter' },
+  { to:'/ingredients', icon:ShoppingBasket, label:'Priser' },
+  { to:'/calculator', icon:Calculator,      label:'Räkna' },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -27,30 +24,30 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div style={{ display:'flex', minHeight:'100vh' }}>
       <aside style={{ width:224, flexShrink:0, background:'var(--brown)', display:'flex', flexDirection:'column', position:'fixed', top:0, left:0, bottom:0, zIndex:100 }}>
 
-        {/* Logo */}
         <div style={{ padding:'20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,.08)' }}>
           <div className="font-serif" style={{ fontSize:17, fontWeight:600, color:'var(--goldl)', letterSpacing:'-.1px' }}>Smakvärlden</div>
-          <div style={{ fontSize:10, color:'rgba(255,255,255,.3)', marginTop:3, fontFamily:'DM Mono' }}>Kökets operativsystem</div>
+          <div style={{ fontSize:11, color:'rgba(255,255,255,.45)', marginTop:4, lineHeight:1.4 }}>
+            Hjälp med matpriser och marginal
+          </div>
         </div>
 
-        {/* Nav */}
         <nav style={{ flex:1, padding:'10px 8px', display:'flex', flexDirection:'column', gap:1 }}>
-          {NAV.map(({ to, icon: Icon, label, hot }) => (
-            <NavLink key={to} to={to} end={to === '/'}
+          {NAV.map(({ to, icon: Icon, label }) => (
+            <NavLink key={to} to={to}
               style={({ isActive }) => ({
                 display:'flex', alignItems:'center', justifyContent:'space-between',
-                padding:'9px 10px', borderRadius:9,
-                fontSize:13.5, fontWeight:500, textDecoration:'none',
-                color: isActive ? '#fff' : 'rgba(255,255,255,.5)',
+                padding:'10px 12px', borderRadius:9,
+                fontSize:14, fontWeight:600, textDecoration:'none',
+                color: isActive ? '#fff' : 'rgba(255,255,255,.55)',
                 background: isActive ? 'rgba(255,255,255,.11)' : 'transparent',
                 transition:'all .15s',
               })}>
               <div style={{ display:'flex', alignItems:'center', gap:9 }}>
-                <Icon size={15} style={{ flexShrink:0 }} />
+                <Icon size={16} style={{ flexShrink:0 }} />
                 {label}
               </div>
-              {hot && alertCount > 0 && (
-                <span style={{ fontSize:10, fontWeight:700, padding:'1px 6px', borderRadius:100, background:'rgba(185,28,28,.8)', color:'#fff', minWidth:18, textAlign:'center' }}>
+              {to === '/ingredients' && alertCount > 0 && (
+                <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:100, background:'rgba(185,28,28,.85)', color:'#fff' }}>
                   {alertCount}
                 </span>
               )}
@@ -58,21 +55,18 @@ export default function Layout({ children }: { children: ReactNode }) {
           ))}
         </nav>
 
-        {/* User section */}
         <div style={{ padding:'10px 8px', borderTop:'1px solid rgba(255,255,255,.08)' }}>
           {user && (
             <div style={{ padding:'10px', borderRadius:9, marginBottom:6, background:'rgba(255,255,255,.06)' }}>
-              <div style={{ fontSize:12, fontWeight:600, color:'#fff', textTransform:'capitalize' }}>{user.name}</div>
+              <div style={{ fontSize:12, fontWeight:600, color:'#fff' }}>{user.name}</div>
               <div style={{ fontSize:10, color:'rgba(255,255,255,.35)', marginTop:1 }}>
-                {user.plan === 'pro'
-                  ? <span style={{ color:'var(--goldl)' }}>⭐ Pro</span>
-                  : <span>Gratisplan</span>}
+                {user.plan === 'pro' ? <span style={{ color:'var(--goldl)' }}>⭐ Pro</span> : 'Gratis'}
               </div>
             </div>
           )}
           {user?.plan === 'free' && (
             <NavLink to="/upgrade" style={{ display:'flex', alignItems:'center', gap:7, padding:'8px 10px', borderRadius:9, marginBottom:4, background:'rgba(201,168,76,.14)', border:'1px solid rgba(201,168,76,.2)', textDecoration:'none', fontSize:12, fontWeight:600, color:'var(--goldl)' }}>
-              <Crown size={12} /> Uppgradera till Pro
+              <Crown size={12} /> Fler skanningar (Pro)
             </NavLink>
           )}
           <NavLink to="/trust" style={{ display:'flex', alignItems:'center', gap:7, padding:'7px 10px', borderRadius:9, marginBottom:3, textDecoration:'none', fontSize:12, color:'rgba(255,255,255,.3)' }}>

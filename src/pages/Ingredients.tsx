@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Plus, Pencil, Trash2, Search, TrendingUp, TrendingDown } from 'lucide-react';
 import { store } from '../store';
 import type { Ingredient } from '../store';
@@ -33,9 +34,12 @@ export default function Ingredients() {
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>
       <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:24 }}>
         <div>
-          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Ingredienser</h1>
-          <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>{ingredients.length} ingredienser · priser uppdateras när du redigerar</p>
-          <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
+          <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Ingredienspriser</h1>
+          <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
+            Här ser du vad dina råvaror kostar.{' '}
+            <Link to="/recipes?scan=invoice" style={{ color:'var(--gold)', fontWeight:700 }}>Fota fakturan</Link>
+            {' '}så uppdateras priserna automatiskt.
+          </p>
         </div>
         <button className="btn-brown" onClick={() => setShowNew(true)} style={{ display:'flex', alignItems:'center', gap:8 }}>
           <Plus size={15} /> Ny ingrediens

@@ -47,4 +47,31 @@ describe('per-account store', () => {
     store.register('Other', 'other@test.se', 'secret2');
     expect(store.getInvoiceScansUsed()).toBe(0);
   });
+
+  it('syncs public recipes to shared catalog', () => {
+    store.register('Anna', 'anna@test.se', 'secret1');
+    const recipe = {
+      id: 'pub-recipe-1',
+      name: 'Annas Pasta',
+      category: 'Huvudrätter',
+      servings: 1,
+      sellingPriceSek: 120,
+      ingredients: [],
+      createdAt: '2026-05-30',
+      visibility: 'public' as const,
+    };
+    store.saveRecipe(recipe);
+
+    expect(store.getPublicRecipes()).toHaveLength(1);
+    expect(store.getPublicRecipes()[0].ownerName).toBe('Anna');
+
+    store.logout();
+    store.register('Bengt', 'bengt@test.se', 'secret2');
+    expect(store.getPublicRecipesFromOthers()).toHaveLength(1);
+    expect(store.getRecipeById('pub-recipe-1')?.name).toBe('Annas Pasta');
+
+    store.login('anna@test.se', 'secret1');
+    store.saveRecipe({ ...recipe, visibility: 'private' });
+    expect(store.getPublicRecipes()).toHaveLength(0);
+  });
 });

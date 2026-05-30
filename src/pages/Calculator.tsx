@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { Plus, Trash2, Save } from 'lucide-react';
 import { store, suggested } from '../store';
-import type { Recipe, RecipeIngredient } from '../store';
+import type { Recipe, RecipeIngredient, RecipeVisibility } from '../store';
+import RecipeVisibilityPicker from '../components/RecipeVisibilityPicker';
 
 const CATS = ['Förrätter','Huvudrätter','Desserter','Soppor','Sallader'];
 
@@ -14,6 +15,7 @@ export default function Calculator() {
   const [cat, setCat]           = useState('Huvudrätter');
   const [servings, setServings] = useState('1');
   const [priceIn, setPriceIn]   = useState('');
+  const [visibility, setVisibility] = useState<RecipeVisibility>('private');
   const [saved, setSaved]       = useState(false);
   const [err, setErr]           = useState('');
 
@@ -41,12 +43,13 @@ export default function Calculator() {
 
   function saveRecipe() {
     setErr('');
-    if (!name.trim()) { setErr('Ange ett receptnamn'); return; }
-    if (recipeIngs.length === 0) { setErr('Lägg till minst en ingrediens'); return; }
+    if (!name.trim()) { setErr('Skriv vad rätten heter'); return; }
+    if (recipeIngs.length === 0) { setErr('Välj minst en ingrediens'); return; }
     const rec: Recipe = {
       id: crypto.randomUUID(), name: name.trim(), category: cat,
       servings: parseInt(servings)||1, sellingPriceSek: sp,
       ingredients: recipeIngs, createdAt: new Date().toISOString().slice(0,10),
+      visibility,
     };
     store.saveRecipe(rec);
     setSaved(true);
@@ -56,9 +59,10 @@ export default function Calculator() {
   return (
     <div style={{ padding:'32px 36px', maxWidth:1040, margin:'0 auto' }}>
       <div style={{ marginBottom:28 }}>
-        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Kalkylator</h1>
-        <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>Bygg en rätt, se kostnad och marginal direkt</p>
-        <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Ingredient price changed → affected recipes → margin loss → suggested action.</p>
+        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Räkna på en rätt</h1>
+        <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
+          Välj ingredienser — appen visar vad rätten kostar och om priset är bra.
+        </p>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 380px', gap:24, alignItems:'start' }}>
@@ -137,9 +141,11 @@ export default function Calculator() {
 
           {err && <div style={{ padding:'10px 14px', background:'var(--redbg)', border:'1px solid rgba(185,28,28,.2)', borderRadius:9, fontSize:13, color:'var(--red)' }}>{err}</div>}
 
+          <RecipeVisibilityPicker value={visibility} onChange={setVisibility} />
+
           <button className="btn-brown" onClick={saveRecipe} style={{ display:'flex', alignItems:'center', gap:8, justifyContent:'center', padding:'13px' }}>
             <Save size={15} />
-            {saved ? '✓ Sparat!' : 'Spara som recept'}
+            {saved ? '✓ Sparat!' : 'Spara rätten'}
           </button>
         </div>
 

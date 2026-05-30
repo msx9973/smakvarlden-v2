@@ -43,10 +43,10 @@ function RecipeRow({ impact, ingredientName, isUp }: { impact: RecipeImpact; ing
           {/* Actions — only for price increases */}
           {isUp && impact.suggestedPriceIncrease > 0 && (
             <div>
-              <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>Rekommenderade åtgärder:</div>
+              <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>Gör så här:</div>
               <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
                 <div style={{ padding:'7px 12px', background:'var(--goldbg)', border:'1px solid var(--goldb)', borderRadius:8, fontSize:12, color:'var(--t1)' }}>
-                  💰 Höj menypris <strong className="font-mono" style={{ color:'var(--brown)' }}>+{impact.suggestedPriceIncrease} kr</strong>
+                  💰 Höj priset på menyn <strong className="font-mono" style={{ color:'var(--brown)' }}>+{impact.suggestedPriceIncrease} kr</strong>
                   <span style={{ color:'var(--t3)', marginLeft:4 }}>
                     ({r.sellingPriceSek} → {r.sellingPriceSek + impact.suggestedPriceIncrease} kr)
                   </span>
@@ -155,26 +155,23 @@ export default function PriceIntel() {
   const increases = alerts.filter(a => a.changePct > 0);
   const decreases = alerts.filter(a => a.changePct < 0);
   const totalRecipesAffected = new Set(alerts.flatMap(a => a.affectedRecipes.map(r => r.recipe.id))).size;
-  const totalMonthlyLoss = increases.reduce((s, a) => s + a.affectedRecipes.reduce((ss, r) => ss + r.profitLostSek * 30, 0), 0);
 
   return (
     <div style={{ padding:'32px 36px', maxWidth:960, margin:'0 auto' }}>
 
       <div style={{ marginBottom:28 }}>
-        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Prisintelligens</h1>
-        <p style={{ fontSize:14, color:'var(--t2)', marginTop:4 }}>
-          Ingredient price changed → affected recipes → margin loss → suggested action
+        <h1 className="font-serif" style={{ fontSize:28, fontWeight:600, letterSpacing:'-.6px', color:'var(--t1)' }}>Priset har ändrats</h1>
+        <p style={{ fontSize:15, color:'var(--t2)', marginTop:6, lineHeight:1.5 }}>
+          Här ser du vilka rätter som behöver höjt pris när en ingrediens blir dyrare.
         </p>
-        <p style={{ fontSize:12, color:'var(--t3)', marginTop:6 }}>Demo data / example calculations. Not live supplier data.</p>
       </div>
 
       {/* Summary KPIs */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12, marginBottom:24 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:24 }}>
         {[
-          { label:'Prisökningar',       value:String(increases.length), color:'var(--red)',   sub:'kräver åtgärd'            },
-          { label:'Prissänkningar',     value:String(decreases.length), color:'var(--green)', sub:'marginal förbättras'       },
-          { label:'Recept påverkade',   value:String(totalRecipesAffected), color:'var(--t1)', sub:'totalt'                  },
-          { label:'Est. månadsförlust', value:totalMonthlyLoss > 0 ? `−${totalMonthlyLoss.toFixed(0)} kr` : '—', color:'var(--red)', sub:'vid 30 kuvert/dag' },
+          { label:'Dyrare ingredienser', value:String(increases.length), color:'var(--red)',   sub:'kolla rätterna'            },
+          { label:'Billigare ingredienser', value:String(decreases.length), color:'var(--green)', sub:'bra för marginalen'       },
+          { label:'Rätter som påverkas',   value:String(totalRecipesAffected), color:'var(--t1)', sub:'totalt'                  },
         ].map(k => (
           <div key={k.label} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:14, padding:'16px 18px' }}>
             <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'.6px', color:'var(--t3)', marginBottom:6 }}>{k.label}</div>
