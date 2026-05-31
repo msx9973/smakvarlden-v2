@@ -27,13 +27,6 @@ const deliverSteps = [
   { title: 'Se påverkan', body: 'Appen visar ett underlag med prisändringar, historik och marginal.' },
 ];
 
-const stats = [
-  { label: 'Gratis pilot', value: '5 produkter' },
-  { label: 'App självservice', value: '59 kr/mån' },
-  { label: 'Exempelprodukter', value: 'Mat + dryck' },
-  { label: 'Första genomgång', value: 'Meny + faktura' },
-];
-
 const insideApp = [
   {
     title: 'Rätter & produkter',
@@ -49,52 +42,6 @@ const insideApp = [
   },
 ];
 
-const pricingPlans = [
-  {
-    name: 'Gratis pilot',
-    price: '0 kr',
-    text: 'En försiktig exempelanalys på 5 produkter med kundens meny och faktura.',
-    bullets: ['Meny + faktura', '5 produkter', 'Kort marginalrapport'],
-  },
-  {
-    name: 'App självservice',
-    price: '59 kr/mån',
-    text: 'För restauranger som vill använda verktyget själva och uppdatera priser löpande.',
-    bullets: ['Rätter & produkter', 'Prishistorik', 'Meny- och fakturaflöde'],
-    featured: true,
-  },
-  {
-    name: 'Startpaket',
-    price: '995 kr',
-    text: 'Hjälp med första uppsättningen så restaurangen kommer igång snabbare.',
-    bullets: ['Första produkter', 'Första fakturan', 'Genomgång av resultat'],
-  },
-];
-
-const knowledgeItems = [
-  {
-    title: 'Menyskanning är ett estimat',
-    body: 'En meny säger ofta vad rätten heter och priset, men inte exakta mängder. Därför ska kunden kunna ändra AI-förslaget.',
-  },
-  {
-    title: 'Fakturaskanning ger riktiga inköpspriser',
-    body: 'När en faktura skannas kan appen uppdatera inköpsvaror som mat, dryck, kaffe och förpackning.',
-  },
-  {
-    title: 'Privata priser ska stanna privata',
-    body: 'Offentliga mallar kan vara inspiration, men fakturor, leverantörer och marginaler ska inte delas offentligt.',
-  },
-];
-
-const navLinks = [
-  ['#produkt', 'Produkt'],
-  ['#funktioner', 'Funktioner'],
-  ['#priser', 'Priser'],
-  ['#kunder', 'Kunder'],
-  ['#om-oss', 'Om oss'],
-  ['#kunskap', 'Kunskap'],
-] as const;
-
 export default function Landing() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
@@ -106,12 +53,7 @@ export default function Landing() {
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:1.4, textTransform:'uppercase', color:'var(--gold)', marginTop:1 }}>Koll på matkostnaden</div>
           </div>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
-          {navLinks.map(([href, label]) => (
-            <a key={href} href={href} style={{ fontSize: 13, color: 'var(--t2)', textDecoration: 'none', padding: '8px 10px', fontWeight: 700 }}>
-              {label}
-            </a>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap:'wrap', justifyContent:'flex-end' }}>
           <a href="#pilot" style={{ fontSize: 13, color: 'var(--brown)', background:'var(--gold)', textDecoration: 'none', padding: '10px 18px', borderRadius:999, fontWeight: 900 }}>Gratis pilot</a>
           <Link to="/login" style={{ fontSize: 13, fontWeight: 800, color: 'var(--white)', background: 'var(--brown)', padding: '10px 20px', borderRadius: 999, textDecoration: 'none' }}>Öppna demo</Link>
         </div>
@@ -206,32 +148,6 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="kunder" style={{ padding:'34px 48px 72px', maxWidth:1120, margin:'0 auto', scrollMarginTop:90 }}>
-        <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:22, padding:'34px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:28, alignItems:'start' }}>
-          <div>
-            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunder</div>
-            <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(28px, 3vw, 42px)', letterSpacing:-1, lineHeight:1.12, color:'var(--t1)', marginBottom:12 }}>
-              För pilotrestauranger som vill testa med egna siffror.
-            </h2>
-            <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7 }}>
-              Vi visar inte kundloggor eller påstår resultat innan en restaurang har gett tillstånd. Första steget är en privat pilotgenomgång med meny, faktura och fem produkter.
-            </p>
-          </div>
-          <div style={{ display:'grid', gap:10 }}>
-            {[
-              ['Passar bra för', 'Pizzeria, pasta, lunchrestaurang, café, bar och bistro.'],
-              ['Privat data', 'Fakturor, inköpspriser och marginaler delas inte offentligt.'],
-              ['Offentliga mallar', 'Kan användas som inspiration utan riktiga kundpriser.'],
-            ].map(([title, body]) => (
-              <div key={title} style={{ padding:'16px', borderRadius:14, background:'var(--goldbg)', border:'1px solid var(--goldb)' }}>
-                <div style={{ fontSize:13, fontWeight:900, color:'var(--brown)', marginBottom:5 }}>{title}</div>
-                <div style={{ fontSize:13, color:'var(--t2)', lineHeight:1.5 }}>{body}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="pilot" style={{ padding: '62px 48px 88px', maxWidth: 1120, margin: '0 auto', scrollMarginTop: 90 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(340px, .9fr)', gap: 42, alignItems: 'start' }}>
           <div>
@@ -267,99 +183,6 @@ export default function Landing() {
 
           <div>
             <ConsultingLeadForm source="landing" />
-          </div>
-        </div>
-      </section>
-
-      <section id="priser" style={{ background:'var(--white)', padding:'82px 48px', scrollMarginTop:90 }}>
-        <div style={{ maxWidth:1080, margin:'0 auto' }}>
-          <div style={{ textAlign:'center', marginBottom:30 }}>
-            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Priser</div>
-            <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(30px, 4vw, 46px)', color:'var(--t1)', letterSpacing:-1, marginBottom:10 }}>
-              Börja enkelt. Betala först när värdet är tydligt.
-            </h2>
-            <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7, maxWidth:620, margin:'0 auto' }}>
-              Pilotpriserna är tänkta för tidiga restauranger och kan justeras efter feedback.
-            </p>
-          </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:14 }}>
-            {pricingPlans.map((plan) => (
-              <div key={plan.name} style={{ borderRadius:18, padding:'26px', border:plan.featured ? '1.5px solid var(--goldb)' : '1px solid var(--border)', background:plan.featured ? 'var(--brown)' : 'var(--cream)' }}>
-                <div style={{ fontSize:12, fontWeight:900, textTransform:'uppercase', letterSpacing:'.8px', color:plan.featured ? 'rgba(255,255,255,.42)' : 'var(--t3)', marginBottom:12 }}>{plan.name}</div>
-                <div className="font-serif" style={{ fontSize:34, fontWeight:700, color:plan.featured ? 'var(--goldl)' : 'var(--t1)', marginBottom:8 }}>{plan.price}</div>
-                <p style={{ fontSize:13, color:plan.featured ? 'rgba(255,255,255,.68)' : 'var(--t2)', lineHeight:1.6, minHeight:62 }}>{plan.text}</p>
-                <div style={{ display:'grid', gap:7, marginTop:18 }}>
-                  {plan.bullets.map((bullet) => (
-                    <div key={bullet} style={{ fontSize:12, fontWeight:700, color:plan.featured ? 'rgba(255,255,255,.72)' : 'var(--t2)' }}>
-                      ✓ {bullet}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="kunskap" style={{ background: 'var(--white)', padding: '88px 48px', scrollMarginTop:90 }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
-          <div>
-            <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 14 }}>Så fungerar demon</div>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 700, letterSpacing: -1.2, color: 'var(--t1)', lineHeight: 1.1, marginBottom: 14 }}>
-              Fyra steg till <span style={{ color: 'var(--gold)', fontStyle: 'italic' }}>bättre beslut</span>
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--t2)', lineHeight: 1.75, marginBottom: 34 }}>Ingen tung installation. Börja med en meny, en faktura och några viktiga produkter.</p>
-            <div style={{ display: 'grid', gap: 14 }}>
-              {deliverSteps.map((step, i) => (
-                <div key={step.title} style={{ display: 'grid', gridTemplateColumns: '42px 1fr', gap: 16, alignItems: 'start' }}>
-                  <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'var(--brown)', color: 'var(--goldl)', fontFamily: 'Playfair Display, serif', fontSize: 16, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--t1)', marginBottom: 5 }}>{step.title}</div>
-                    <div style={{ fontSize: 13, color: 'var(--t2)', lineHeight: 1.65 }}>{step.body}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ background: 'var(--goldbg)', border: '1px solid var(--border)', borderRadius: 18, padding: 34 }}>
-            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 26, fontWeight: 700, color: 'var(--t1)', letterSpacing: -.5, marginBottom: 20 }}>Det här visar pilotgenomgången</h3>
-            {stats.map((row, i) => (
-              <div key={row.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 0', borderBottom: i < stats.length - 1 ? '1px solid var(--border)' : 'none', fontSize: 13 }}>
-                <span style={{ color: 'var(--t2)' }}>{row.label}</span>
-                <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 800, color: '#15803d' }}>{row.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{ maxWidth:1080, margin:'34px auto 0', display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:12 }}>
-          {knowledgeItems.map((item) => (
-            <div key={item.title} style={{ border:'1px solid var(--border)', borderRadius:16, padding:'20px', background:'var(--cream)' }}>
-              <h3 style={{ fontSize:14, fontWeight:900, color:'var(--t1)', marginBottom:8 }}>{item.title}</h3>
-              <p style={{ fontSize:13, color:'var(--t2)', lineHeight:1.65 }}>{item.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="om-oss" style={{ padding:'78px 48px', maxWidth:1080, margin:'0 auto', scrollMarginTop:90 }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:36, alignItems:'center' }}>
-          <div>
-            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Om oss</div>
-            <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(30px, 4vw, 46px)', color:'var(--t1)', letterSpacing:-1, lineHeight:1.12, marginBottom:14 }}>
-              Smakvärlden byggs nära svenska restauranger.
-            </h2>
-            <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.75 }}>
-              Målet är inte att ersätta kockens erfarenhet. Målet är att ge tydligare siffror när råvarupriser, dryckespriser och förpackningskostnader förändras.
-            </p>
-          </div>
-          <div style={{ background:'var(--goldbg)', border:'1px solid var(--goldb)', borderRadius:20, padding:'26px' }}>
-            <div style={{ fontSize:14, fontWeight:900, color:'var(--brown)', marginBottom:10 }}>Kunskapsidéer framåt</div>
-            <ul style={{ margin:0, paddingLeft:18, color:'var(--t2)', fontSize:13, lineHeight:1.8 }}>
-              <li>Guide: hur man läser en leverantörsfaktura.</li>
-              <li>Guide: skillnad mellan menyskanning och receptskanning.</li>
-              <li>Guide: hur offentliga mallar fungerar utan privata priser.</li>
-            </ul>
           </div>
         </div>
       </section>
