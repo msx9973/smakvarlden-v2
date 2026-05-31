@@ -86,7 +86,7 @@ export default function ConsultingLeadForm({ source, tone = 'light' }: Consultin
         </label>
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div className="consulting-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <label>
           <span style={labelStyle(tone)}>Restaurang</span>
           <input name="restaurant" required placeholder="Restaurangnamn" style={fieldStyle(tone)} />
@@ -97,7 +97,7 @@ export default function ConsultingLeadForm({ source, tone = 'light' }: Consultin
         </label>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div className="consulting-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <label>
           <span style={labelStyle(tone)}>E-post</span>
           <input name="email" type="email" required placeholder="chef@restaurant.se" style={fieldStyle(tone)} />

@@ -80,31 +80,34 @@ export default function Landing() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  const landingLogoStyle = { ...logoStyle, width: isMobile ? 142 : 210, maxWidth: isMobile ? '42vw' : '48vw' };
+  const sectionPad = isMobile ? '52px 20px' : '76px 48px';
+
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
-      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(247,244,239,.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)', padding: '0 40px', height: 70, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(247,244,239,.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)', padding: isMobile ? '0 14px' : '0 40px', minHeight: isMobile ? 62 : 70, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
-          <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={logoStyle} />
+          <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={landingLogoStyle} />
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
-          {navLinks.map(([href, label]) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
+          {!isMobile && navLinks.map(([href, label]) => (
             <a key={href} href={href} style={{ fontSize: 13, color: 'var(--t2)', textDecoration: 'none', padding: '8px 10px', fontWeight: 700 }}>
               {label}
             </a>
           ))}
-          <a href="#pilot" style={{ fontSize: 13, color: 'var(--brown)', background:'var(--gold)', textDecoration: 'none', padding: '10px 18px', borderRadius:999, fontWeight: 900 }}>Gratis pilot</a>
-          <Link to="/login" style={{ fontSize: 13, fontWeight: 800, color: 'var(--white)', background: 'var(--brown)', padding: '10px 20px', borderRadius: 999, textDecoration: 'none' }}>Ãppna demo</Link>
+          <a href="#pilot" style={{ fontSize: isMobile ? 12 : 13, color: 'var(--brown)', background:'var(--gold)', textDecoration: 'none', padding: isMobile ? '8px 10px' : '10px 18px', borderRadius:999, fontWeight: 900, whiteSpace: 'nowrap' }}>Gratis pilot</a>
+          <Link to="/login" style={{ fontSize: isMobile ? 12 : 13, fontWeight: 800, color: 'var(--white)', background: 'var(--brown)', padding: isMobile ? '8px 10px' : '10px 20px', borderRadius: 999, textDecoration: 'none', whiteSpace: 'nowrap' }}>{isMobile ? 'Demo' : 'Ãppna demo'}</Link>
         </div>
       </nav>
 
-      <section id="produkt" style={{ background: 'linear-gradient(135deg, var(--brown) 0%, #160904 100%)', padding: '86px 48px 96px', position: 'relative', overflow: 'hidden', scrollMarginTop:90 }}>
+      <section id="produkt" style={{ background: 'linear-gradient(135deg, var(--brown) 0%, #160904 100%)', padding: isMobile ? '54px 20px 64px' : '86px 48px 96px', position: 'relative', overflow: 'hidden', scrollMarginTop:90 }}>
         <div style={{ position: 'absolute', top: -260, right: -120, width: 620, height: 620, borderRadius: '50%', background: 'radial-gradient(circle, rgba(214,184,94,.18) 0%, transparent 68%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1120, margin: '0 auto', display:'grid', gridTemplateColumns:isMobile?'1fr':'minmax(0, 1.05fr) minmax(340px, .95fr)', gap:44, alignItems:'center', position:'relative' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems:'center', gap:8, fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--goldl)', border: '1px solid rgba(214,184,94,.28)', background:'rgba(214,184,94,.08)', padding: '7px 14px', borderRadius: 100, marginBottom: 24 }}>
               Gratis marginalkoll pÃ¥ 5 produkter
             </div>
-            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(42px, 6vw, 76px)', fontWeight: 700, letterSpacing: -2, lineHeight: 1.04, color: '#fff', marginBottom: 22 }}>
+            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: isMobile ? 42 : 'clamp(42px, 6vw, 76px)', fontWeight: 700, letterSpacing: isMobile ? -0.8 : -2, lineHeight: 1.04, color: '#fff', marginBottom: 22 }}>
               Se vad varje produkt <span style={{ color: 'var(--goldl)', fontStyle: 'italic' }}>egentligen kostar.</span>
             </h1>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,.68)', lineHeight: 1.78, maxWidth: 650, marginBottom: 34 }}>
@@ -158,7 +161,7 @@ export default function Landing() {
         ))}
       </div>
 
-      <section id="funktioner" style={{ padding: '76px 48px 40px', maxWidth: 1120, margin: '0 auto', scrollMarginTop:90 }}>
+      <section id="funktioner" style={{ padding: isMobile ? '52px 20px 34px' : '76px 48px 40px', maxWidth: 1120, margin: '0 auto', scrollMarginTop:90 }}>
         <div style={{ textAlign:'center', marginBottom:30 }}>
           <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Byggt fÃ¶r svenska restauranger</div>
           <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(30px, 4vw, 48px)', color:'var(--t1)', letterSpacing:-1, lineHeight:1.1, marginBottom:12 }}>
@@ -168,7 +171,7 @@ export default function Landing() {
             En faktura kan innehÃ¥lla kyckling, mozzarella, Ã¶l, cola, whiskey, kaffebÃ¶nor och takeawaylÃ¥dor. SmakvÃ¤rlden kan samla inkÃ¶psraderna och visa vilka produkter som pÃ¥verkas i kalkylen.
           </p>
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(4, 1fr)', gap:12 }}>
+        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(4, 1fr)', gap:12 }}>
           {services.map((service) => (
             <div key={service.title} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:18, padding:'22px', boxShadow:'0 8px 26px var(--shad)' }}>
               <h3 style={{ fontSize:15, fontWeight:900, color:'var(--t1)', marginBottom:8 }}>{service.title}</h3>
@@ -186,8 +189,8 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="kunder" style={{ padding:'34px 48px 72px', maxWidth:1120, margin:'0 auto', scrollMarginTop:90 }}>
-        <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:22, padding:'34px', display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:28, alignItems:'start' }}>
+      <section id="kunder" style={{ padding: isMobile ? '28px 20px 52px' : '34px 48px 72px', maxWidth:1120, margin:'0 auto', scrollMarginTop:90 }}>
+        <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:22, padding:isMobile ? 22 : 34, display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:28, alignItems:'start' }}>
           <div>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunder</div>
             <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(28px, 3vw, 42px)', letterSpacing:-1, lineHeight:1.12, color:'var(--t1)', marginBottom:12 }}>
@@ -212,7 +215,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="pilot" style={{ padding: '62px 48px 88px', maxWidth: 1120, margin: '0 auto', scrollMarginTop: 90 }}>
+      <section id="pilot" style={{ padding: isMobile ? '46px 20px 62px' : '62px 48px 88px', maxWidth: 1120, margin: '0 auto', scrollMarginTop: 90 }}>
         <div style={{ display: 'grid', gridTemplateColumns:isMobile?'1fr':'minmax(0, 1.1fr) minmax(340px, .9fr)', gap: 42, alignItems: 'start' }}>
           <div>
             <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 14 }}>Gratis pilot i Upplands VÃ¤sby</div>
@@ -237,7 +240,7 @@ export default function Landing() {
               ))}
             </div>
 
-            <div style={{ background: 'var(--brown)', borderRadius: 18, padding: '28px 34px', color: '#fff' }}>
+            <div style={{ background: 'var(--brown)', borderRadius: 18, padding: isMobile ? '22px 20px' : '28px 34px', color: '#fff' }}>
               <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, fontWeight: 700, color: 'var(--goldl)', marginBottom: 8 }}>Integritet fÃ¶rst</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,.64)', lineHeight: 1.7 }}>
                 Fakturor, inkÃ¶pspriser och marginaler Ã¤r privata. Offentliga mallar delar aldrig era riktiga priser eller leverantÃ¶rer.
@@ -251,7 +254,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="kunskap" style={{ background:'var(--white)', padding:'78px 48px', scrollMarginTop:90 }}>
+      <section id="kunskap" style={{ background:'var(--white)', padding: sectionPad, scrollMarginTop:90 }}>
         <div style={{ maxWidth:1080, margin:'0 auto' }}>
           <div style={{ textAlign:'center', marginBottom:26 }}>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunskap</div>
@@ -273,7 +276,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="om-oss" style={{ padding:'78px 48px', maxWidth:1080, margin:'0 auto', scrollMarginTop:90 }}>
+      <section id="om-oss" style={{ padding: sectionPad, maxWidth:1080, margin:'0 auto', scrollMarginTop:90 }}>
         <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:36, alignItems:'center' }}>
           <div>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Om oss</div>
@@ -312,7 +315,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <footer style={{ background: '#0A0604', padding: '32px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <footer style={{ background: '#0A0604', padding: isMobile ? '28px 20px 92px' : '32px 48px', display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', flexWrap: 'wrap', gap: 14 }}>
         <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', background: '#fff', borderRadius: 8, padding: '4px 8px' }}>
           <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={{ ...logoStyle, width: 170 }} />
         </Link>
