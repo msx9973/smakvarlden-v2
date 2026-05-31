@@ -189,7 +189,7 @@ export default function Landing() {
           </div>
           <div style={{ display:'grid', gap:10 }}>
             {[
-              ['Passar bra för', 'Restauranger som säljer mat, dryck eller andra produkter och vill förstå hur inköpspriser påverkar marginalen.'],
+              ['Passar bra för', 'Restauranger som vill förstå marginalen på menyprodukter som rätter, dryck, kaffe, tillbehör, takeaway och catering.'],
               ['Privat data', 'Fakturor, inköpspriser och marginaler delas inte offentligt.'],
               ['Offentliga mallar', 'Kan användas som inspiration utan riktiga kundpriser.'],
             ].map(([title, body]) => (
