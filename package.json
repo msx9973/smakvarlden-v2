@@ -18,7 +18,8 @@
     "react-router-dom": "^7.15.1",
     "recharts": "^3.8.1",
     "tesseract.js": "^7.0.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "@supabase/supabase-js": "^2.49.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
