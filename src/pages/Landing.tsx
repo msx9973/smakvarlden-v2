@@ -5,41 +5,41 @@ import ConsultingLeadForm from '../components/ConsultingLeadForm';
 const services = [
   {
     title: 'Menyskanner',
-    body: 'Skanna menyn och fÃ¥ snabba, redigerbara estimat fÃ¶r mat, dryck, kaffe, tillbehÃ¶r och catering.',
+    body: 'Skanna menyn och få snabba, redigerbara estimat för mat, dryck, kaffe, tillbehör och catering.',
   },
   {
     title: 'Fakturaskanner',
-    body: 'Uppdatera inkÃ¶pspriser frÃ¥n en leverantÃ¶rsfaktura och se gammalt pris mot nytt pris.',
+    body: 'Uppdatera inköpspriser från en leverantörsfaktura och se gammalt pris mot nytt pris.',
   },
   {
-    title: 'RÃ¤tter & produkter',
-    body: 'RÃ¤kna pÃ¥ pizza, pasta, Ã¶l, whiskey, cola, cappuccino, lunchlÃ¥dor och andra produkter.',
+    title: 'Rätter & produkter',
+    body: 'Räkna på pizza, pasta, öl, whiskey, cola, cappuccino, lunchlådor och andra produkter.',
   },
   {
     title: 'Marginalbeslut',
-    body: 'FÃ¥ underlag fÃ¶r om pris, portion eller kalkyl bÃ¶r ses Ã¶ver.',
+    body: 'Få underlag för om pris, portion eller kalkyl bör ses över.',
   },
 ];
 
 const deliverSteps = [
   { title: 'Skanna meny', body: 'AI hittar produkter, priser och sannolika ingredienser.' },
-  { title: 'Granska', body: 'Kunden justerar mÃ¤ngder, dryckesmÃ¥tt och priser.' },
-  { title: 'Skanna faktura', body: 'Riktiga inkÃ¶pspriser ersÃ¤tter estimat.' },
-  { title: 'Se pÃ¥verkan', body: 'Appen visar ett underlag med prisÃ¤ndringar, historik och marginal.' },
+  { title: 'Granska', body: 'Kunden justerar mängder, dryckesmått och priser.' },
+  { title: 'Skanna faktura', body: 'Riktiga inköpspriser ersätter estimat.' },
+  { title: 'Se påverkan', body: 'Appen visar ett underlag med prisändringar, historik och marginal.' },
 ];
 
 const insideApp = [
   {
-    title: 'RÃ¤tter & produkter',
-    body: 'Spara mat, dryck, kaffe, tillbehÃ¶r och catering. Varje produkt har menypris, rÃ¥varor, kostnad och marginal.',
+    title: 'Rätter & produkter',
+    body: 'Spara mat, dryck, kaffe, tillbehör och catering. Varje produkt har menypris, råvaror, kostnad och marginal.',
   },
   {
     title: 'Prishistorik',
-    body: 'NÃ¤r en faktura uppdaterar ett pris sparas datum och pris sÃ¥ kunden kan se utvecklingen Ã¶ver tid.',
+    body: 'När en faktura uppdaterar ett pris sparas datum och pris så kunden kan se utvecklingen över tid.',
   },
   {
-    title: 'PrisÃ¤ndringar',
-    body: 'Appen visar vilka produkter som pÃ¥verkas nÃ¤r exempelvis cola, ost, whiskey, grÃ¤dde eller takeawaylÃ¥dor Ã¤ndras i pris.',
+    title: 'Prisändringar',
+    body: 'Appen visar vilka produkter som påverkas när exempelvis cola, ost, whiskey, grädde eller takeawaylådor ändras i pris.',
   },
 ];
 
@@ -53,16 +53,16 @@ const navLinks = [
 
 const knowledgeItems = [
   {
-    title: 'Menyskanning Ã¤r ett estimat',
-    body: 'En meny visar namn och pris, men inte exakta mÃ¤ngder. DÃ¤rfÃ¶r ska kunden kunna granska och Ã¤ndra AI-fÃ¶rslaget.',
+    title: 'Menyskanning är ett estimat',
+    body: 'En meny visar namn och pris, men inte exakta mängder. Därför ska kunden kunna granska och ändra AI-förslaget.',
   },
   {
-    title: 'Fakturaskanning uppdaterar inkÃ¶psvaror',
-    body: 'En faktura kan uppdatera mat, dryck, kaffe och fÃ¶rpackning i samma flÃ¶de.',
+    title: 'Fakturaskanning uppdaterar inköpsvaror',
+    body: 'En faktura kan uppdatera mat, dryck, kaffe och förpackning i samma flöde.',
   },
   {
     title: 'Privata priser stannar privata',
-    body: 'Fakturor, leverantÃ¶rer och riktiga marginaler visas inte offentligt.',
+    body: 'Fakturor, leverantörer och riktiga marginaler visas inte offentligt.',
   },
 ];
 
@@ -96,7 +96,7 @@ export default function Landing() {
             </a>
           ))}
           <a href="#pilot" style={{ fontSize: isMobile ? 12 : 13, color: 'var(--brown)', background:'var(--gold)', textDecoration: 'none', padding: isMobile ? '8px 10px' : '10px 18px', borderRadius:999, fontWeight: 900, whiteSpace: 'nowrap' }}>Gratis pilot</a>
-          <Link to="/login" style={{ fontSize: isMobile ? 12 : 13, fontWeight: 800, color: 'var(--white)', background: 'var(--brown)', padding: isMobile ? '8px 10px' : '10px 20px', borderRadius: 999, textDecoration: 'none', whiteSpace: 'nowrap' }}>{isMobile ? 'Demo' : 'Ãppna demo'}</Link>
+          <Link to="/login" style={{ fontSize: isMobile ? 12 : 13, fontWeight: 800, color: 'var(--white)', background: 'var(--brown)', padding: isMobile ? '8px 10px' : '10px 20px', borderRadius: 999, textDecoration: 'none', whiteSpace: 'nowrap' }}>{isMobile ? 'Demo' : 'Öppna demo'}</Link>
         </div>
       </nav>
 
@@ -105,24 +105,24 @@ export default function Landing() {
         <div style={{ maxWidth: 1120, margin: '0 auto', display:'grid', gridTemplateColumns:isMobile?'1fr':'minmax(0, 1.05fr) minmax(340px, .95fr)', gap:44, alignItems:'center', position:'relative' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems:'center', gap:8, fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--goldl)', border: '1px solid rgba(214,184,94,.28)', background:'rgba(214,184,94,.08)', padding: '7px 14px', borderRadius: 100, marginBottom: 24 }}>
-              Gratis marginalkoll pÃ¥ 5 produkter
+              Gratis marginalkoll på 5 produkter
             </div>
             <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: isMobile ? 42 : 'clamp(42px, 6vw, 76px)', fontWeight: 700, letterSpacing: isMobile ? -0.8 : -2, lineHeight: 1.04, color: '#fff', marginBottom: 22 }}>
               Se vad varje produkt <span style={{ color: 'var(--goldl)', fontStyle: 'italic' }}>egentligen kostar.</span>
             </h1>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,.68)', lineHeight: 1.78, maxWidth: 650, marginBottom: 34 }}>
-              Skanna meny, recept och fakturor. SmakvÃ¤rlden kan visa gamla och nya inkÃ¶pspriser, prishistorik och vilka rÃ¤tter, drycker eller produkter som kan behÃ¶va ses Ã¶ver.
+              Skanna meny, recept och fakturor. Smakvärlden kan visa gamla och nya inköpspriser, prishistorik och vilka rätter, drycker eller produkter som kan behöva ses över.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom:28 }}>
               <a href="#pilot" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '14px 28px', borderRadius: 999, fontSize: 14, fontWeight: 900, textDecoration: 'none' }}>
-                FÃ¥ gratis marginalkoll
+                Få gratis marginalkoll
               </a>
               <Link to="/login" style={{ background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.86)', padding: '14px 24px', borderRadius: 999, fontSize: 14, fontWeight: 800, textDecoration: 'none', border: '1px solid rgba(255,255,255,.16)' }}>
                 Testa demo
               </Link>
             </div>
             <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
-              {['Menyskanner', 'Fakturaskanner', 'RÃ¤tter & produkter'].map(item => (
+              {['Menyskanner', 'Fakturaskanner', 'Rätter & produkter'].map(item => (
                 <span key={item} style={{ padding:'6px 11px', borderRadius:999, background:'rgba(255,255,255,.07)', border:'1px solid rgba(255,255,255,.1)', color:'rgba(255,255,255,.62)', fontSize:12, fontWeight:700 }}>{item}</span>
               ))}
             </div>
@@ -130,13 +130,13 @@ export default function Landing() {
           <div style={{ background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.12)', borderRadius:26, padding:22, boxShadow:'0 28px 70px rgba(0,0,0,.22)' }}>
             <div style={{ background:'var(--white)', borderRadius:20, overflow:'hidden' }}>
               <div style={{ padding:'16px 18px', borderBottom:'1px solid var(--border)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                <div style={{ fontSize:13, fontWeight:900, color:'var(--t1)' }}>PrisÃ¤ndringar</div>
+                <div style={{ fontSize:13, fontWeight:900, color:'var(--t1)' }}>Prisändringar</div>
                 <span style={{ fontSize:10, fontWeight:900, color:'var(--red)', background:'var(--redbg)', padding:'4px 8px', borderRadius:999 }}>Exempel</span>
               </div>
               {[
-                ['Coca-Cola 33cl', '7.80 â 8.60 kr/st', '+10.3%'],
-                ['Whiskey 4cl', '14.20 â 15.95 kr', '+12.3%'],
-                ['LunchlÃ¥da takeaway', '46 â 52 kr', 'granska'],
+                ['Coca-Cola 33cl', '7.80 → 8.60 kr/st', '+10.3%'],
+                ['Whiskey 4cl', '14.20 → 15.95 kr', '+12.3%'],
+                ['Lunchlåda takeaway', '46 → 52 kr', 'granska'],
               ].map(([name, price, change], i) => (
                 <div key={name} style={{ padding:'15px 18px', borderBottom:i < 2 ? '1px solid var(--border)' : 'none', display:'grid', gridTemplateColumns:'1fr auto', gap:12, alignItems:'center' }}>
                   <div>
@@ -163,12 +163,12 @@ export default function Landing() {
 
       <section id="funktioner" style={{ padding: isMobile ? '52px 20px 34px' : '76px 48px 40px', maxWidth: 1120, margin: '0 auto', scrollMarginTop:90 }}>
         <div style={{ textAlign:'center', marginBottom:30 }}>
-          <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Byggt fÃ¶r svenska restauranger</div>
+          <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Byggt för svenska restauranger</div>
           <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(30px, 4vw, 48px)', color:'var(--t1)', letterSpacing:-1, lineHeight:1.1, marginBottom:12 }}>
-            Mat, dryck, kaffe och tillbehÃ¶r i samma kalkyl.
+            Mat, dryck, kaffe och tillbehör i samma kalkyl.
           </h2>
           <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7, maxWidth:650, margin:'0 auto' }}>
-            En faktura kan innehÃ¥lla kyckling, mozzarella, Ã¶l, cola, whiskey, kaffebÃ¶nor och takeawaylÃ¥dor. SmakvÃ¤rlden kan samla inkÃ¶psraderna och visa vilka produkter som pÃ¥verkas i kalkylen.
+            En faktura kan innehålla kyckling, mozzarella, öl, cola, whiskey, kaffebönor och takeawaylådor. Smakvärlden kan samla inköpsraderna och visa vilka produkter som påverkas i kalkylen.
           </p>
         </div>
         <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(4, 1fr)', gap:12 }}>
@@ -194,17 +194,17 @@ export default function Landing() {
           <div>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunder</div>
             <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(28px, 3vw, 42px)', letterSpacing:-1, lineHeight:1.12, color:'var(--t1)', marginBottom:12 }}>
-              FÃ¶r pilotrestauranger som vill testa med egna siffror.
+              För pilotrestauranger som vill testa med egna siffror.
             </h2>
             <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7 }}>
-              Vi visar inte kundloggor eller pÃ¥stÃ¥r resultat innan en restaurang har gett tillstÃ¥nd. FÃ¶rsta steget Ã¤r en privat pilotgenomgÃ¥ng med meny, faktura och fem produkter.
+              Vi visar inte kundloggor eller påstår resultat innan en restaurang har gett tillstånd. Första steget är en privat pilotgenomgång med meny, faktura och fem produkter.
             </p>
           </div>
           <div style={{ display:'grid', gap:10 }}>
             {[
-              ['Passar bra fÃ¶r', 'Restauranger som vill ha koll pÃ¥ vad maten, drycken och varje sÃ¥ld portion faktiskt kostar.'],
-              ['Privat data', 'Fakturor, inkÃ¶pspriser och marginaler delas inte offentligt.'],
-              ['Offentliga mallar', 'Kan anvÃ¤ndas som inspiration utan riktiga kundpriser.'],
+              ['Passar bra för', 'Restauranger som vill ha koll på vad maten, drycken och varje såld portion faktiskt kostar.'],
+              ['Privat data', 'Fakturor, inköpspriser och marginaler delas inte offentligt.'],
+              ['Offentliga mallar', 'Kan användas som inspiration utan riktiga kundpriser.'],
             ].map(([title, body]) => (
               <div key={title} style={{ padding:'16px', borderRadius:14, background:'var(--goldbg)', border:'1px solid var(--goldb)' }}>
                 <div style={{ fontSize:13, fontWeight:900, color:'var(--brown)', marginBottom:5 }}>{title}</div>
@@ -218,19 +218,19 @@ export default function Landing() {
       <section id="pilot" style={{ padding: isMobile ? '46px 20px 62px' : '62px 48px 88px', maxWidth: 1120, margin: '0 auto', scrollMarginTop: 90 }}>
         <div style={{ display: 'grid', gridTemplateColumns:isMobile?'1fr':'minmax(0, 1.1fr) minmax(340px, .9fr)', gap: 42, alignItems: 'start' }}>
           <div>
-            <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 14 }}>Gratis pilot i Upplands VÃ¤sby</div>
+            <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 14 }}>Gratis pilot i Upplands Väsby</div>
             <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(30px, 4vw, 52px)', fontWeight: 700, letterSpacing: -1.2, color: 'var(--t1)', lineHeight: 1.08, marginBottom: 14 }}>
-              Skicka en meny och en faktura. FÃ¥ en tydlig marginalkoll.
+              Skicka en meny och en faktura. Få en tydlig marginalkoll.
             </h2>
             <p style={{ fontSize: 16, color: 'var(--t2)', lineHeight: 1.75, maxWidth: 620, marginBottom: 30 }}>
-              FÃ¶rsta piloten Ã¤r enkel: vi kontrollerar 5 produkter och visar en exempelrapport med prisÃ¤ndringar, marginalpÃ¥verkan och mÃ¶jliga nÃ¤sta steg.
+              Första piloten är enkel: vi kontrollerar 5 produkter och visar en exempelrapport med prisändringar, marginalpåverkan och möjliga nästa steg.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap: 12, marginBottom: 28 }}>
               {[
-                ['1 meny', 'Foto, PDF eller lÃ¤nk till menyn.'],
-                ['1 faktura', 'Senaste fakturan frÃ¥n leverantÃ¶r.'],
-                ['5 produkter', 'Mat, dryck, kaffe eller tillbehÃ¶r.'],
+                ['1 meny', 'Foto, PDF eller länk till menyn.'],
+                ['1 faktura', 'Senaste fakturan från leverantör.'],
+                ['5 produkter', 'Mat, dryck, kaffe eller tillbehör.'],
                 ['1 rapport', 'Gammal kostnad, ny kostnad och marginal.'],
               ].map(([title, body]) => (
                 <div key={title} style={{ background: 'var(--white)', border:'1px solid var(--border)', borderRadius:16, padding: '20px' }}>
@@ -241,9 +241,9 @@ export default function Landing() {
             </div>
 
             <div style={{ background: 'var(--brown)', borderRadius: 18, padding: isMobile ? '22px 20px' : '28px 34px', color: '#fff' }}>
-              <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, fontWeight: 700, color: 'var(--goldl)', marginBottom: 8 }}>Integritet fÃ¶rst</h3>
+              <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, fontWeight: 700, color: 'var(--goldl)', marginBottom: 8 }}>Integritet först</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,.64)', lineHeight: 1.7 }}>
-                Fakturor, inkÃ¶pspriser och marginaler Ã¤r privata. Offentliga mallar delar aldrig era riktiga priser eller leverantÃ¶rer.
+                Fakturor, inköpspriser och marginaler är privata. Offentliga mallar delar aldrig era riktiga priser eller leverantörer.
               </p>
             </div>
           </div>
@@ -259,10 +259,10 @@ export default function Landing() {
           <div style={{ textAlign:'center', marginBottom:26 }}>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunskap</div>
             <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(28px, 3.5vw, 44px)', color:'var(--t1)', letterSpacing:-1, marginBottom:10 }}>
-              SÃ¥ kan restaurangen fÃ¶rstÃ¥ kalkylen.
+              Så kan restaurangen förstå kalkylen.
             </h2>
             <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7, maxWidth:650, margin:'0 auto' }}>
-              Kunskapsdelen ska hjÃ¤lpa kunden fÃ¶rstÃ¥ skillnaden mellan AI-estimat, egna mÃ¤ngder och riktiga fakturapriser.
+              Kunskapsdelen ska hjälpa kunden förstå skillnaden mellan AI-estimat, egna mängder och riktiga fakturapriser.
             </p>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(3, 1fr)', gap:12 }}>
@@ -281,18 +281,18 @@ export default function Landing() {
           <div>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Om oss</div>
             <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(30px, 4vw, 46px)', color:'var(--t1)', letterSpacing:-1, lineHeight:1.12, marginBottom:14 }}>
-              SmakvÃ¤rlden byggs nÃ¤ra svenska restauranger.
+              Smakvärlden byggs nära svenska restauranger.
             </h2>
             <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.75 }}>
-              MÃ¥let Ã¤r inte att ersÃ¤tta kockens erfarenhet. MÃ¥let Ã¤r att ge tydligare siffror nÃ¤r rÃ¥varupriser, dryckespriser och fÃ¶rpackningskostnader fÃ¶rÃ¤ndras.
+              Målet är inte att ersätta kockens erfarenhet. Målet är att ge tydligare siffror när råvarupriser, dryckespriser och förpackningskostnader förändras.
             </p>
           </div>
           <div style={{ background:'var(--goldbg)', border:'1px solid var(--goldb)', borderRadius:20, padding:'26px' }}>
-            <div style={{ fontSize:14, fontWeight:900, color:'var(--brown)', marginBottom:10 }}>Senare kan vi lÃ¤gga till</div>
+            <div style={{ fontSize:14, fontWeight:900, color:'var(--brown)', marginBottom:10 }}>Senare kan vi lägga till</div>
             <ul style={{ margin:0, paddingLeft:18, color:'var(--t2)', fontSize:13, lineHeight:1.8 }}>
               <li>Separata kunskapssidor.</li>
               <li>Publika produktmallar utan privata priser.</li>
-              <li>Kundcase fÃ¶rst nÃ¤r restauranger ger tillstÃ¥nd.</li>
+              <li>Kundcase först när restauranger ger tillstånd.</li>
             </ul>
           </div>
         </div>
@@ -302,16 +302,16 @@ export default function Landing() {
         <div style={{ background: 'var(--brown)', borderRadius: 22, padding: isMobile ? '40px 20px' : '64px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
           <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 18 }}>Redo att testa?</div>
           <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(30px, 4vw, 52px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, lineHeight: 1.1, marginBottom: 16 }}>
-            BÃ¶rja med fem produkter<br />
+            Börja med fem produkter<br />
             <span style={{ color: 'var(--goldl)', fontStyle: 'italic' }}>i fakturans finstilta.</span>
           </h2>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,.58)', lineHeight: 1.65, maxWidth: 520, margin: '0 auto 38px' }}>
-            Skicka en meny och en faktura sÃ¥ gÃ¶r vi en fÃ¶rsiktig exempelanalys pÃ¥ 5 produkter.
+            Skicka en meny och en faktura så gör vi en försiktig exempelanalys på 5 produkter.
           </p>
           <a href="#pilot" style={{ background: 'var(--gold)', color: 'var(--brown)', padding: '13px 30px', borderRadius: 999, fontSize: 14, fontWeight: 900, textDecoration: 'none' }}>
             Boka gratis marginalkoll
           </a>
-          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.28)', letterSpacing: .5, marginTop: 24 }}>chef@smakvarlden.se Â· smakvarlden.se Â· Upplands VÃ¤sby, Sweden</div>
+          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.28)', letterSpacing: .5, marginTop: 24 }}>chef@smakvarlden.se · smakvarlden.se · Upplands Väsby, Sweden</div>
         </div>
       </section>
 
@@ -324,7 +324,7 @@ export default function Landing() {
           <Link to="/login" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Demo</Link>
           <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Kontakt</a>
         </div>
-        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.18)' }}>Â© 2026 SmakvÃ¤rlden</div>
+        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.18)' }}>© 2026 Smakvärlden</div>
       </footer>
     </div>
   );
