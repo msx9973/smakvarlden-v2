@@ -1099,3 +1099,51 @@
   .ip-section { padding: 32px 16px !important; }
   .ip-contact { padding: 32px 16px !important; }
 }
+/* ── MOBILE CARD FIX — force single column on small phones ── */
+@media (max-width: 600px) {
+
+  /* Force all card grids to single column */
+  .ip-feature-list,
+  [class*="ip-"] > ul,
+  .ip-section .ip-feature-list {
+    grid-template-columns: 1fr !important;
+    overflow: hidden !important;
+  }
+
+  /* Fix overflow on all IP sections */
+  .ip, .ip * {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Fix any remaining 2-col layouts */
+  .ip-split,
+  .ip-demo,
+  .ip-final,
+  .ip-hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Fix font sizes for small screens */
+  .ip h1 { font-size: 2.2rem !important; line-height: 1.15 !important; }
+  .ip h2 { font-size: 1.8rem !important; line-height: 1.2 !important; }
+  .ip h3 { font-size: 1.2rem !important; }
+
+  /* Fix section padding */
+  .ip-section { padding: 32px 16px !important; }
+  .ip-hero { padding: 32px 16px !important; }
+  .ip-section-head { margin-bottom: 24px !important; }
+
+  /* Fix contact/ask section */
+  .ip-contact {
+    flex-direction: column !important;
+    padding: 32px 16px !important;
+  }
+
+  /* Ensure text doesn't overflow */
+  p, h1, h2, h3, li, a {
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+}
