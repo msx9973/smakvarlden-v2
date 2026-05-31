@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import ConsultingLeadForm from '../components/ConsultingLeadForm';
+import LogoMark from '../components/LogoMark';
 
 const services = [
   {
@@ -70,7 +71,7 @@ export default function Landing() {
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(247,244,239,.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)', padding: '0 40px', height: 70, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link to="/" style={{ display:'flex', alignItems:'center', gap:12, textDecoration:'none' }}>
-          <img src="/logo-mark.svg" alt="Smakvärlden" width={42} height={42} style={{ borderRadius:12, flexShrink:0 }} />
+          <LogoMark size={42} />
           <div>
             <div style={{ fontFamily:'Playfair Display, Georgia, serif', fontSize:22, fontWeight:700, color:'var(--brown)', letterSpacing:'-.4px' }}>Smakvärlden</div>
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:1.4, textTransform:'uppercase', color:'var(--gold)', marginTop:1 }}>Restaurang • Kostnad • Marginal</div>

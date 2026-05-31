@@ -3,6 +3,7 @@ import { Home, BookOpen, ShoppingBasket, Calculator, LogOut, Crown, ShieldCheck,
 import { useAuth } from '../lib/auth-context';
 import { useLanguage } from '../lib/language';
 import { store } from '../store';
+import LogoMark from './LogoMark';
 import type { ReactNode } from 'react';
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -27,7 +28,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
         <div style={{ padding:'20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,.08)' }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <img src="/logo-mark.svg" alt="" width={34} height={34} style={{ borderRadius:10, flexShrink:0 }} />
+            <LogoMark size={34} decorative />
             <div>
               <div className="font-serif" style={{ fontSize:17, fontWeight:600, color:'var(--goldl)', letterSpacing:'-.1px' }}>Smakvärlden</div>
               <div style={{ fontSize:10, color:'rgba(255,255,255,.45)', marginTop:3, lineHeight:1.35 }}>

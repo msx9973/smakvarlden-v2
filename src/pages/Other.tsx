@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Crown, Check } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
 import { store } from '../store';
+import LogoMark from '../components/LogoMark';
 
 export function WastePage() {
   const ings = store.getIngredients();
@@ -95,7 +96,7 @@ export function LoginPage() {
     <div style={{ minHeight:'100vh', background:'var(--cream)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div style={{ width:'100%', maxWidth:400 }}>
         <div style={{ textAlign:'center', marginBottom:32 }}>
-          <img src="/logo-mark.svg" alt="Smakvärlden" width={48} height={48} style={{ borderRadius:14, margin:'0 auto 12px', display:'block' }} />
+          <LogoMark size={48} style={{ margin:'0 auto 12px' }} />
           <h1 className="font-serif" style={{ fontSize:24, fontWeight:600, color:'var(--brown)' }}>Välkommen!</h1>
           <p style={{ fontSize:15, color:'var(--t2)', marginTop:8, lineHeight:1.5 }}>
             Restaurang • Kostnad • Marginal — fota fakturan, spara rätter och produkter och se om priset räcker.
