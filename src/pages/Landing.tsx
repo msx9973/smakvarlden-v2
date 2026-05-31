@@ -34,6 +34,58 @@ const stats = [
   { label: 'Första genomgång', value: 'Meny + faktura' },
 ];
 
+const insideApp = [
+  {
+    title: 'Rätter & produkter',
+    body: 'Spara mat, dryck, kaffe, tillbehör och catering. Varje produkt har menypris, råvaror, kostnad och marginal.',
+  },
+  {
+    title: 'Prishistorik',
+    body: 'När en faktura uppdaterar ett pris sparas datum och pris så kunden kan se utvecklingen över tid.',
+  },
+  {
+    title: 'Prisändringar',
+    body: 'Appen visar vilka produkter som påverkas när exempelvis cola, ost, whiskey, grädde eller takeawaylådor ändras i pris.',
+  },
+];
+
+const pricingPlans = [
+  {
+    name: 'Gratis pilot',
+    price: '0 kr',
+    text: 'En försiktig exempelanalys på 5 produkter med kundens meny och faktura.',
+    bullets: ['Meny + faktura', '5 produkter', 'Kort marginalrapport'],
+  },
+  {
+    name: 'App självservice',
+    price: '59 kr/mån',
+    text: 'För restauranger som vill använda verktyget själva och uppdatera priser löpande.',
+    bullets: ['Rätter & produkter', 'Prishistorik', 'Meny- och fakturaflöde'],
+    featured: true,
+  },
+  {
+    name: 'Startpaket',
+    price: '995 kr',
+    text: 'Hjälp med första uppsättningen så restaurangen kommer igång snabbare.',
+    bullets: ['Första produkter', 'Första fakturan', 'Genomgång av resultat'],
+  },
+];
+
+const knowledgeItems = [
+  {
+    title: 'Menyskanning är ett estimat',
+    body: 'En meny säger ofta vad rätten heter och priset, men inte exakta mängder. Därför ska kunden kunna ändra AI-förslaget.',
+  },
+  {
+    title: 'Fakturaskanning ger riktiga inköpspriser',
+    body: 'När en faktura skannas kan appen uppdatera inköpsvaror som mat, dryck, kaffe och förpackning.',
+  },
+  {
+    title: 'Privata priser ska stanna privata',
+    body: 'Offentliga mallar kan vara inspiration, men fakturor, leverantörer och marginaler ska inte delas offentligt.',
+  },
+];
+
 const navLinks = [
   ['#produkt', 'Produkt'],
   ['#funktioner', 'Funktioner'],
@@ -121,6 +173,7 @@ export default function Landing() {
           <div key={step.title} style={{ padding: '20px 16px', textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,.25)' : 'none' }}>
             <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 34, fontWeight: 700, color: 'rgba(255,255,255,.22)', lineHeight: 1 }}>{i + 1}</div>
             <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--brown)', marginTop: 4 }}>{step.title}</div>
+            <div style={{ fontSize: 11, color: 'rgba(47,22,13,.7)', marginTop: 4, lineHeight: 1.35 }}>{step.body}</div>
           </div>
         ))}
       </div>
@@ -140,6 +193,14 @@ export default function Landing() {
             <div key={service.title} style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:18, padding:'22px', boxShadow:'0 8px 26px var(--shad)' }}>
               <h3 style={{ fontSize:15, fontWeight:900, color:'var(--t1)', marginBottom:8 }}>{service.title}</h3>
               <p style={{ fontSize:13, color:'var(--t2)', lineHeight:1.65 }}>{service.body}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop:22, display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12 }}>
+          {insideApp.map((item) => (
+            <div key={item.title} style={{ background:'var(--brown)', borderRadius:18, padding:'22px', color:'#fff' }}>
+              <div style={{ fontSize:13, fontWeight:900, color:'var(--goldl)', marginBottom:8 }}>{item.title}</div>
+              <p style={{ fontSize:13, color:'rgba(255,255,255,.68)', lineHeight:1.65 }}>{item.body}</p>
             </div>
           ))}
         </div>
@@ -222,15 +283,18 @@ export default function Landing() {
             </p>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:14 }}>
-            {[
-              ['Gratis pilot', '0 kr', 'Marginalkoll på 5 produkter med meny + faktura.'],
-              ['App självservice', '59 kr/mån', 'Använd appen själv för produkter, priser och prishistorik.'],
-              ['Startpaket', '995 kr', 'Hjälp att lägga in första produkter och komma igång.'],
-            ].map(([name, price, text], index) => (
-              <div key={name} style={{ borderRadius:18, padding:'26px', border:index === 1 ? '1.5px solid var(--goldb)' : '1px solid var(--border)', background:index === 1 ? 'var(--brown)' : 'var(--cream)' }}>
-                <div style={{ fontSize:12, fontWeight:900, textTransform:'uppercase', letterSpacing:'.8px', color:index === 1 ? 'rgba(255,255,255,.42)' : 'var(--t3)', marginBottom:12 }}>{name}</div>
-                <div className="font-serif" style={{ fontSize:34, fontWeight:700, color:index === 1 ? 'var(--goldl)' : 'var(--t1)', marginBottom:8 }}>{price}</div>
-                <p style={{ fontSize:13, color:index === 1 ? 'rgba(255,255,255,.68)' : 'var(--t2)', lineHeight:1.6 }}>{text}</p>
+            {pricingPlans.map((plan) => (
+              <div key={plan.name} style={{ borderRadius:18, padding:'26px', border:plan.featured ? '1.5px solid var(--goldb)' : '1px solid var(--border)', background:plan.featured ? 'var(--brown)' : 'var(--cream)' }}>
+                <div style={{ fontSize:12, fontWeight:900, textTransform:'uppercase', letterSpacing:'.8px', color:plan.featured ? 'rgba(255,255,255,.42)' : 'var(--t3)', marginBottom:12 }}>{plan.name}</div>
+                <div className="font-serif" style={{ fontSize:34, fontWeight:700, color:plan.featured ? 'var(--goldl)' : 'var(--t1)', marginBottom:8 }}>{plan.price}</div>
+                <p style={{ fontSize:13, color:plan.featured ? 'rgba(255,255,255,.68)' : 'var(--t2)', lineHeight:1.6, minHeight:62 }}>{plan.text}</p>
+                <div style={{ display:'grid', gap:7, marginTop:18 }}>
+                  {plan.bullets.map((bullet) => (
+                    <div key={bullet} style={{ fontSize:12, fontWeight:700, color:plan.featured ? 'rgba(255,255,255,.72)' : 'var(--t2)' }}>
+                      ✓ {bullet}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -267,6 +331,14 @@ export default function Landing() {
               </div>
             ))}
           </div>
+        </div>
+        <div style={{ maxWidth:1080, margin:'34px auto 0', display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:12 }}>
+          {knowledgeItems.map((item) => (
+            <div key={item.title} style={{ border:'1px solid var(--border)', borderRadius:16, padding:'20px', background:'var(--cream)' }}>
+              <h3 style={{ fontSize:14, fontWeight:900, color:'var(--t1)', marginBottom:8 }}>{item.title}</h3>
+              <p style={{ fontSize:13, color:'var(--t2)', lineHeight:1.65 }}>{item.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
