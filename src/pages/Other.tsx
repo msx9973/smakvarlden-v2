@@ -98,7 +98,7 @@ export function LoginPage() {
           <img src="/logo-mark.svg" alt="Smakvärlden" width={48} height={48} style={{ borderRadius:14, margin:'0 auto 12px', display:'block' }} />
           <h1 className="font-serif" style={{ fontSize:24, fontWeight:600, color:'var(--brown)' }}>Välkommen!</h1>
           <p style={{ fontSize:15, color:'var(--t2)', marginTop:8, lineHeight:1.5 }}>
-            Koll på matkostnaden — fota fakturan, spara rätter och produkter och se om priset räcker.
+            Restaurang • Kostnad • Marginal — fota fakturan, spara rätter och produkter och se om priset räcker.
           </p>
         </div>
         <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:20, padding:'28px', boxShadow:'0 8px 32px var(--shadmd)' }}>

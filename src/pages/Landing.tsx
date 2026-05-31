@@ -73,7 +73,7 @@ export default function Landing() {
           <img src="/logo-mark.svg" alt="Smakvärlden" width={42} height={42} style={{ borderRadius:12, flexShrink:0 }} />
           <div>
             <div style={{ fontFamily:'Playfair Display, Georgia, serif', fontSize:22, fontWeight:700, color:'var(--brown)', letterSpacing:'-.4px' }}>Smakvärlden</div>
-            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:1.4, textTransform:'uppercase', color:'var(--gold)', marginTop:1 }}>Koll på matkostnaden</div>
+            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:1.4, textTransform:'uppercase', color:'var(--gold)', marginTop:1 }}>Restaurang • Kostnad • Marginal</div>
           </div>
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
@@ -305,7 +305,7 @@ export default function Landing() {
       <footer style={{ background: '#0A0604', padding: '32px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
         <div>
           <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--goldl)', fontWeight: 700 }}>Smakvärlden</div>
-          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 1.4, color: 'rgba(201,168,76,.55)', textTransform: 'uppercase', marginTop: 3 }}>Koll på matkostnaden</div>
+          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 1.4, color: 'rgba(201,168,76,.55)', textTransform: 'uppercase', marginTop: 3 }}>Restaurang • Kostnad • Marginal</div>
         </div>
         <div style={{ display: 'flex', gap: 20 }}>
           <Link to="/trust" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Integritet</Link>

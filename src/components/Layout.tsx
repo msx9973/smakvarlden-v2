@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <div>
               <div className="font-serif" style={{ fontSize:17, fontWeight:600, color:'var(--goldl)', letterSpacing:'-.1px' }}>Smakvärlden</div>
               <div style={{ fontSize:10, color:'rgba(255,255,255,.45)', marginTop:3, lineHeight:1.35 }}>
-                {isEnglish ? 'Food cost under control' : 'Koll på matkostnaden'}
+                {isEnglish ? 'Restaurant cost and margin' : 'Restaurang • Kostnad • Marginal'}
               </div>
             </div>
           </div>
