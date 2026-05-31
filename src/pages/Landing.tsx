@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ConsultingLeadForm from '../components/ConsultingLeadForm';
-import LogoMark from '../components/LogoMark';
 
 const services = [
   {
@@ -67,6 +66,13 @@ const knowledgeItems = [
   },
 ];
 
+const logoStyle = {
+  width: 210,
+  maxWidth: '48vw',
+  height: 'auto',
+  display: 'block',
+} as const;
+
 export default function Landing() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
@@ -77,12 +83,8 @@ export default function Landing() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(247,244,239,.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)', padding: '0 40px', height: 70, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Link to="/" style={{ display:'flex', alignItems:'center', gap:12, textDecoration:'none' }}>
-          <LogoMark size={42} />
-          <div>
-            <div style={{ fontFamily:'Playfair Display, Georgia, serif', fontSize:22, fontWeight:700, color:'var(--brown)', letterSpacing:'-.4px' }}>SmakvÃ¤rlden</div>
-            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:1.4, textTransform:'uppercase', color:'var(--gold)', marginTop:1 }}>Restaurang â¢ Kostnad â¢ Marginal</div>
-          </div>
+        <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
+          <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={logoStyle} />
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
           {navLinks.map(([href, label]) => (
@@ -311,10 +313,9 @@ export default function Landing() {
       </section>
 
       <footer style={{ background: '#0A0604', padding: '32px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-        <div>
-          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--goldl)', fontWeight: 700 }}>SmakvÃ¤rlden</div>
-          <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, letterSpacing: 1.4, color: 'rgba(201,168,76,.55)', textTransform: 'uppercase', marginTop: 3 }}>Restaurang â¢ Kostnad â¢ Marginal</div>
-        </div>
+        <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', background: '#fff', borderRadius: 8, padding: '4px 8px' }}>
+          <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={{ ...logoStyle, width: 170 }} />
+        </Link>
         <div style={{ display: 'flex', gap: 20 }}>
           <Link to="/trust" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Integritet</Link>
           <Link to="/login" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Demo</Link>

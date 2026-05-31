@@ -82,11 +82,17 @@ export default function Recipes() {
   useEffect(() => {
     const scan = searchParams.get('scan');
     const isNew = searchParams.get('new');
-    if (scan === 'invoice') setShowScanner(true);
-    if (scan === 'recipe') setShowRecipeScanner(true);
-    if (scan === 'menu') setShowMenuScanner(true);
-    if (isNew === '1') setShowNew(true);
-    if (scan || isNew) setSearchParams({}, { replace: true });
+    if (!scan && !isNew) return;
+
+    const timeout = window.setTimeout(() => {
+      if (scan === 'invoice') setShowScanner(true);
+      if (scan === 'recipe') setShowRecipeScanner(true);
+      if (scan === 'menu') setShowMenuScanner(true);
+      if (isNew === '1') setShowNew(true);
+      setSearchParams({}, { replace: true });
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
   }, [searchParams, setSearchParams]);
 
   const activeRecipes = view === 'mine' ? recipes : publicRecipes;
