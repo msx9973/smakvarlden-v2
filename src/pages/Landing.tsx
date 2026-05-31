@@ -42,6 +42,29 @@ const insideApp = [
   },
 ];
 
+const navLinks = [
+  ['#produkt', 'Produkt'],
+  ['#funktioner', 'Funktioner'],
+  ['#kunder', 'Kunder'],
+  ['#om-oss', 'Om oss'],
+  ['#kunskap', 'Kunskap'],
+] as const;
+
+const knowledgeItems = [
+  {
+    title: 'Menyskanning är ett estimat',
+    body: 'En meny visar namn och pris, men inte exakta mängder. Därför ska kunden kunna granska och ändra AI-förslaget.',
+  },
+  {
+    title: 'Fakturaskanning uppdaterar inköpsvaror',
+    body: 'En faktura kan uppdatera mat, dryck, kaffe och förpackning i samma flöde.',
+  },
+  {
+    title: 'Privata priser stannar privata',
+    body: 'Fakturor, leverantörer och riktiga marginaler visas inte offentligt.',
+  },
+];
+
 export default function Landing() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
@@ -53,7 +76,12 @@ export default function Landing() {
             <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:1.4, textTransform:'uppercase', color:'var(--gold)', marginTop:1 }}>Koll på matkostnaden</div>
           </div>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap:'wrap', justifyContent:'flex-end' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
+          {navLinks.map(([href, label]) => (
+            <a key={href} href={href} style={{ fontSize: 13, color: 'var(--t2)', textDecoration: 'none', padding: '8px 10px', fontWeight: 700 }}>
+              {label}
+            </a>
+          ))}
           <a href="#pilot" style={{ fontSize: 13, color: 'var(--brown)', background:'var(--gold)', textDecoration: 'none', padding: '10px 18px', borderRadius:999, fontWeight: 900 }}>Gratis pilot</a>
           <Link to="/login" style={{ fontSize: 13, fontWeight: 800, color: 'var(--white)', background: 'var(--brown)', padding: '10px 20px', borderRadius: 999, textDecoration: 'none' }}>Öppna demo</Link>
         </div>
@@ -148,6 +176,32 @@ export default function Landing() {
         </div>
       </section>
 
+      <section id="kunder" style={{ padding:'34px 48px 72px', maxWidth:1120, margin:'0 auto', scrollMarginTop:90 }}>
+        <div style={{ background:'var(--white)', border:'1px solid var(--border)', borderRadius:22, padding:'34px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:28, alignItems:'start' }}>
+          <div>
+            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunder</div>
+            <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(28px, 3vw, 42px)', letterSpacing:-1, lineHeight:1.12, color:'var(--t1)', marginBottom:12 }}>
+              För pilotrestauranger som vill testa med egna siffror.
+            </h2>
+            <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7 }}>
+              Vi visar inte kundloggor eller påstår resultat innan en restaurang har gett tillstånd. Första steget är en privat pilotgenomgång med meny, faktura och fem produkter.
+            </p>
+          </div>
+          <div style={{ display:'grid', gap:10 }}>
+            {[
+              ['Passar bra för', 'Pizzeria, pasta, lunchrestaurang, café, bar och bistro.'],
+              ['Privat data', 'Fakturor, inköpspriser och marginaler delas inte offentligt.'],
+              ['Offentliga mallar', 'Kan användas som inspiration utan riktiga kundpriser.'],
+            ].map(([title, body]) => (
+              <div key={title} style={{ padding:'16px', borderRadius:14, background:'var(--goldbg)', border:'1px solid var(--goldb)' }}>
+                <div style={{ fontSize:13, fontWeight:900, color:'var(--brown)', marginBottom:5 }}>{title}</div>
+                <div style={{ fontSize:13, color:'var(--t2)', lineHeight:1.5 }}>{body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="pilot" style={{ padding: '62px 48px 88px', maxWidth: 1120, margin: '0 auto', scrollMarginTop: 90 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(340px, .9fr)', gap: 42, alignItems: 'start' }}>
           <div>
@@ -183,6 +237,50 @@ export default function Landing() {
 
           <div>
             <ConsultingLeadForm source="landing" />
+          </div>
+        </div>
+      </section>
+
+      <section id="kunskap" style={{ background:'var(--white)', padding:'78px 48px', scrollMarginTop:90 }}>
+        <div style={{ maxWidth:1080, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:26 }}>
+            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Kunskap</div>
+            <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(28px, 3.5vw, 44px)', color:'var(--t1)', letterSpacing:-1, marginBottom:10 }}>
+              Så kan restaurangen förstå kalkylen.
+            </h2>
+            <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.7, maxWidth:650, margin:'0 auto' }}>
+              Kunskapsdelen ska hjälpa kunden förstå skillnaden mellan AI-estimat, egna mängder och riktiga fakturapriser.
+            </p>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:12 }}>
+            {knowledgeItems.map((item) => (
+              <div key={item.title} style={{ border:'1px solid var(--border)', borderRadius:16, padding:'20px', background:'var(--cream)' }}>
+                <h3 style={{ fontSize:14, fontWeight:900, color:'var(--t1)', marginBottom:8 }}>{item.title}</h3>
+                <p style={{ fontSize:13, color:'var(--t2)', lineHeight:1.65 }}>{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="om-oss" style={{ padding:'78px 48px', maxWidth:1080, margin:'0 auto', scrollMarginTop:90 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:36, alignItems:'center' }}>
+          <div>
+            <div style={{ fontFamily:'DM Mono, monospace', fontSize:10, letterSpacing:2, textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>Om oss</div>
+            <h2 style={{ fontFamily:'Playfair Display, serif', fontSize:'clamp(30px, 4vw, 46px)', color:'var(--t1)', letterSpacing:-1, lineHeight:1.12, marginBottom:14 }}>
+              Smakvärlden byggs nära svenska restauranger.
+            </h2>
+            <p style={{ fontSize:15, color:'var(--t2)', lineHeight:1.75 }}>
+              Målet är inte att ersätta kockens erfarenhet. Målet är att ge tydligare siffror när råvarupriser, dryckespriser och förpackningskostnader förändras.
+            </p>
+          </div>
+          <div style={{ background:'var(--goldbg)', border:'1px solid var(--goldb)', borderRadius:20, padding:'26px' }}>
+            <div style={{ fontSize:14, fontWeight:900, color:'var(--brown)', marginBottom:10 }}>Senare kan vi lägga till</div>
+            <ul style={{ margin:0, paddingLeft:18, color:'var(--t2)', fontSize:13, lineHeight:1.8 }}>
+              <li>Separata kunskapssidor.</li>
+              <li>Publika produktmallar utan privata priser.</li>
+              <li>Kundcase först när restauranger ger tillstånd.</li>
+            </ul>
           </div>
         </div>
       </section>
