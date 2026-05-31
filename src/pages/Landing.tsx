@@ -46,8 +46,8 @@ const navLinks = [
   ['#produkt', 'Produkt'],
   ['#funktioner', 'Funktioner'],
   ['#kunder', 'Kunder'],
-  ['#om-oss', 'Om oss'],
   ['#kunskap', 'Kunskap'],
+  ['#om-oss', 'Om oss'],
 ] as const;
 
 const knowledgeItems = [
