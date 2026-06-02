@@ -67,7 +67,7 @@ const knowledgeItems = [
 ];
 
 const logoStyle = {
-  width: 210,
+  width: 250,
   maxWidth: '48vw',
   height: 'auto',
   display: 'block',
@@ -80,14 +80,14 @@ export default function Landing() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  const landingLogoStyle = { ...logoStyle, width: isMobile ? 142 : 210, maxWidth: isMobile ? '42vw' : '48vw' };
+  const landingLogoStyle = { ...logoStyle, width: isMobile ? 150 : 250, maxWidth: isMobile ? '42vw' : '50vw' };
   const sectionPad = isMobile ? '52px 20px' : '76px 48px';
 
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', background: 'var(--cream)', color: 'var(--t1)' }}>
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(247,244,239,.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)', padding: isMobile ? '0 14px' : '0 40px', minHeight: isMobile ? 62 : 70, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
-          <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={landingLogoStyle} />
+          <img src="/smakvarlden-logo-tight.png" alt="Smakvärlden" style={landingLogoStyle} />
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 6, flexWrap:'wrap', justifyContent:'flex-end' }}>
           {!isMobile && navLinks.map(([href, label]) => (
@@ -323,7 +323,7 @@ export default function Landing() {
 
       <footer style={{ background: '#0A0604', padding: isMobile ? '28px 20px 92px' : '32px 48px', display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', flexWrap: 'wrap', gap: 14 }}>
         <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', background: '#fff', borderRadius: 8, padding: '4px 8px' }}>
-          <img src="/smakvarlden-logo.png" alt="Smakvärlden" style={{ ...logoStyle, width: 170 }} />
+          <img src="/smakvarlden-logo-tight.png" alt="Smakvärlden" style={{ ...logoStyle, width: 190 }} />
         </Link>
         <div style={{ display: 'flex', gap: 20 }}>
           <Link to="/trust" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Integritet</Link>
