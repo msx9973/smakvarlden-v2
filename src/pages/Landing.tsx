@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ConsultingLeadForm from '../components/ConsultingLeadForm';
+import LogoMark from '../components/LogoMark';
 
 const services = [
   {
@@ -321,16 +322,20 @@ export default function Landing() {
         </div>
       </section>
 
-      <footer style={{ background: '#0A0604', padding: isMobile ? '28px 20px 92px' : '32px 48px', display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', flexWrap: 'wrap', gap: 14 }}>
-        <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', background: '#fff', borderRadius: 8, padding: '4px 8px' }}>
-          <img src="/smakvarlden-logo-tight.png" alt="Smakvärlden" style={{ ...logoStyle, width: 190 }} />
+      <footer style={{ background: '#0A0604', padding: isMobile ? '28px 20px 92px' : '30px 48px', display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', flexWrap: 'wrap', gap: 20 }}>
+        <Link to="/" aria-label="Smakvärlden home" style={{ display: 'inline-flex', alignItems: 'center', gap:10, textDecoration: 'none' }}>
+          <LogoMark size={34} decorative />
+          <span>
+            <span style={{ display:'block', fontFamily:'Playfair Display, Georgia, serif', fontSize:18, lineHeight:1, fontWeight:700, color:'var(--goldl)' }}>Smakvärlden</span>
+            <span style={{ display:'block', marginTop:4, fontSize:10, fontWeight:800, letterSpacing:1.2, textTransform:'uppercase', color:'rgba(230,202,121,.58)' }}>Restaurang • Kostnad • Marginal</span>
+          </span>
         </Link>
-        <div style={{ display: 'flex', gap: 20 }}>
-          <Link to="/trust" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Integritet</Link>
-          <Link to="/login" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Demo</Link>
-          <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 12, color: 'rgba(255,255,255,.3)', textDecoration: 'none' }}>Kontakt</a>
+        <div style={{ display: 'flex', gap: 22, flexWrap:'wrap' }}>
+          <Link to="/trust" style={{ fontSize: 13, fontWeight:700, color: 'rgba(255,255,255,.64)', textDecoration: 'none' }}>Integritet</Link>
+          <Link to="/login" style={{ fontSize: 13, fontWeight:700, color: 'rgba(255,255,255,.64)', textDecoration: 'none' }}>Demo</Link>
+          <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 13, fontWeight:700, color: 'rgba(255,255,255,.64)', textDecoration: 'none' }}>Kontakt</a>
         </div>
-        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.18)' }}>© 2026 Smakvärlden</div>
+        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.38)' }}>© 2026 Smakvärlden</div>
       </footer>
     </div>
   );
