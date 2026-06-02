@@ -106,6 +106,17 @@ export function LoginPage() {
           <div style={{ padding:'12px 14px', borderRadius:11, background:'var(--goldbg)', border:'1px solid var(--goldb)', color:'hsl(17 47% 22%)', fontSize:13, lineHeight:1.5, marginBottom:16 }}>
             Ditt konto sparas i webbläsaren på den här datorn. Skapa konto med valfri e-post och lösenord (minst 4 tecken).
           </div>
+          <button
+            type="button"
+            onClick={() => { setMode('login'); setEmail('demo@smakvarlden.se'); setPw('demo1234'); setErr(''); }}
+            style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, padding:'12px 14px', borderRadius:11, border:'1px solid var(--goldb)', background:'rgba(201,168,76,.12)', color:'var(--brown)', cursor:'pointer', marginBottom:16, textAlign:'left' }}
+          >
+            <span>
+              <span style={{ display:'block', fontSize:12, fontWeight:900, marginBottom:3 }}>Använd demo-konto</span>
+              <span style={{ display:'block', fontFamily:'DM Mono, monospace', fontSize:12, color:'var(--t2)' }}>demo@smakvarlden.se / demo1234</span>
+            </span>
+            <span style={{ fontSize:12, fontWeight:900, color:'var(--gold)' }}>Fyll i</span>
+          </button>
           <div style={{ display:'flex', gap:2, padding:4, background:'var(--muted)', borderRadius:12, marginBottom:22 }}>
             {(['login','register'] as const).map((m) => (
               <button key={m} onClick={() => { setMode(m); setErr(''); }}

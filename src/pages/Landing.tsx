@@ -121,6 +121,12 @@ export default function Landing() {
                 Testa demo
               </Link>
             </div>
+            <div style={{ display:'inline-flex', flexWrap:'wrap', gap:8, alignItems:'center', padding:'10px 13px', borderRadius:14, background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.14)', color:'rgba(255,255,255,.72)', fontSize:13, lineHeight:1.5, marginBottom:22 }}>
+              <span style={{ fontWeight:800, color:'var(--goldl)' }}>Demo:</span>
+              <span style={{ fontFamily:'DM Mono, monospace' }}>demo@smakvarlden.se</span>
+              <span style={{ color:'rgba(255,255,255,.32)' }}>/</span>
+              <span style={{ fontFamily:'DM Mono, monospace' }}>demo1234</span>
+            </div>
             <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
               {['Menyskanner', 'Fakturaskanner', 'Rätter & produkter'].map(item => (
                 <span key={item} style={{ padding:'6px 11px', borderRadius:999, background:'rgba(255,255,255,.07)', border:'1px solid rgba(255,255,255,.1)', color:'rgba(255,255,255,.62)', fontSize:12, fontWeight:700 }}>{item}</span>
