@@ -330,12 +330,12 @@ export default function Landing() {
             <span style={{ display:'block', marginTop:4, fontSize:10, fontWeight:800, letterSpacing:1.2, textTransform:'uppercase', color:'rgba(230,202,121,.58)' }}>Restaurang • Kostnad • Marginal</span>
           </span>
         </Link>
-        <div style={{ display: 'flex', gap: 22, flexWrap:'wrap' }}>
-          <Link to="/trust" style={{ fontSize: 13, fontWeight:700, color: 'rgba(255,255,255,.64)', textDecoration: 'none' }}>Integritet</Link>
-          <Link to="/login" style={{ fontSize: 13, fontWeight:700, color: 'rgba(255,255,255,.64)', textDecoration: 'none' }}>Demo</Link>
-          <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 13, fontWeight:700, color: 'rgba(255,255,255,.64)', textDecoration: 'none' }}>Kontakt</a>
+        <div style={{ display: 'flex', gap: 24, flexWrap:'wrap' }}>
+          <Link to="/trust" style={{ fontSize: 14, fontWeight:800, color: 'rgba(255,255,255,.82)', textDecoration: 'none' }}>Integritet</Link>
+          <Link to="/login" style={{ fontSize: 14, fontWeight:800, color: 'rgba(255,255,255,.82)', textDecoration: 'none' }}>Demo</Link>
+          <a href="mailto:chef@smakvarlden.se" style={{ fontSize: 14, fontWeight:800, color: 'rgba(255,255,255,.82)', textDecoration: 'none' }}>Kontakt</a>
         </div>
-        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.38)' }}>© 2026 Smakvärlden</div>
+        <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, fontWeight:700, letterSpacing:.4, color: 'rgba(230,202,121,.72)' }}>© 2026 Smakvärlden</div>
       </footer>
     </div>
   );
