@@ -1,6 +1,6 @@
 import type { Handler } from '@netlify/functions';
 
-const ALLOWED_TYPES = ['invoice', 'recipe', 'menu'];
+const ALLOWED_TYPES = ['invoice', 'recipe', 'menu', 'menu-estimate'];
 const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-6';
 
 const corsHeaders = {
@@ -43,13 +43,17 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const { type, base64, mediaType } = JSON.parse(event.body || '{}');
+    const { type, base64, mediaType, items } = JSON.parse(event.body || '{}');
 
     if (!ALLOWED_TYPES.includes(type)) {
       return jsonResponse(400, { error: 'Invalid type' });
     }
 
-    if (!base64 || !mediaType) {
+    if (type === 'menu-estimate' && (!Array.isArray(items) || items.length === 0 || items.length > 6)) {
+      return jsonResponse(400, { error: 'Menu estimate requires 1-6 items' });
+    }
+
+    if (type !== 'menu-estimate' && (!base64 || !mediaType)) {
       return jsonResponse(400, { error: 'Missing data' });
     }
 
@@ -86,13 +90,19 @@ export const handler: Handler = async (event) => {
         'Extrahera alla säljbara produkter: maträtter, drycker, kaffe, desserter, tillbehör, extra toppings och catering/lunchlådor.',
         'Sätt category till en av: Mat, Dryck, Kaffe, Dessert, Tillbehör, Catering.',
         'Prioritera att alltid få med ALLA produktnamn och menypriser, även på långa menyer.',
-        'Gissa högst 4 viktigaste ingredienser per produkt med portionsmängd och svenskt grossist-/marknadspris.',
-        'För enkla drycker, kaffe och tillbehör räcker 1-2 ingredienser.',
         'Håll JSON kompakt. Skriv inga förklaringar och upprepa inte menytext.',
-        'Detta är ett snabbt estimat, inte exakt receptkalkyl. Använd confidence 0.5-0.85 beroende på hur tydlig rätten är.',
         'Svara endast med giltig JSON:',
-        '{"items":[{"name":"Carbonara","category":"Pasta","menuPrice":180,"confidence":0.78,"ingredients":[{"name":"Pasta","quantity":120,"unit":"g","estimatedPriceSek":32,"priceUnit":"kg","category":"Torrvaror","confidence":0.8}]}]}',
-        'Behåll rättnamn på menyns språk. Använd SEK-priser per priceUnit. Om pris saknas på menyn, sätt menuPrice null.',
+        '{"items":[{"name":"Carbonara","category":"Mat","menuPrice":180,"confidence":0.9}]}',
+        'Behåll rättnamn på menyns språk. Om pris saknas på menyn, sätt menuPrice null.',
+      ].join(' '),
+      'menu-estimate': [
+        'Du skapar snabba redigerbara produktkalkyler från redan extraherade menyrader.',
+        'Behåll exakt samma produktnamn, kategori och menypris som i indata.',
+        'Gissa högst 4 viktigaste ingredienser per produkt med rimlig portionsmängd och svenskt grossist-/marknadspris.',
+        'För enkla drycker, kaffe och tillbehör räcker 1-2 ingredienser.',
+        'Använd SEK-priser per priceUnit och confidence 0.5-0.85. Håll JSON kompakt och skriv inga förklaringar.',
+        'Svara endast med giltig JSON:',
+        '{"items":[{"name":"Carbonara","category":"Mat","menuPrice":180,"confidence":0.78,"ingredients":[{"name":"Pasta","quantity":120,"unit":"g","estimatedPriceSek":32,"priceUnit":"kg","category":"Torrvaror","confidence":0.8}]}]}',
       ].join(' '),
     };
 
@@ -106,12 +116,17 @@ export const handler: Handler = async (event) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: type === 'menu' ? 12000 : type === 'invoice' ? 4000 : 3000,
+        max_tokens: type === 'menu' ? 4000 : type === 'menu-estimate' ? 5000 : type === 'invoice' ? 4000 : 3000,
         system: systems[type],
         messages: [
           {
             role: 'user',
-            content: [
+            content: type === 'menu-estimate' ? [
+              {
+                type: 'text',
+                text: `Skapa kostnadsestimat för dessa menyrader: ${JSON.stringify(items)}`,
+              },
+            ] : [
               {
                 type: isPdf ? 'document' : 'image',
                 source: { type: 'base64', media_type: mediaType, data: base64 },
@@ -121,7 +136,7 @@ export const handler: Handler = async (event) => {
                 text: type === 'invoice'
                   ? 'Läs denna faktura.'
                   : type === 'menu'
-                    ? 'Läs denna meny och skapa redigerbara kostnadsestimat.'
+                    ? 'Läs denna meny och extrahera alla produktnamn, kategorier och priser.'
                     : 'Läs detta recept.',
               },
             ],

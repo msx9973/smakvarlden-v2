@@ -355,6 +355,14 @@ interface ScannedMenuItem {
 interface ScannedMenu { items?: Omit<ScannedMenuItem, 'id' | 'selected'>[]; }
 type MSState = 'idle' | 'scanning' | 'review' | 'saved' | 'error' | 'limit';
 
+function chunkMenuItems<T>(items: T[], size = 6): T[][] {
+  const chunks: T[][] = [];
+  for (let index = 0; index < items.length; index += size) {
+    chunks.push(items.slice(index, index + size));
+  }
+  return chunks;
+}
+
 function normalizeMenuPriceUnit(unit?: string) {
   const normalized = normalizeUnit(unit || '');
   if (normalized === 'l') return 'l';
@@ -413,7 +421,17 @@ function MenuScanner({ isPro, onClose }: { isPro: boolean; onClose: () => void }
     setError('');
     try {
       const { base64, mediaType } = await fileToBase64(file);
-      const data = await scanDocument({ type: 'menu', base64, mediaType }) as ScannedMenu;
+      const extracted = await scanDocument({ type: 'menu', base64, mediaType }) as ScannedMenu;
+      const extractedItems = extracted.items || [];
+      if (extractedItems.length === 0) {
+        throw new Error(isEnglish ? 'No menu products were found.' : 'Inga menyprodukter hittades.');
+      }
+      const estimates = await Promise.all(
+        chunkMenuItems(extractedItems).map(async batch =>
+          scanDocument({ type: 'menu-estimate', items: batch }) as Promise<ScannedMenu>
+        ),
+      );
+      const data: ScannedMenu = { items: estimates.flatMap(estimate => estimate.items || []) };
       const existing = store.getIngredients();
       const menuItems = (data.items || []).map((item, index): ScannedMenuItem => ({
         id: crypto.randomUUID(),

@@ -7,9 +7,10 @@ export interface ScanHealth {
 }
 
 export interface ScanRequest {
-  type: 'invoice' | 'recipe' | 'menu';
-  base64: string;
-  mediaType: string;
+  type: 'invoice' | 'recipe' | 'menu' | 'menu-estimate';
+  base64?: string;
+  mediaType?: string;
+  items?: unknown[];
 }
 
 function guessMediaType(file: File): string {
