@@ -21,6 +21,10 @@ function extractJson(text: string) {
   return text.trim().replace(/```json|```/g, '').trim();
 }
 
+function scanError(error: unknown) {
+  return error instanceof Error ? error.message : 'Unknown error';
+}
+
 export const handler: Handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: corsHeaders, body: '' };
@@ -81,7 +85,10 @@ export const handler: Handler = async (event) => {
         'Du är ett system som läser restaurangmenyer från svenska restauranger.',
         'Extrahera alla säljbara produkter: maträtter, drycker, kaffe, desserter, tillbehör, extra toppings och catering/lunchlådor.',
         'Sätt category till en av: Mat, Dryck, Kaffe, Dessert, Tillbehör, Catering.',
-        'Extrahera produktnamn, menypris och kategori. Gissa rimliga ingredienser, portionsmängder och svenska grossist-/marknadspriser när de inte står i menyn.',
+        'Prioritera att alltid få med ALLA produktnamn och menypriser, även på långa menyer.',
+        'Gissa högst 4 viktigaste ingredienser per produkt med portionsmängd och svenskt grossist-/marknadspris.',
+        'För enkla drycker, kaffe och tillbehör räcker 1-2 ingredienser.',
+        'Håll JSON kompakt. Skriv inga förklaringar och upprepa inte menytext.',
         'Detta är ett snabbt estimat, inte exakt receptkalkyl. Använd confidence 0.5-0.85 beroende på hur tydlig rätten är.',
         'Svara endast med giltig JSON:',
         '{"items":[{"name":"Carbonara","category":"Pasta","menuPrice":180,"confidence":0.78,"ingredients":[{"name":"Pasta","quantity":120,"unit":"g","estimatedPriceSek":32,"priceUnit":"kg","category":"Torrvaror","confidence":0.8}]}]}',
@@ -99,7 +106,7 @@ export const handler: Handler = async (event) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: type === 'menu' ? 6000 : type === 'invoice' ? 4000 : 3000,
+        max_tokens: type === 'menu' ? 12000 : type === 'invoice' ? 4000 : 3000,
         system: systems[type],
         messages: [
           {
@@ -133,11 +140,26 @@ export const handler: Handler = async (event) => {
       return jsonResponse(500, { error: 'AI returned no text' });
     }
 
-    const parsed = JSON.parse(extractJson(text));
+    if (data.stop_reason === 'max_tokens') {
+      return jsonResponse(422, {
+        error: 'Menyn är för stor för en enda skanning. Fota en menysida eller sektion i taget.',
+      });
+    }
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(extractJson(text));
+    } catch (error) {
+      return jsonResponse(422, {
+        error: type === 'menu'
+          ? 'Menyn kunde inte läsas klart. Fota en tydlig menysida eller sektion och försök igen.'
+          : `AI-svaret kunde inte läsas: ${scanError(error)}`,
+      });
+    }
     return jsonResponse(200, parsed);
   } catch (err) {
     return jsonResponse(500, {
-      error: err instanceof Error ? err.message : 'Unknown error',
+      error: scanError(err),
     });
   }
 };
