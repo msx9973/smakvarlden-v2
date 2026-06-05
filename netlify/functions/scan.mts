@@ -99,7 +99,7 @@ export const handler: Handler = async (event) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 1800,
+        max_tokens: type === 'menu' ? 6000 : type === 'invoice' ? 4000 : 3000,
         system: systems[type],
         messages: [
           {
