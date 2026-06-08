@@ -12,6 +12,7 @@ import PriceIntel from './pages/PriceIntel';
 import Analytics from './pages/Analytics';
 import InvestorPresentation from './pages/InvestorPresentation';
 import Landing from './pages/Landing';
+import AdminDashboard from './pages/AdminDashboard';
 import { LoginPage, TrustPage, UpgradePage, WastePage } from './pages/Other';
 import './index.css';
 
@@ -44,6 +45,7 @@ function AppRoutes() {
           <Route path="/landing"      element={<Landing />} />
           <Route path="/presentation" element={<InvestorPresentation />} />
           <Route path="/investor"     element={<InvestorPresentation />} />
+          <Route path="/admin"         element={<AdminDashboard />} />
           <Route path="/trust"        element={<TrustPage />} />
           <Route path="/privacy"      element={<TrustPage />} />
           <Route path="/terms"        element={<TrustPage />} />
