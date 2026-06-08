@@ -1,4 +1,3 @@
-import { supabase } from '../lib/supabase';
 import {
   calculateMarginPct,
   calculatePriceChangePct,
@@ -498,12 +497,18 @@ export const store = {
   login(email: string, pw: string): User {
     if (!email.includes('@') || pw.length < 4) throw new Error('Ogiltig e-post eller lösenord');
 
-    // Track login in Supabase
+    // Track login via Supabase REST API (no SDK needed)
     const isDemo = email.trim().toLowerCase() === 'demo@smakvarlden.se';
-    supabase.from('demo_visits').insert({
-      type: isDemo ? 'demo' : 'real',
-      email: isDemo ? 'demo@smakvarlden.se' : email.split('@')[1], // only store domain for real users
-    }).then(() => {}).catch(() => {}); // fire and forget, never block login
+    fetch('https://gwmfhaumkfgoqnnywvag.supabase.co/rest/v1/demo_visits', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3bWZoYXVta2Znb3Fubnl3dmFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzM4MzgsImV4cCI6MjA5MzA0OTgzOH0.BkC7l2W4wuDD0mgvk5fom2PEn6avhkBOBJ5yK-Aib58',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3bWZoYXVta2Znb3Fubnl3dmFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzM4MzgsImV4cCI6MjA5MzA0OTgzOH0.BkC7l2W4wuDD0mgvk5fom2PEn6avhkBOBJ5yK-Aib58',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ type: isDemo ? 'demo' : 'real', email: isDemo ? 'demo@smakvarlden.se' : email.split('@')[1] })
+    }).catch(() => {}); // fire and forget
 
     const registry = getUserRegistry();
     const key = emailKey(email);
