@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-
 interface Visit {
   id: string;
   type: 'demo' | 'real';
@@ -37,11 +35,13 @@ export default function AdminDashboard() {
 
   async function loadData() {
     setLoading(true);
-    const { data } = await supabase
-      .from('demo_visits')
-      .select('*')
-      .order('visited_at', { ascending: false })
-      .limit(200);
+    const resp = await fetch('https://gwmfhaumkfgoqnnywvag.supabase.co/rest/v1/demo_visits?select=*&order=visited_at.desc&limit=200', {
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3bWZoYXVta2Znb3Fubnl3dmFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzM4MzgsImV4cCI6MjA5MzA0OTgzOH0.BkC7l2W4wuDD0mgvk5fom2PEn6avhkBOBJ5yK-Aib58',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3bWZoYXVta2Znb3Fubnl3dmFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzM4MzgsImV4cCI6MjA5MzA0OTgzOH0.BkC7l2W4wuDD0mgvk5fom2PEn6avhkBOBJ5yK-Aib58'
+      }
+    });
+    const data: Visit[] = resp.ok ? await resp.json() : [];
 
     if (data) {
       setVisits(data);
