@@ -22,10 +22,13 @@ export const supabase = {
     }),
     select: (cols = '*') => ({
       order: (_col: string, _opts?: object) => ({
-        limit: (_n: number) => 
+        limit: (_n: number): Promise<{ data: unknown[]; error: string | null }> =>
           fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${cols}&order=visited_at.desc&limit=200`, { headers })
-            .then(r => r.ok ? r.json().then((data: unknown[]) => ({ data, error: null })) : { data: [], error: 'failed' })
-            .catch(() => ({ data: [], error: 'failed' })),
+            .then((r): Promise<{ data: unknown[]; error: string | null }> =>
+              r.ok
+                ? r.json().then((data: unknown[]) => ({ data, error: null as string | null }))
+                : Promise.resolve({ data: [] as unknown[], error: 'failed' as string | null }))
+            .catch(() => ({ data: [] as unknown[], error: 'failed' as string | null })),
       }),
     }),
   }),
