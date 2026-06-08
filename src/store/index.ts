@@ -1,3 +1,4 @@
+import { supabase } from '../lib/supabase';
 import {
   calculateMarginPct,
   calculatePriceChangePct,
@@ -496,6 +497,13 @@ export const store = {
 
   login(email: string, pw: string): User {
     if (!email.includes('@') || pw.length < 4) throw new Error('Ogiltig e-post eller lösenord');
+
+    // Track login in Supabase
+    const isDemo = email.trim().toLowerCase() === 'demo@smakvarlden.se';
+    supabase.from('demo_visits').insert({
+      type: isDemo ? 'demo' : 'real',
+      email: isDemo ? 'demo@smakvarlden.se' : email.split('@')[1], // only store domain for real users
+    }).then(() => {}).catch(() => {}); // fire and forget, never block login
 
     const registry = getUserRegistry();
     const key = emailKey(email);
